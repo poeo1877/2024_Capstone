@@ -6,15 +6,21 @@ import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "lot")
 public class Lot {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lot_id")
     private Long lotId;
 
+    @Column(name = "product_name", nullable = false)
     private String productName;
-    private int lotVolume;
 
     @ManyToOne
-    @JoinColumn(name = "batch_id", referencedColumnName = "batchId")
+    @JoinColumn(name = "batch_id")
     private Batch batch;
+
+    @Column(name = "lot_volume", nullable = false)
+    private int lotVolume;
 }

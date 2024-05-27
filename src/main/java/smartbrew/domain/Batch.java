@@ -5,23 +5,35 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
-@Entity
 @Data
+@Entity
+@Table(name = "batch")
 public class Batch {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "batch_id")
     private Long batchId;
 
+    @Column(name = "start_time", nullable = false)
     private Timestamp startTime = new Timestamp(System.currentTimeMillis());
+
+    @Column(name = "end_time")
     private Timestamp endTime;
+
+    @Column(name = "recipe_ratio")
     private String recipeRatio = "1.0";
 
     @ManyToOne
-    @JoinColumn(name = "recipe_id", referencedColumnName = "recipeId")
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "fermenter_id", referencedColumnName = "fermenterId")
+    @JoinColumn(name = "fermenter_id")
     private Fermenter fermenter;
+
+    @OneToMany(mappedBy = "batch")
+    private List<SensorMeasurement> sensorMeasurements;
 }
