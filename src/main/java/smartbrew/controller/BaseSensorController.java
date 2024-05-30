@@ -1,6 +1,6 @@
 package smartbrew.controller;
 
-
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,26 +8,15 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-public abstract class BaseSensorController<T> {
+public interface BaseSensorController<T> {
 
-    public abstract ResponseEntity<List<T>> getByBatchId(@PathVariable Long batchId);
+    ResponseEntity<List<T>> getByBatchId(@PathVariable Long batchId);
 
-    public abstract ResponseEntity<List<T>> getByDateRange(@RequestParam("start") Timestamp start, @RequestParam("end") Timestamp end);
+    ResponseEntity<List<T>> getByDateRange(@RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String startStr,
+                                           @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String endStr);
 
-    public abstract ResponseEntity<List<T>> getByValueRange(@RequestParam("min") BigDecimal min, @RequestParam("max") BigDecimal max);
+    ResponseEntity<List<T>> getByValueRange(@RequestParam(value = "min", required = false) BigDecimal min,
+                                            @RequestParam(value = "max", required = false) BigDecimal max);
 
-    public abstract ResponseEntity<T> postData(@RequestBody T data);
-
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<T> update(@PathVariable Long id, @RequestBody T dto) {
-//        // Implementation to update sensor data
-//        return ResponseEntity.ok().build();
-//    }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> delete(@PathVariable Long id) {
-//        // Implementation to delete sensor data by ID
-//        return ResponseEntity.ok().build();
-//    }
+    ResponseEntity<T> postData(@RequestBody T data);
 }

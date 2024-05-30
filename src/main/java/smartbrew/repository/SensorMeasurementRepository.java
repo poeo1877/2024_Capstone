@@ -3,20 +3,38 @@ package smartbrew.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import smartbrew.domain.SensorMeasurement;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import smartbrew.dto.PressureSensorDTO;
+
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+
 @Repository
 public interface SensorMeasurementRepository extends JpaRepository<SensorMeasurement, Long> {
-//    List<SensorMeasurement> findByBatchId(Long batchId);
-    List<SensorMeasurement> findByBatch_BatchId(Long batchId);
-    List<SensorMeasurement> findByMeasuredTimeBetween(Timestamp startTime, Timestamp endTime);
-    List<SensorMeasurement> findByPressureUpperBetween(BigDecimal minPressure, BigDecimal maxPressure);
-    List<SensorMeasurement> findByPressureLowerBetween(BigDecimal minPressure, BigDecimal maxPressure);
-    List<SensorMeasurement> findByPhBetween(BigDecimal minPh, BigDecimal maxPh);
+  /*  List<SensorMeasurement> findByPhBetween(BigDecimal minPh, BigDecimal maxPh);
     List<SensorMeasurement> findByOutTemperatureBetween(BigDecimal minTemp, BigDecimal maxTemp);
     List<SensorMeasurement> findByInTemperatureBetween(BigDecimal minTemp, BigDecimal maxTemp);
-    List<SensorMeasurement> findByCo2ConcentrationBetween(Integer minCo2, Integer maxCo2);
+    List<SensorMeasurement> findByCo2ConcentrationBetween(Integer minCo2, Integer maxCo2);*/
+    List<SensorMeasurement> findByBatch_BatchId(Long batchId);
+    List<SensorMeasurement> findByMeasuredTimeBetween(Timestamp start, Timestamp end);
+    List<SensorMeasurement> findByMeasuredTimeAfter(Timestamp start);
+    List<SensorMeasurement> findByMeasuredTimeBefore(Timestamp end);
+
+    List<SensorMeasurement> findByPressureUpperBetween(BigDecimal min, BigDecimal max);
+    List<SensorMeasurement> findByPressureUpperGreaterThanEqual(BigDecimal min);
+    List<SensorMeasurement> findByPressureUpperLessThanEqual(BigDecimal max);
+    List<SensorMeasurement> findByPressureLowerBetween(BigDecimal min, BigDecimal max);
+    List<SensorMeasurement> findByPressureLowerGreaterThanEqual(BigDecimal min);
+    List<SensorMeasurement> findByPressureLowerLessThanEqual(BigDecimal max);
+
+    @Query("SELECT new smartbrew.dto.PressureSensorDTO(sm.dataId, sm.pressureUpper, sm.pressureLower, sm.measuredTime, sm.batch.batchId) " +
+            "FROM SensorMeasurement sm " +
+            "WHERE sm.measuredTime >= :sixMonthsAgo")
+    List<PressureSensorDTO> findPressureSensorDataForLastSixMonths(@Param("sixMonthsAgo") Timestamp sixMonthsAgo);
+
+
 }
