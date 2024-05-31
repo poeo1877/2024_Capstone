@@ -1,8 +1,8 @@
 package smartbrew.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import smartbrew.dto.PressureSensorDTO;
-import smartbrew.service.PressureSensorMeasurementService;
+import smartbrew.dto.TemperatureSensorDTO;
+import smartbrew.service.TemperatureSensorMeasurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +18,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sensors/pressure")
-public class PressureSensorController {
+@RequestMapping("/sensors/temperature")
+public class TemperatureSensorController {
+
     @Autowired
     private Logger logger;
+
     @Autowired
-    private PressureSensorMeasurementService service;
+    private TemperatureSensorMeasurementService service;
 
     @GetMapping
-    public ResponseEntity<List<PressureSensorDTO>> getAllMeasurements() {
+    public ResponseEntity<List<TemperatureSensorDTO>> getAllMeasurements() {
         try {
             return ResponseEntity.ok(service.getAllMeasurements());
         } catch (Exception e) {
@@ -36,9 +38,9 @@ public class PressureSensorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PressureSensorDTO> getMeasurementById(@PathVariable Long id) {
+    public ResponseEntity<TemperatureSensorDTO> getMeasurementById(@PathVariable Long id) {
         try {
-            PressureSensorDTO dto = service.getMeasurementById(id);
+            TemperatureSensorDTO dto = service.getMeasurementById(id);
             return ResponseEntity.ok(dto);
         } catch (IllegalArgumentException e) {
             logger.error("Error occurred: {}", e.getMessage());
@@ -50,7 +52,7 @@ public class PressureSensorController {
     }
 
     @PostMapping
-    public ResponseEntity<PressureSensorDTO> createMeasurement(@RequestBody PressureSensorDTO dto) {
+    public ResponseEntity<TemperatureSensorDTO> createMeasurement(@RequestBody TemperatureSensorDTO dto) {
         try {
             return ResponseEntity.ok(service.createMeasurement(dto));
         } catch (Exception e) {
@@ -60,9 +62,9 @@ public class PressureSensorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PressureSensorDTO> updateMeasurement(@PathVariable Long id, @RequestBody PressureSensorDTO dto) {
+    public ResponseEntity<TemperatureSensorDTO> updateMeasurement(@PathVariable Long id, @RequestBody TemperatureSensorDTO dto) {
         try {
-            PressureSensorDTO updatedDto = service.updateMeasurement(id, dto);
+            TemperatureSensorDTO updatedDto = service.updateMeasurement(id, dto);
             return ResponseEntity.ok(updatedDto);
         } catch (IllegalArgumentException e) {
             logger.error("Error occurred: {}", e.getMessage());
@@ -86,8 +88,9 @@ public class PressureSensorController {
             return ResponseEntity.status(500).body(null);
         }
     }
+
     @GetMapping("/date-range")
-    public ResponseEntity<List<PressureSensorDTO>> getMeasurementsByDateRange(
+    public ResponseEntity<List<TemperatureSensorDTO>> getMeasurementsByDateRange(
             @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String startStr,
             @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String endStr) {
         try {
@@ -95,9 +98,9 @@ public class PressureSensorController {
             final Timestamp end = endStr != null ? parseTimestamp(endStr, false) : null;
 
             // If only start is provided, set end to the end of the same day
-            final Timestamp defaultEnd = (start != null && end == null) ? Timestamp.valueOf(start.toLocalDateTime().toLocalDate().atTime(23, 59, 59)) : end;
+            final Timestamp effectiveEnd = (start != null && end == null) ? Timestamp.valueOf(start.toLocalDateTime().toLocalDate().atTime(23, 59, 59)) : end;
 
-            List<PressureSensorDTO> results = service.getMeasurementsByDateRange(start, defaultEnd);
+            List<TemperatureSensorDTO> results = service.getMeasurementsByDateRange(start, effectiveEnd);
 
             // DB에서 들어온 DTO의 시간 값이 서울 기준인지 확인하는 용도
             results.forEach(dto -> System.out.println("DTO: " + dto));
@@ -127,6 +130,4 @@ public class PressureSensorController {
             throw new IllegalArgumentException("Invalid date/time format");
         }
     }
-
-
 }

@@ -2,20 +2,20 @@ package smartbrew.service;
 
 import smartbrew.domain.Batch;
 import smartbrew.domain.SensorMeasurement;
-import smartbrew.dto.PressureSensorDTO;
+import smartbrew.dto.TemperatureSensorDTO;
 import smartbrew.repository.BatchRepository;
 import smartbrew.repository.SensorMeasurementRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SensorMeasurementService {
+public class TemperatureSensorMeasurementService {
 
     @Autowired
     private SensorMeasurementRepository repository;
@@ -23,13 +23,15 @@ public class SensorMeasurementService {
     @Autowired
     private BatchRepository batchRepository;
 
-    public List<PressureSensorDTO> getAllMeasurements() {
+    private static final ZoneId KST_ZONE_ID = ZoneId.of("Asia/Seoul");
+
+    public List<TemperatureSensorDTO> getAllMeasurements() {
         return repository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    public PressureSensorDTO getMeasurementById(Long id) {
+    public TemperatureSensorDTO getMeasurementById(Long id) {
         Optional<SensorMeasurement> measurement = repository.findById(id);
         if (measurement.isPresent()) {
             return convertToDto(measurement.get());
@@ -38,12 +40,7 @@ public class SensorMeasurementService {
         }
     }
 
-//    public PressureSensorDTO createMeasurement(PressureSensorDTO dto) {
-//        SensorMeasurement measurement = convertToEntity(dto);
-//        SensorMeasurement savedMeasurement = repository.save(measurement);
-//        return convertToDto(savedMeasurement);
-//    }
-    public PressureSensorDTO createMeasurement(PressureSensorDTO dto) {
+    public TemperatureSensorDTO createMeasurement(TemperatureSensorDTO dto) {
         SensorMeasurement measurement = convertToEntity(dto);
         if (dto.getBatchId() != null) {
             Optional<Batch> batch = batchRepository.findById(dto.getBatchId());
@@ -52,26 +49,13 @@ public class SensorMeasurementService {
         SensorMeasurement savedMeasurement = repository.save(measurement);
         return convertToDto(savedMeasurement);
     }
-//    public PressureSensorDTO updateMeasurement(Long id, PressureSensorDTO dto) {
-//        Optional<SensorMeasurement> optionalMeasurement = repository.findById(id);
-//        if (optionalMeasurement.isPresent()) {
-//            SensorMeasurement measurement = optionalMeasurement.get();
-//            measurement.setPressureUpper(dto.getPressureUpper());
-//            measurement.setPressureLower(dto.getPressureLower());
-//            measurement.setMeasuredTime(dto.getMeasuredTime());
-//            measurement.setBatch(null); // Adjust based on your batch handling
-//            SensorMeasurement updatedMeasurement = repository.save(measurement);
-//            return convertToDto(updatedMeasurement);
-//        } else {
-//            return null;
-//        }
-//    }
-    public PressureSensorDTO updateMeasurement(Long id, PressureSensorDTO dto) {
+
+    public TemperatureSensorDTO updateMeasurement(Long id, TemperatureSensorDTO dto) {
         Optional<SensorMeasurement> optionalMeasurement = repository.findById(id);
         if (optionalMeasurement.isPresent()) {
             SensorMeasurement measurement = optionalMeasurement.get();
-            measurement.setPressureUpper(dto.getPressureUpper());
-            measurement.setPressureLower(dto.getPressureLower());
+            measurement.setOutTemperature(dto.getOutTemperature());
+            measurement.setInTemperature(dto.getInTemperature());
             measurement.setMeasuredTime(dto.getMeasuredTime());
             if (dto.getBatchId() != null) {
                 Optional<Batch> batch = batchRepository.findById(dto.getBatchId());
@@ -85,6 +69,7 @@ public class SensorMeasurementService {
             throw new IllegalArgumentException("SensorMeasurement with ID " + id + " not found");
         }
     }
+
     public void deleteMeasurement(Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
@@ -93,7 +78,7 @@ public class SensorMeasurementService {
         }
     }
 
-    public List<PressureSensorDTO> getMeasurementsByDateRange(Timestamp start, Timestamp end) {
+    public List<TemperatureSensorDTO> getMeasurementsByDateRange(Timestamp start, Timestamp end) {
         List<SensorMeasurement> measurements;
         if (start != null && end != null) {
             measurements = repository.findByMeasuredTimeBetween(start, end);
@@ -104,29 +89,27 @@ public class SensorMeasurementService {
         } else {
             measurements = repository.findAll();
         }
+
         return measurements.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-
-    private PressureSensorDTO convertToDto(SensorMeasurement sensorMeasurement) {
-        return new PressureSensorDTO(
+    private TemperatureSensorDTO convertToDto(SensorMeasurement sensorMeasurement) {
+        return new TemperatureSensorDTO(
                 sensorMeasurement.getDataId(),
-                sensorMeasurement.getPressureUpper(),
-                sensorMeasurement.getPressureLower(),
+                sensorMeasurement.getOutTemperature(),
+                sensorMeasurement.getInTemperature(),
                 sensorMeasurement.getMeasuredTime(),
-                sensorMeasurement.getBatch() != null ? sensorMeasurement.getBatch().getBatchId() : null,
-                sensorMeasurement.getBrix() != null ? sensorMeasurement.getBrix() : null
-                );
+                sensorMeasurement.getBatch() != null ? sensorMeasurement.getBatch().getBatchId() : null
+        );
     }
 
-    private SensorMeasurement convertToEntity(PressureSensorDTO dto) {
+    private SensorMeasurement convertToEntity(TemperatureSensorDTO dto) {
         SensorMeasurement sensorMeasurement = new SensorMeasurement();
         sensorMeasurement.setDataId(dto.getDataId());
-        sensorMeasurement.setPressureUpper(dto.getPressureUpper());
-        sensorMeasurement.setPressureLower(dto.getPressureLower());
+        sensorMeasurement.setOutTemperature(dto.getOutTemperature());
+        sensorMeasurement.setInTemperature(dto.getInTemperature());
         sensorMeasurement.setMeasuredTime(dto.getMeasuredTime());
-        sensorMeasurement.setBrix(dto.getBrix());
-        // Handle batch assignment if needed
         return sensorMeasurement;
     }
+
 }
