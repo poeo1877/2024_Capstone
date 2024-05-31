@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-radial-gauge"></script>
+  <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .card h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .card p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .card .value {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+    .card .change {
+      font-size: 1.5rem;
+    }
+    .sidebar {
+      width: 200px;
+      position: fixed;
+      top: 0;
+      left: -200px; /* Hide sidebar initially */
+      height: 100%;
+      background: #f7fafc;
+      padding: 20px;
+      overflow-y: auto;
+      transition: left 0.3s ease-in-out;
+      z-index: 1000;
+    }
+    .sidebar.visible {
+      left: 0; /* Show sidebar */
+    }
+    .sidebar button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    .menu-button {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .menu-button {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1100;
+      }
+      .container {
+        margin-left: 0 !important;
+      }
+    }
+    @media (min-width: 769px) {
+      .sidebar {
+        left: 0; /* Always show sidebar */
+      }
+      .menu-button {
+        display: none;
+      }
+      .container {
+        margin-left: 220px;
+      }
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .input-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+    .input-container input[type="number"] {
+      width: 60px;
+      text-align: right;
+      margin-left: 10px;
+      border: 1px solid #cbd5e0;
+      border-radius: 4px;
+      padding: 0.5rem;
+      background: #f7fafc;
+    }
+    .input-container input[type="range"] {
+      flex: 1;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-4">
+<div class="overflow-container">
+  <div class="side-nav-button-container">
+    <div class="new-conversation-container ng-star-inserted">
+      <expandable-button data-test-id="new-chat-button" icon="add" aria-label="새 채팅" mattooltip="새 채팅" class="mat-mdc-tooltip-trigger new-chat-button" _nghost-ng-c154029806="">
+        <button mat-button="" data-test-id="button" class="expandable-button gmat-body-2 mdc-button mat-mdc-button mat-unthemed mat-mdc-button-base" mat-ripple-loader-uninitialized="" mat-ripple-loader-class-name="mat-mdc-button-ripple">
+          <span class="mat-mdc-button-persistent-ripple mdc-button__ripple"></span>
+          <mat-icon role="img" data-test-id="icon" class="mat-icon notranslate outlined button-icon google-symbols mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font"> add </mat-icon>
+          <span class="mdc-button__label">
+              <span data-test-id="content" class="button-content">새 채팅</span>
+            </span>
+          <span class="mat-mdc-focus-indicator"></span>
+          <span class="mat-mdc-button-touch-target"></span>
+        </button>
+      </expandable-button>
+    </div>
+    <button class="menu-button bg-blue-500 text-white px-4 py-2 rounded" onclick="toggleSidebar()">Menu</button>
+  </div>
+</div>
+<div class="sidebar">
+  <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded mb-2" onClick="location.href='/DashBoard'">DashBoard</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded" onClick="location.href='/hello'">상세 데이터</button>
+  <!-- Add dummy buttons to enable scrolling -->
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 1</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 2</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 3</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 4</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 5</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 6</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 7</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 8</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 9</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 10</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 11</button>
+  <button type="button" class="bg-gray-200 px-4 py-2 rounded">Dummy Button 12</button>
+</div>
+<div class="container max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="card lg:col-span-2">
+      <div class="flex justify-between items-center mb-4 py-4">
+        <h2>현재 상태</h2>
+        <div>
+          <select class="border border-gray-300 rounded px-2 py-1">
+            <option>Batch 1</option>
+            <option>Batch 2</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-2">
+        <div class="card">
+          <div class="value text-orange-500">0.0°C</div>
+          <div class="change text-red-500">0.0% ↑</div>
+          <p>온도</p>
+        </div>
+        <div class="card">
+          <div class="value text-orange-500">0.0</div>
+          <div class="change text-blue-500">0.0% ↓</div>
+          <p>당도</p>
+        </div>
+        <div class="card">
+          <div class="value">0.0</div>
+          <div class="change text-red-500">0.0% ↑</div>
+          <p>pH</p>
+        </div>
+        <div class="card">
+          <div class="value">0.0</div>
+          <div class="change text-red-500">0.0% ↑</div>
+          <p>이산화탄소 농도</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <canvas id="radarChart"></canvas>
+      <div class="slider-label">
+        <span>Aromatics</span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="5" step="0.1" value="3.0" id="aromaticsSlider">
+        <input type="number" min="0" max="5" step="0.1" value="3.0" id="aromaticsInput">
+      </div>
+      <div class="slider-label">
+        <span>Acidity</span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="5" step="0.1" value="4.0" id="aciditySlider">
+        <input type="number" min="0" max="5" step="0.1" value="4.0" id="acidityInput">
+      </div>
+      <div class="slider-label">
+        <span>Sweetness</span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="5" step="0.1" value="2.0" id="sweetnessSlider">
+        <input type="number" min="0" max="5" step="0.1" value="2.0" id="sweetnessInput">
+      </div>
+      <div class="slider-label">
+        <span>Aftertaste</span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="5" step="0.1" value="5.0" id="aftertasteSlider">
+        <input type="number" min="0" max="5" step="0.1" value="5.0" id="aftertasteInput">
+      </div>
+      <div class="slider-label">
+        <span>Body</span>
+      </div>
+      <div class="input-container">
+        <input type="range" min="0" max="5" step="0.1" value="3.0" id="bodySlider">
+        <input type="number" min="0" max="5" step="0.1" value="3.0" id="bodyInput">
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('visible');
+  }
+
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  const radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Aromatics', 'Acidity', 'Sweetness', 'Aftertaste', 'Body'],
+      datasets: [{
+        label: 'Dataset',
+        data: [3, 4, 2, 5, 3],
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+      }]
+    },
+    options: {
+      scales: {
+        r: {  // Update from `scale` to `scales.r` for the latest Chart.js version
+          min: 0,
+          max: 5,
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1
+          }
+        }
+      }
+    }
+  });
+
+  function updateChart() {
+    const aromatics = parseFloat(document.getElementById('aromaticsSlider').value);
+    const acidity = parseFloat(document.getElementById('aciditySlider').value);
+    const sweetness = parseFloat(document.getElementById('sweetnessSlider').value);
+    const aftertaste = parseFloat(document.getElementById('aftertasteSlider').value);
+    const body = parseFloat(document.getElementById('bodySlider').value);
+
+    radarChart.data.datasets[0].data = [aromatics, acidity, sweetness, aftertaste, body];
+    radarChart.update();
+
+    document.getElementById('aromaticsInput').value = aromatics.toFixed(1);
+    document.getElementById('acidityInput').value = acidity.toFixed(1);
+    document.getElementById('sweetnessInput').value = sweetness.toFixed(1);
+    document.getElementById('aftertasteInput').value = aftertaste.toFixed(1);
+    document.getElementById('bodyInput').value = body.toFixed(1);
+  }
+
+  function updateSliderFromInput() {
+    const aromatics = parseFloat(document.getElementById('aromaticsInput').value);
+    const acidity = parseFloat(document.getElementById('acidityInput').value);
+    const sweetness = parseFloat(document.getElementById('sweetnessInput').value);
+    const aftertaste = parseFloat(document.getElementById('aftertasteInput').value);
+    const body = parseFloat(document.getElementById('bodyInput').value);
+
+    document.getElementById('aromaticsSlider').value = aromatics;
+    document.getElementById('aciditySlider').value = acidity;
+    document.getElementById('sweetnessSlider').value = sweetness;
+    document.getElementById('aftertasteSlider').value = aftertaste;
+    document.getElementById('bodySlider').value = body;
+
+    updateChart();
+  }
+
+  document.getElementById('aromaticsSlider').addEventListener('input', updateChart);
+  document.getElementById('aciditySlider').addEventListener('input', updateChart);
+  document.getElementById('sweetnessSlider').addEventListener('input', updateChart);
+  document.getElementById('aftertasteSlider').addEventListener('input', updateChart);
+  document.getElementById('bodySlider').addEventListener('input', updateChart);
+
+  document.getElementById('aromaticsInput').addEventListener('input', updateSliderFromInput);
+  document.getElementById('acidityInput').addEventListener('input', updateSliderFromInput);
+  document.getElementById('sweetnessInput').addEventListener('input', updateSliderFromInput);
+  document.getElementById('aftertasteInput').addEventListener('input', updateSliderFromInput);
+  document.getElementById('bodyInput').addEventListener('input', updateSliderFromInput);
+</script>
+</body>
+</html>
