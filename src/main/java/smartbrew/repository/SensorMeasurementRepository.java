@@ -24,6 +24,9 @@ public interface SensorMeasurementRepository extends JpaRepository<SensorMeasure
     List<SensorMeasurement> findByMeasuredTimeAfter(Timestamp start);
     List<SensorMeasurement> findByMeasuredTimeBefore(Timestamp end);
 
+    /*
+      ("/sensors/pressure") 에서 사용할 함수들
+     */
     List<SensorMeasurement> findByPressureUpperBetween(BigDecimal min, BigDecimal max);
     List<SensorMeasurement> findByPressureUpperGreaterThanEqual(BigDecimal min);
     List<SensorMeasurement> findByPressureUpperLessThanEqual(BigDecimal max);
@@ -36,5 +39,16 @@ public interface SensorMeasurementRepository extends JpaRepository<SensorMeasure
             "WHERE sm.measuredTime >= :sixMonthsAgo")
     List<PressureSensorDTO> findPressureSensorDataForLastSixMonths(@Param("sixMonthsAgo") Timestamp sixMonthsAgo);
 
+
+    /*
+      ("/sensor/temperature") 에서 사용할 함수들
+     */
+    List<SensorMeasurement> findByInTemperatureBetween(BigDecimal minTemp, BigDecimal maxTemp);
+    List<SensorMeasurement> findByInTemperatureGreaterThanEqual(BigDecimal minTemp);
+    List<SensorMeasurement> findByInTemperatureLessThanEqual(BigDecimal maxTemp);
+
+    List<SensorMeasurement> findByOutTemperatureBetween(BigDecimal minTemp, BigDecimal maxTemp);
+    List<SensorMeasurement> findByOutTemperatureGreaterThanEqual(BigDecimal minTemp);
+    List<SensorMeasurement> findByOutTemperatureLessThanEqual(BigDecimal maxTemp);
 
 }

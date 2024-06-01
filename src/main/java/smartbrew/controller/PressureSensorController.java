@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -110,6 +111,23 @@ public class PressureSensorController {
         } catch (Exception e) {
             logger.error("Error occurred while fetching sensor measurements by date range: {} - {}", startStr, endStr, e);
             return ResponseEntity.status(400).body(null);
+        }
+    }
+
+    @GetMapping("/value-range")
+    public ResponseEntity<List<PressureSensorDTO>> getMeasurementsByPressureRange(
+            @RequestParam(value = "min", required = false) BigDecimal min,
+            @RequestParam(value = "max", required = false) BigDecimal max,
+            @RequestParam(value = "position") String position) {
+        try {
+            List<PressureSensorDTO> results = service.getMeasurementsByPressureRange(min, max, position);
+            return ResponseEntity.ok(results);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error occurred: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching sensor measurements by pressure range", e);
+            return ResponseEntity.status(500).body(null);
         }
     }
 

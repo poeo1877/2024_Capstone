@@ -8,8 +8,8 @@ import smartbrew.repository.SensorMeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,7 +23,6 @@ public class TemperatureSensorMeasurementService {
     @Autowired
     private BatchRepository batchRepository;
 
-    private static final ZoneId KST_ZONE_ID = ZoneId.of("Asia/Seoul");
 
     public List<TemperatureSensorDTO> getAllMeasurements() {
         return repository.findAll().stream()
@@ -93,7 +92,47 @@ public class TemperatureSensorMeasurementService {
         return measurements.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    public List<TemperatureSensorDTO> getMeasurementsByTemperatureRange(BigDecimal minTemp, BigDecimal maxTemp, String position) {
+        List<SensorMeasurement> measurements;
+        if ("in".equalsIgnoreCase(position)) {
+            if (minTemp != null && maxTemp != null) {
+                measurements = repository.findByInTemperatureBetween(minTemp, maxTemp);
+            } else if (minTemp != null) {
+                measurements = repository.findByInTemperatureGreaterThanEqual(minTemp);
+            } else if (maxTemp != null) {
+                measurements = repository.findByInTemperatureLessThanEqual(maxTemp);
+            } else {
+                measurements = repository.findAll();
+            }
+        } else if ("out".equalsIgnoreCase(position)) {
+            if (minTemp != null && maxTemp != null) {
+                measurements = repository.findByOutTemperatureBetween(minTemp, maxTemp);
+            } else if (minTemp != null) {
+                measurements = repository.findByOutTemperatureGreaterThanEqual(minTemp);
+            } else if (maxTemp != null) {
+                measurements = repository.findByOutTemperatureLessThanEqual(maxTemp);
+            } else {
+                measurements = repository.findAll();
+            }
+        } else {
+            if (minTemp != null && maxTemp != null) {
+                measurements = repository.findByInTemperatureBetween(minTemp, maxTemp);
+                measurements.addAll(repository.findByOutTemperatureBetween(minTemp, maxTemp));
+            } else if (minTemp != null) {
+                measurements = repository.findByInTemperatureGreaterThanEqual(minTemp);
+                measurements.addAll(repository.findByOutTemperatureGreaterThanEqual(minTemp));
+            } else if (maxTemp != null) {
+                measurements = repository.findByInTemperatureLessThanEqual(maxTemp);
+                measurements.addAll(repository.findByOutTemperatureLessThanEqual(maxTemp));
+            } else {
+                measurements = repository.findAll();
+            }
+        }
+
+        return measurements.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
     private TemperatureSensorDTO convertToDto(SensorMeasurement sensorMeasurement) {
+        if (sensorMeasurement == null) return null;
         return new TemperatureSensorDTO(
                 sensorMeasurement.getDataId(),
                 sensorMeasurement.getOutTemperature(),
@@ -104,6 +143,7 @@ public class TemperatureSensorMeasurementService {
     }
 
     private SensorMeasurement convertToEntity(TemperatureSensorDTO dto) {
+        if(dto == null) return null;
         SensorMeasurement sensorMeasurement = new SensorMeasurement();
         sensorMeasurement.setDataId(dto.getDataId());
         sensorMeasurement.setOutTemperature(dto.getOutTemperature());

@@ -9,9 +9,8 @@ import smartbrew.repository.SensorMeasurementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,6 +89,35 @@ public class PressureSensorMeasurementService {
         } else {
             measurements = repository.findAll();
         }
+        return measurements.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    public List<PressureSensorDTO> getMeasurementsByPressureRange(BigDecimal min, BigDecimal max, String position) {
+        List<SensorMeasurement> measurements;
+        if ("upper".equalsIgnoreCase(position)) {
+            if (min != null && max != null) {
+                measurements = repository.findByPressureUpperBetween(min, max);
+            } else if (min != null) {
+                measurements = repository.findByPressureUpperGreaterThanEqual(min);
+            } else if (max != null) {
+                measurements = repository.findByPressureUpperLessThanEqual(max);
+            } else {
+                measurements = repository.findAll();
+            }
+        } else if ("lower".equalsIgnoreCase(position)) {
+            if (min != null && max != null) {
+                measurements = repository.findByPressureLowerBetween(min, max);
+            } else if (min != null) {
+                measurements = repository.findByPressureLowerGreaterThanEqual(min);
+            } else if (max != null) {
+                measurements = repository.findByPressureLowerLessThanEqual(max);
+            } else {
+                measurements = repository.findAll();
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid position: " + position);
+        }
+
         return measurements.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 

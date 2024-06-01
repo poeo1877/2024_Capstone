@@ -9,11 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -115,6 +114,32 @@ public class TemperatureSensorController {
             return ResponseEntity.status(400).body(null);
         }
     }
+
+    @GetMapping("/value-range")
+    public ResponseEntity<List<TemperatureSensorDTO>> getMeasurementsByTemperatureRange(
+            @RequestParam(value = "min", required = false) BigDecimal minTemp,
+            @RequestParam(value = "max", required = false) BigDecimal maxTemp,
+            @RequestParam(value = "position", required = false) String position) {
+        try {
+            List<TemperatureSensorDTO> results = service.getMeasurementsByTemperatureRange(minTemp, maxTemp, position);
+
+            results.forEach(dto -> System.out.println("DTO: " + dto));
+
+            if (results.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.ok(results);
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid argument provided: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching sensor measurements by temperature range: {} - {}, position: {}", minTemp, maxTemp, position, e);
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+
 
     private Timestamp parseTimestamp(String dateTimeStr, boolean isStart) {
         try {
