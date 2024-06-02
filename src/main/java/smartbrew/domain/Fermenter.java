@@ -18,12 +18,12 @@ public class Fermenter {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private FermentationStatus status = FermentationStatus.대기;
+    private FermentationStatus status = FermentationStatus.WAITING;
+
+//    @Enumerated(EnumType.STRING)  // Use EnumType.STRING to store the enum as a string
+//    @Column(name = "status", nullable = false)
+//    private String status = FermentationStatus.WAITING.toString();  // Store as string
 
     @Column(name = "fermenter_line")
     private String fermenterLine;
-
-    public enum FermentationStatus {
-        대기, 발효중, 완료, 오류
-    }
 }

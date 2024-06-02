@@ -1,6 +1,5 @@
 package smartbrew.domain;
 
-import jakarta.annotation.sql.DataSourceDefinitions;
 import jakarta.persistence.*;
 import lombok.Data;
 
