@@ -1,49 +1,40 @@
 package smartbrew.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import java.sql.Timestamp;
+import jakarta.annotation.sql.DataSourceDefinitions;
+import jakarta.persistence.*;
+import lombok.Data;
 
+import java.sql.Timestamp;
+import java.util.List;
+
+@Data
 @Entity
+@Table(name = "batch")
 public class Batch {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long batchId;
-    private final Timestamp startTime;
-    private final Timestamp endTime;
-    private final String recipeRatio;
-    private final int recipeId;
-    private final int fermenterId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "batch_id")
+    private Long batchId;
 
-    // Parameterized constructor
-    public Batch(long batchId, Timestamp startTime, Timestamp endTime, String recipeRatio, int recipeId, int fermenterId) {
-        this.batchId = batchId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.recipeRatio = recipeRatio;
-        this.recipeId = recipeId;
-        this.fermenterId = fermenterId;
-    }
+    @Column(name = "start_time", nullable = false)
+    private Timestamp startTime = new Timestamp(System.currentTimeMillis());
 
-    // Getter methods
-    public long getBatchId() {
-        return batchId;
-    }
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-    public String getRecipeRatio() {
-        return recipeRatio;
-    }
-    public int getRecipeId() {
-        return recipeId;
-    }
-    public int getFermenterId() {
-        return fermenterId;
-    }
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
+    @Column(name = "recipe_ratio")
+    private String recipeRatio = "1.0";
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
+
+    @ManyToOne
+    @JoinColumn(name = "fermenter_id")
+    private Fermenter fermenter;
+
+    @OneToMany(mappedBy = "batch")
+    private List<SensorMeasurement> sensorMeasurements;
+
 }

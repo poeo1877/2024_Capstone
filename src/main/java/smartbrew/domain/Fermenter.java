@@ -1,34 +1,31 @@
 package smartbrew.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
+@Table(name = "fermenter")
 public class Fermenter {
-    private long fermenterId;
-    private int fermentorVolume;
-    private FermentationStatus status;
-    private String fermentorLine;
 
-    // Getters, Setters, and Constructors
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "fermenter_id")
+    private Long fermenterId;
 
-    public Fermenter(int fermentorVolume, String fermentorLine) {
-        this.fermentorVolume = fermentorVolume;
-        this.fermentorLine = fermentorLine;
-        this.status = FermentationStatus.WAITING;
+    @Column(name = "fermenter_volume", nullable = false)
+    private int fermenterVolume;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private FermentationStatus status = FermentationStatus.대기;
+
+    @Column(name = "fermenter_line")
+    private String fermenterLine;
+
+
+
+    public enum FermentationStatus {
+        대기, 발효중, 완료, 오류
     }
-
-
-    public void startFermentation() {
-        this.status = FermentationStatus.ACTIVE;
-    }
-
-    public void completeFermentation() {
-        this.status = FermentationStatus.COMPLETED;
-    }
-
-    // Other domain-specific methods
 }
-

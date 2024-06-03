@@ -1,0 +1,104 @@
+/* styles.css */
+
+/* 모달 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; /* 화면에 고정 */
+    z-index: 1; /* 모든 것 위에 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 전체 너비 */
+    height: 100%; /* 전체 높이 */
+    overflow: auto; /* 스크롤바 추가 */
+    background-color: rgb(0,0,0); /* 폴백 컬러 */
+    background-color: rgba(0,0,0,0.4); /* 반투명 효과 */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 페이지 중앙에 배치 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* 너비 */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 테이블 스타일 */
+#materialTable {
+    width: 80%; /* 테이블 너비 조정 */
+    margin: 20px auto; /* 중앙 정렬 */
+    border-collapse: collapse;
+}
+
+#materialTable th, #materialTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#materialTable th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+#rawmaterialTable {
+    width: 80%; /* 테이블 너비 조정 */
+    margin: 20px auto; /* 중앙 정렬 */
+    border-collapse: collapse;
+}
+
+#rawmaterialTable th, #rawmaterialTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#rawmaterialTable th {
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+/* 원료 추가 버튼 스타일 */
+#addMaterialBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* 녹색 배경 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 80px; /* 버튼의 너비를 고정값으로 설정 */
+    height: 60px; /* 버튼의 높이를 고정값으로 설정 */
+}
+
+#addMaterialBtn:hover {
+    background-color: #45a049;
+}
+#start-button {
+    position: absolute;
+    top: 100px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* 녹색 배경 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 80px; /* 버튼의 너비를 고정값으로 설정 */
+    height: 40px; /* 버튼의 높이를 고정값으로 설정 */
+}
+
+#start-button {
+    background-color: #45a049;
+}

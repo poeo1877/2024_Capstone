@@ -1,22 +1,26 @@
 package smartbrew.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
 @Entity
+@Table(name = "lot")
 public class Lot {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer lotId;
+    @Column(name = "lot_id")
+    private Long lotId;
+
+    @Column(name = "product_name", nullable = false)
     private String productName;
-    private Integer batchId;
-    private Integer lotVolume;
 
-    // 기본 생성자
-    public Lot() {
+    @ManyToOne
+    @JoinColumn(name = "batch_id")
+    private Batch batch;
 
-    }
-
+    @Column(name = "lot_volume", nullable = false)
+    private int lotVolume;
 }
