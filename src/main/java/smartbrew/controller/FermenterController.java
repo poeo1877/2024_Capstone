@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/fermenters")
+@RequestMapping("/fermenter")
 public class FermenterController {
     @Autowired
     private Logger logger;
