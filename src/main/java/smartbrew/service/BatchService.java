@@ -105,7 +105,7 @@ public class BatchService {
                 .collect(Collectors.toList());
     }
 
-    private BatchDTO convertToDto(Batch batch) {
+    public BatchDTO convertToDto(Batch batch) {
         return new BatchDTO(
                 batch.getBatchId(),
                 batch.getStartTime(),
@@ -116,7 +116,7 @@ public class BatchService {
         );
     }
 
-    private Batch convertToEntity(BatchDTO dto) {
+    public Batch convertToEntity(BatchDTO dto) {
         Batch batch = new Batch();
         batch.setBatchId(dto.getBatchId());
         batch.setStartTime(dto.getStartTime());
@@ -127,15 +127,16 @@ public class BatchService {
         return batch;
     }
 
-    private Fermenter convertToFermenter(Long fermenterId) {
+    public Fermenter convertToFermenter(Long fermenterId) {
         Fermenter fermenter = new Fermenter();
         fermenter.setFermenterId(fermenterId);
         return fermenter;
     }
 
-    private Recipe convertToRecipe(Long recipeId) {
+    public Recipe convertToRecipe(Long recipeId) {
         Recipe recipe = new Recipe();
         recipe.setRecipeId(recipeId);
         return recipe;
     }
+
 }

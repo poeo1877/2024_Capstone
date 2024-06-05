@@ -1,7 +1,9 @@
 package smartbrew.service;
 
+import smartbrew.domain.Batch;
 import smartbrew.domain.FermentationStatus;
 import smartbrew.domain.Fermenter;
+import smartbrew.dto.BatchDTO;
 import smartbrew.dto.FermenterDTO;
 import smartbrew.repository.FermenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ public class FermenterService {
 
     @Autowired
     private FermenterRepository fermenterRepository;
+    @Autowired
+    private BatchService batchService;
 
     public List<FermenterDTO> getAllFermenters() {
         return fermenterRepository.findAll().stream()
@@ -72,11 +76,10 @@ public class FermenterService {
                 .collect(Collectors.toList());
     }
 
-    public List<FermenterDTO> getFermentersByStatus(String status) {
-        FermentationStatus fermentationStatus = FermentationStatus.valueOf(status.toUpperCase());
-        List<Fermenter> fermenters = fermenterRepository.findByStatus(fermentationStatus);
-        return fermenters.stream()
-                .map(this::convertToDto)
+    public List<BatchDTO> getBatchesByFermenterStatus(FermentationStatus status) {
+        List<Batch> batches = fermenterRepository.findBatchesByFermenterStatus(status.name());
+        return batches.stream()
+                .map(batchService::convertToDto)
                 .collect(Collectors.toList());
     }
 

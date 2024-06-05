@@ -2,6 +2,7 @@ package smartbrew.controller;
 
 import smartbrew.domain.FermentationStatus;
 import smartbrew.domain.Fermenter;
+import smartbrew.dto.BatchDTO;
 import smartbrew.dto.FermenterDTO;
 import smartbrew.service.FermenterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class FermenterController {
         }
     }
 
-    @GetMapping("/status")
+    /*@GetMapping("/status")
     public ResponseEntity<?> getFermenterStatuses(@RequestParam(value = "status", required = false) String status) {
         try {
             if (status == null) {
@@ -107,6 +108,30 @@ public class FermenterController {
             }
         } catch (Exception e) {
             logger.error("Error occurred while fetching fermenter statuses or fermenters by status", e);
+            return ResponseEntity.status(500).body(null);
+        }
+    }*/
+
+    @GetMapping("/status")
+    public ResponseEntity<?> getFermenterStatuses(@RequestParam(value = "status", required = false) String status) {
+        try {
+            if (status == null) {
+                List<String> statuses = Arrays.stream(FermentationStatus.values())
+                        .map(Enum::name)
+                        .collect(Collectors.toList());
+                return ResponseEntity.ok(statuses);
+            } else {
+                try {
+                    FermentationStatus fermentationStatus = FermentationStatus.valueOf(status.toUpperCase());
+                    List<BatchDTO> batches = fermenterService.getBatchesByFermenterStatus(fermentationStatus);
+                    return ResponseEntity.ok(batches);
+                } catch (IllegalArgumentException e) {
+                    logger.error("Invalid status value provided: {}", status, e);
+                    return ResponseEntity.badRequest().body("Invalid status value. Valid values are: WAITING, FERMENTING, COMPLETED, ERROR");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error occurred while fetching fermenter statuses or batches by status", e);
             return ResponseEntity.status(500).body(null);
         }
     }
