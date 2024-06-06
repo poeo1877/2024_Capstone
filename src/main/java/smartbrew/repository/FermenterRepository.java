@@ -12,18 +12,15 @@ import java.util.List;
 
 @Repository
 public interface FermenterRepository extends JpaRepository<Fermenter, Long> {
-    List<Fermenter> findByStatus(FermentationStatus status);
     @Query("SELECT DISTINCT f.fermenterLine FROM Fermenter f")
     List<String> findDistinctFermenterLines();
     List<Fermenter> findByFermenterLine(String fermenterLine);
-
 
     @Query("SELECT b FROM Batch b JOIN b.fermenter f WHERE CAST(f.status AS string) = :status")
     List<Batch> findBatchesByFermenterStatus(@Param("status") String status);
 
 //    @Query("SELECT b.batchId FROM Batch b JOIN b.fermenter f WHERE f.status = 'FERMENTING'")
 //    Long findBatchIdByFermenterStatusFermenting();
-
     @Query("SELECT b.batchId FROM Batch b WHERE b.fermenter.status = 'FERMENTING'")
     Long findBatchIdByFermenterStatusFermenting();
 }

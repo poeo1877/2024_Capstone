@@ -19,4 +19,5 @@ public class SensorMeasurementDTO {
     private BigDecimal ph;
     private Timestamp measuredTime;
     private Long batchId;
+    private BigDecimal brix;
 }

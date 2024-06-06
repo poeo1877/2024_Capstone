@@ -1,7 +1,6 @@
 package smartbrew.controller;
 
 import smartbrew.domain.FermentationStatus;
-import smartbrew.domain.Fermenter;
 import smartbrew.dto.BatchDTO;
 import smartbrew.dto.FermenterDTO;
 import smartbrew.service.FermenterService;

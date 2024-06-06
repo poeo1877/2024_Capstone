@@ -57,25 +57,6 @@ public class FermenterService {
         fermenterRepository.deleteById(id);
     }
 
-    /*public List<FermenterDTO> getFermentersByStatus(FermentationStatus status) {
-        List<Fermenter> fermenters = fermenterRepository.findByStatus(status);
-        return fermenters.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }*/
-
-    /*
-        Enum Type을 최대한 활용해 DBMS로 요청하는 쿼리를 작성하려 했으나 연산자 오류로 해결 불가
-        단순히 Fermenter 테이블 값을 전부 불러와서 /fermenters/status의 RequestParam 값을 이용해
-        서버에서 값을 필터링하는 방식으로 변경하였다.
-        이는 차후에 Fermenter 테이블 값이 많아지면 성능 저하를 야기하니 개선 필요
-     */
-    public List<FermenterDTO> getFermentersByStatusFiltered(FermentationStatus status) {
-        return getAllFermenters().stream()
-                .filter(fermenter -> fermenter.getStatus() == status)
-                .collect(Collectors.toList());
-    }
-
     public List<BatchDTO> getBatchesByFermenterStatus(FermentationStatus status) {
         List<Batch> batches = fermenterRepository.findBatchesByFermenterStatus(status.name());
         return batches.stream()

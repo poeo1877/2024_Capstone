@@ -6,7 +6,6 @@ import smartbrew.component.CurrentBatchComponent;
 import smartbrew.domain.Batch;
 import smartbrew.domain.SensorMeasurement;
 import smartbrew.dto.SensorMeasurementDTO;
-import smartbrew.repository.BatchRepository;
 import smartbrew.repository.SensorMeasurementRepository;
 
 import java.math.BigDecimal;
@@ -87,10 +86,10 @@ public class SensorMeasurementService {
                 measurement.getCo2Concentration(),
                 measurement.getPh(),
                 measurement.getMeasuredTime(),
-                measurement.getBatch().getBatchId()
+                measurement.getBatch().getBatchId(),
+                measurement.getBrix()
         );
     }
-
     private SensorMeasurement convertToEntity(SensorMeasurementDTO dto) {
         SensorMeasurement sensorMeasurement = new SensorMeasurement();
         sensorMeasurement.setOutTemperature(dto.getOutTemperature());
@@ -100,6 +99,7 @@ public class SensorMeasurementService {
         sensorMeasurement.setCo2Concentration(dto.getCo2Concentration());
         sensorMeasurement.setPh(dto.getPh());
         sensorMeasurement.setMeasuredTime(dto.getMeasuredTime());
+        sensorMeasurement.setBrix(dto.getBrix());
         return sensorMeasurement;
     }
     private SensorMeasurement convertToEntity(SensorMeasurementDTO dto, Long batchId) {
@@ -110,6 +110,7 @@ public class SensorMeasurementService {
         sensorMeasurement.setPressureLower(dto.getPressureLower());
         sensorMeasurement.setCo2Concentration(dto.getCo2Concentration());
         sensorMeasurement.setPh(dto.getPh());
+        sensorMeasurement.setBrix(calculateBrix(dto.getPressureUpper(), dto.getPressureLower()));
         sensorMeasurement.setMeasuredTime(dto.getMeasuredTime());
         sensorMeasurement.setBatch(new Batch(batchId));
         return sensorMeasurement;

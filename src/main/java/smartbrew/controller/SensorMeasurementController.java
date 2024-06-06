@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartbrew.component.CurrentBatchComponent;
 import smartbrew.dto.SensorMeasurementDTO;
-import smartbrew.dto.TemperatureSensorDTO;
 import smartbrew.service.SensorMeasurementService;
 
 import java.math.BigDecimal;
@@ -28,32 +27,20 @@ public class SensorMeasurementController {
 
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
-    /*@PostMapping("/measurement")
-    public ResponseEntity<Void> createMeasurement(@RequestBody SensorMeasurementDTO dto) {
-        *//*
-            {
-                "outTemperature": 24.7222,
-                "inTemperature": 25.311,
-                "pressureUpper": 100.52222,
-                "pressureLower": 99.8,
-                "co2Concentration": 480,
-                "ph": 5.8,
-                "measuredTime": "2024-06-10T15:30:00",
-                "batchId": 3
-            }
-         *//*
-        try {
-            sensorMeasurementService.saveMeasurement(dto);
-            return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(400).body(null); // Bad request if no fermenting batch found
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
-        }
-    }*/
 
     @PostMapping("/measurement")
     public ResponseEntity<String> saveMeasurement(@RequestBody SensorMeasurementDTO dto) {
+        /* Body example
+           {
+                "outTemperature": 4.7222,
+                "inTemperature": 20.311,
+                "pressureUpper": 2569.7,
+                "pressureLower": 1.000,
+                "co2Concentration": 1000,
+                "ph": 5.8,
+                "measuredTime": "2024-06-07T15:30:00"
+            }
+        */
         try {
             sensorMeasurementService.saveMeasurement(dto);
             return ResponseEntity.ok("Measurement saved successfully.");
@@ -75,6 +62,7 @@ public class SensorMeasurementController {
     }
 
     @GetMapping("/date-range")
+    // http://localhost:8080/sensor/date-range?start=2024-05-23&end=2024-06-11
     public ResponseEntity<List<SensorMeasurementDTO>> getMeasurementsByDateRange(
             @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String startStr,
             @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) String endStr,
@@ -100,6 +88,7 @@ public class SensorMeasurementController {
 
 
     @GetMapping("/value-range")
+    //   http://localhost:8080/sensor/value-range?min=1.0&max=2.0&field=pressureUpper&batchId=1
     public ResponseEntity<List<SensorMeasurementDTO>> getMeasurementsByValueRange(
             @RequestParam(value = "min", required = true) BigDecimal min,
             @RequestParam(value = "max", required = true) BigDecimal max,
