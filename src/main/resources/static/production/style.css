@@ -1,0 +1,63 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 1cm;
+    background-color: #f4f4f9; /* 배경색 추가 */
+    color: #333; /* 글자색 변경 */
+}
+
+.container {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 배치 */
+    gap: 1cm; /* 요소 간의 간격 */
+}
+
+.table-container {
+    flex-grow: 1; /* 표 영역이 가능한 많은 공간을 차지하도록 함 */
+    overflow-x: auto; /* 필요한 경우 가로 스크롤바 추가 */
+}
+
+#data-table {
+    width: 100%; /* 표의 너비를 100%로 설정 */
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 표에 그림자 추가 */
+}
+
+#data-table th, #data-table td {
+    border: 1px solid #ddd; /* 테두리 색상 변경 */
+    padding: 12px; /* 패딩 조정 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+#data-table th {
+    background-color: #f8f8f8; /* 헤더 배경색 변경 */
+    font-weight: bold; /* 헤더 폰트 굵게 */
+}
+
+#data-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* 짝수 행 배경색 변경 */
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
+    padding: 1cm;
+}
+
+#addRowButton {
+    padding: 12px 24px; /* 패딩 조정 */
+    cursor: pointer;
+    width: 140px; /* 버튼 너비 조정 */
+    height: 50px; /* 버튼 높이 조정 */
+    background-color: #4CAF50; /* 버튼 배경색 변경 */
+    color: white; /* 버튼 글자색 변경 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 둥근 모서리 추가 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    font-size: 16px; /* 폰트 크기 조정 */
+    transition: background-color 0.3s ease; /* 배경색 전환 효과 */
+}
+
+#addRowButton:hover {
+    background-color: #45a049; /* 호버 시 배경색 변경 */
+}
