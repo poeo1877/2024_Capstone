@@ -1,8 +1,6 @@
 
 package smartbrew.service;
 import org.springframework.test.annotation.Commit;
-import smartbrew.domain.Member;
-import smartbrew.repository.MemberRepository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

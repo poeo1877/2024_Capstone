@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-gray-100 p-4">
+<div class="header expanded">
+  <div class="nav-buttons">
+    <button type="button" onClick="location.href='/DashBoard'">DashBoard</button>
+    <button type="button" class="nav-button" onClick="location.href='/hello'">상세 데이터</button>
+  </div>
+</div>
+<button class="menu-button">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+</button>
+<div class="sidebar" id="sidebar">
+  <div class="batch-list">
+    <div class="batch-item">
+      <span>Batch 1</span>
+      <button class="options-button">...</button>
+      <div class="batch-options hidden">
+        <button class="rename-button">이름 변경</button>
+        <button class="remove-button">삭제</button>
+      </div>
+    </div>
+    <button style="font-size: 1rem; color: #007bff; cursor: pointer;" onclick="addBatch()">+ Add Batch</button>
+  </div>
+</div>
+<div id="batch1Container" class="container active">
+  <div class="max-w-7xl bg-white shadow-md rounded-lg p-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="card lg:col-span-2">
+        <div class="flex justify-between items-center mb-4 py-4">
+          <h2>현재 상태</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 py-2">
+          <div class="card">
+            <div class="value text-orange-500">0.0°C</div>
+            <div class="change text-red-500">0.0% ↑</div>
+            <p>온도</p>
+          </div>
+          <div class="card">
+            <div class="value text-orange-500">0.0</div>
+            <div class="change text-blue-500">0.0% ↓</div>
+            <p>당도</p>
+          </div>
+          <div class="card">
+            <div class="value">0.0</div>
+            <div class="change text-red-500">0.0% ↑</div>
+            <p>pH</p>
+          </div>
+          <div class="card">
+            <div class="value">0.0</div>
+            <div class="change text-red-500">0.0% ↑</div>
+            <p>이산화탄소 농도</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <canvas id="radarChart1"></canvas>
+        <div class="slider-label">
+          <span>Aromatics</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="3.0" id="aromaticsSlider1">
+          <input type="number" min="0" max="5" step="0.1" value="3.0" id="aromaticsInput1">
+        </div>
+        <div class="slider-label">
+          <span>Acidity</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="4.0" id="aciditySlider1">
+          <input type="number" min="0" max="5" step="0.1" value="4.0" id="acidityInput1">
+        </div>
+        <div class="slider-label">
+          <span>Sweetness</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="2.0" id="sweetnessSlider1">
+          <input type="number" min="0" max="5" step="0.1" value="2.0" id="sweetnessInput1">
+        </div>
+        <div class="slider-label">
+          <span>Aftertaste</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="5.0" id="aftertasteSlider1">
+          <input type="number" min="0" max="5" step="0.1" value="5.0" id="aftertasteInput1">
+        </div>
+        <div class="slider-label">
+          <span>Body</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="3.0" id="bodySlider1">
+          <input type="number" min="0" max="5" step="0.1" value="3.0" id="bodyInput1">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/scripts.js"></script>
+</body>
+</html>
