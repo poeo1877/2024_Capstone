@@ -1,5 +1,6 @@
 package smartbrew.domain;
 
+import jakarta.annotation.sql.DataSourceDefinitions;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,6 @@ public class Batch {
 
     @OneToMany(mappedBy = "batch")
     private List<SensorMeasurement> sensorMeasurements;
-
 
     public Batch(Long batchId) {
         this.batchId = batchId;

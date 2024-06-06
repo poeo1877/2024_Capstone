@@ -14,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface SensorMeasurementRepository extends JpaRepository<SensorMeasurement, Long> {
+    List<SensorMeasurement> findByMeasuredTimeBetween(Timestamp startTime, Timestamp endTime);
     List<SensorMeasurement> findByBatch_BatchIdOrderByMeasuredTimeAsc(Long batchId);
     @Query("SELECT s FROM SensorMeasurement s WHERE " +
             "(CAST(:start AS timestamp) IS NULL OR s.measuredTime >= :start) AND " +

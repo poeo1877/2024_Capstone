@@ -1,3 +1,4 @@
+// RawMaterialReceipt.java
 package smartbrew.domain;
 
 import jakarta.persistence.*;
@@ -23,12 +24,23 @@ public class RawMaterialReceipt {
     private int unitPrice;
 
     @ManyToOne
-    @JoinColumn(name = "raw_material_id")
+    @JoinColumn(name = "raw_material_id", referencedColumnName = "raw_material_id")
     private RawMaterial rawMaterial;
 
     @Column(name = "created_at", nullable = false)
-    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    private Timestamp createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    public RawMaterialReceipt(BigDecimal quantity, int unitPrice, RawMaterial rawMaterial) {
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.rawMaterial = rawMaterial;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    public RawMaterialReceipt() {
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+    }
 }

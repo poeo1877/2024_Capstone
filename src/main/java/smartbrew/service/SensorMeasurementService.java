@@ -41,6 +41,12 @@ public class SensorMeasurementService {
         return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    public List<SensorMeasurement> findSensorMeasurementsWithinDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
+        return sensorMeasurementRepository.findByMeasuredTimeBetween(startTimestamp, endTimestamp);
+    }
+
+
+
     public List<SensorMeasurementDTO> getMeasurementsByBatchId(Long batchId) {
         List<SensorMeasurement> measurements = sensorMeasurementRepository.findByBatch_BatchIdOrderByMeasuredTimeAsc(batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
         return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());

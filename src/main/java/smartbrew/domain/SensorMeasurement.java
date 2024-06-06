@@ -43,4 +43,5 @@ public class SensorMeasurement {
     @ManyToOne
     @JoinColumn(name = "batch_id")
     private Batch batch;
+
 }
