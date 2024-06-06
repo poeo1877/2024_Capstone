@@ -2,10 +2,12 @@ package smartbrew.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.List;
 
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "batch")
@@ -35,4 +37,9 @@ public class Batch {
 
     @OneToMany(mappedBy = "batch")
     private List<SensorMeasurement> sensorMeasurements;
+
+
+    public Batch(Long batchId) {
+        this.batchId = batchId;
+    }
 }

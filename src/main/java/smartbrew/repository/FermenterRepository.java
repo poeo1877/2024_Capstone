@@ -20,4 +20,10 @@ public interface FermenterRepository extends JpaRepository<Fermenter, Long> {
 
     @Query("SELECT b FROM Batch b JOIN b.fermenter f WHERE CAST(f.status AS string) = :status")
     List<Batch> findBatchesByFermenterStatus(@Param("status") String status);
+
+//    @Query("SELECT b.batchId FROM Batch b JOIN b.fermenter f WHERE f.status = 'FERMENTING'")
+//    Long findBatchIdByFermenterStatusFermenting();
+
+    @Query("SELECT b.batchId FROM Batch b WHERE b.fermenter.status = 'FERMENTING'")
+    Long findBatchIdByFermenterStatusFermenting();
 }

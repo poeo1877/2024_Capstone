@@ -18,6 +18,6 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
     @Query("SELECT b FROM Batch b WHERE (b.startTime >= :start) AND (b.endTime <= :end) ORDER BY b.startTime ASC")
     List<Batch> findByDateRange(@Param("start") Timestamp start, @Param("end") Timestamp end);
 
-
-
+    @Query("SELECT b FROM Batch b JOIN b.fermenter f WHERE f.status = 'FERMENTING'")
+    Batch findBatchByFermenterStatusFermenting();
 }

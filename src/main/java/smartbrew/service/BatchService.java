@@ -1,5 +1,6 @@
 package smartbrew.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Sort;
 import smartbrew.domain.Batch;
 import smartbrew.domain.Fermenter;
@@ -18,6 +19,10 @@ public class BatchService {
     @Autowired
     private BatchRepository batchRepository;
 
+    private Batch currentBatch;
+    public Batch getCurrentBatch() {
+        return currentBatch;
+    }
     public List<BatchDTO> getAllBatches() {
         return batchRepository.findAll().stream()
                 .map(this::convertToDto)
