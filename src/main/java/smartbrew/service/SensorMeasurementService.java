@@ -12,6 +12,8 @@ import smartbrew.repository.SensorMeasurementRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SensorMeasurementService {
@@ -25,15 +27,6 @@ public class SensorMeasurementService {
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
     public void saveMeasurement(SensorMeasurementDTO dto) {
-        /*SensorMeasurement measurement = convertToEntity(dto);
-
-        if (measurement.getPressureUpper() != null && measurement.getPressureLower() != null) {
-            BigDecimal brix = calculateBrix(measurement.getPressureUpper(), measurement.getPressureLower());
-            measurement.setBrix(brix);
-        }
-
-        sensorMeasurementRepository.save(measurement);*/
-
         Long currentBatchId = currentBatchComponent.getCurrentBatchId();
         if (currentBatchId == null) {
             throw new IllegalStateException("No batch is currently fermenting. Data cannot be stored.");
@@ -43,6 +36,61 @@ public class SensorMeasurementService {
         measurement.setBrix(calculateBrix(dto.getPressureUpper(), dto.getPressureLower()));
         sensorMeasurementRepository.save(measurement);
     }
+
+    public List<SensorMeasurementDTO> getMeasurementsByDateRange(Timestamp start, Timestamp end, Long batchId) {
+        List<SensorMeasurement> measurements = sensorMeasurementRepository.findByMeasuredTimeBetweenAndBatchIdOrderByMeasuredTimeAsc(start, end, batchId);
+        return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public List<SensorMeasurementDTO> getMeasurementsByBatchId(Long batchId) {
+        List<SensorMeasurement> measurements = sensorMeasurementRepository.findByBatch_BatchIdOrderByMeasuredTimeAsc(batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
+        return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public List<SensorMeasurementDTO> getMeasurementsByValueRange(BigDecimal min, BigDecimal max, String field, Long batchId) {
+        List<SensorMeasurement> measurements;
+        switch (field) {
+            case "outTemperature":
+                measurements = sensorMeasurementRepository.findByOutTemperatureBetweenAndBatchId(min, max, batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
+                break;
+            case "inTemperature":
+                measurements = sensorMeasurementRepository.findByInTemperatureBetweenAndBatchId(min, max, batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
+                break;
+            case "pressureUpper":
+                measurements = sensorMeasurementRepository.findByPressureUpperBetweenAndBatchId(min, max, batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
+                break;
+            case "pressureLower":
+                measurements = sensorMeasurementRepository.findByPressureLowerBetweenAndBatchId(min, max, batchId != null ? batchId : currentBatchComponent.getCurrentBatchId());
+                break;
+            case "co2":
+                measurements = sensorMeasurementRepository.findByCo2ConcentrationBetweenAndBatchId(min.intValue(), max.intValue(), batchId);
+                break;
+            case "ph":
+                measurements = sensorMeasurementRepository.findByPhBetweenAndBatchId(min, max, batchId);
+                break;
+            case "brix":
+                measurements = sensorMeasurementRepository.findByBrixBetweenAndBatchId(min, max, batchId);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid parameter for value range search: " + field);
+
+        }
+        return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private SensorMeasurementDTO convertToDTO(SensorMeasurement measurement) {
+        return new SensorMeasurementDTO(
+                measurement.getOutTemperature(),
+                measurement.getInTemperature(),
+                measurement.getPressureUpper(),
+                measurement.getPressureLower(),
+                measurement.getCo2Concentration(),
+                measurement.getPh(),
+                measurement.getMeasuredTime(),
+                measurement.getBatch().getBatchId()
+        );
+    }
+
     private SensorMeasurement convertToEntity(SensorMeasurementDTO dto) {
         SensorMeasurement sensorMeasurement = new SensorMeasurement();
         sensorMeasurement.setOutTemperature(dto.getOutTemperature());

@@ -19,10 +19,7 @@ public class BatchService {
     @Autowired
     private BatchRepository batchRepository;
 
-    private Batch currentBatch;
-    public Batch getCurrentBatch() {
-        return currentBatch;
-    }
+
     public List<BatchDTO> getAllBatches() {
         return batchRepository.findAll().stream()
                 .map(this::convertToDto)
