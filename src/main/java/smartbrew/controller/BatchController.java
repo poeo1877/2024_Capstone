@@ -1,7 +1,5 @@
 package smartbrew.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import smartbrew.domain.Batch;
 import smartbrew.domain.SensorMeasurement;
 import smartbrew.dto.productDTO;
-import smartbrew.service.BatchService;
-import smartbrew.service.SensorMeasurementServiceA;
 import smartbrew.domain.ExcelGenerator;
 
 import java.io.ByteArrayInputStream;
@@ -28,14 +24,40 @@ import java.util.stream.Collectors;
 @RequestMapping("/batch")
 public class BatchController {
 
-    private final BatchService batchService;
-    private final SensorMeasurementServiceA sensorMeasurementServiceA;
-    private static final Logger logger = LoggerFactory.getLogger(BatchController.class);
 
-    public BatchController(BatchService batchService, SensorMeasurementServiceA sensorMeasurementServiceA) {
-        this.batchService = batchService;
-        this.sensorMeasurementServiceA = sensorMeasurementServiceA;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @GetMapping("/completed")
     public ResponseEntity<List<productDTO>> getCompletedBatch(
