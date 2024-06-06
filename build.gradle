@@ -37,6 +37,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
+	implementation 'com.pi4j:pi4j-core:1.2'
 
 
 }
