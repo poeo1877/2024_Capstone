@@ -14,7 +14,7 @@ import smartbrew.domain.Batch;
 import smartbrew.domain.SensorMeasurement;
 import smartbrew.dto.productDTO;
 import smartbrew.service.BatchService;
-import smartbrew.service.SensorMeasurementService;
+import smartbrew.service.SensorMeasurementServiceA;
 import smartbrew.domain.ExcelGenerator;
 
 import java.io.ByteArrayInputStream;
@@ -29,12 +29,12 @@ import java.util.stream.Collectors;
 public class BatchController {
 
     private final BatchService batchService;
-    private final SensorMeasurementService sensorMeasurementService;
+    private final SensorMeasurementServiceA sensorMeasurementServiceA;
     private static final Logger logger = LoggerFactory.getLogger(BatchController.class);
 
-    public BatchController(BatchService batchService, SensorMeasurementService sensorMeasurementService) {
+    public BatchController(BatchService batchService, SensorMeasurementServiceA sensorMeasurementServiceA) {
         this.batchService = batchService;
-        this.sensorMeasurementService = sensorMeasurementService;
+        this.sensorMeasurementServiceA = sensorMeasurementServiceA;
     }
 
     @GetMapping("/completed")
@@ -45,7 +45,7 @@ public class BatchController {
             Timestamp startTimestamp = Timestamp.valueOf(startDate);
             Timestamp endTimestamp = Timestamp.valueOf(endDate);
 
-            List<SensorMeasurement> sensorMeasurements = sensorMeasurementService.findSensorMeasurementsWithinDateRange(startTimestamp, endTimestamp);
+            List<SensorMeasurement> sensorMeasurements = sensorMeasurementServiceA.findSensorMeasurementsWithinDateRange(startTimestamp, endTimestamp);
             if (sensorMeasurements.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -87,7 +87,7 @@ public class BatchController {
             Timestamp startTimestamp = Timestamp.valueOf(startDate);
             Timestamp endTimestamp = Timestamp.valueOf(endDate);
 
-            List<SensorMeasurement> sensorMeasurements = sensorMeasurementService.findSensorMeasurementsWithinDateRange(startTimestamp, endTimestamp);
+            List<SensorMeasurement> sensorMeasurements = sensorMeasurementServiceA.findSensorMeasurementsWithinDateRange(startTimestamp, endTimestamp);
             if (sensorMeasurements.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

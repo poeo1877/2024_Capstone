@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface BatchRepository extends JpaRepository<Batch, Integer> {
+public interface BatchRepositoryA extends JpaRepository<Batch, Integer> {
     List<Batch> findByEndTimeNotNull();
 
     @Query("SELECT AVG(sm.inTemperature) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")

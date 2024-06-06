@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import smartbrew.domain.Batch;
 import smartbrew.domain.SensorMeasurement;
-import smartbrew.dto.PressureSensorDTO;
-import smartbrew.repository.BatchRepository;
-import smartbrew.repository.SensorMeasurementRepository;
+import smartbrew.repository.BatchRepositoryA;
+import smartbrew.repository.SensorMeasurementRepositoryA;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -18,13 +17,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sensors/pressure")
-public class PressureSensorController extends BaseSensorController<PressureSensorDTO> {
+public class PressureSensorControllerA extends BaseSensorController<PressureSensorDTO> {
 
     @Autowired
-    private SensorMeasurementRepository repository;
+    private SensorMeasurementRepositoryA repository;
 
     @Autowired
-    private BatchRepository batchRepository;
+    private BatchRepositoryA batchRepositoryA;
 
     @Override
     public ResponseEntity<List<PressureSensorDTO>> getByBatchId(@PathVariable Long batchId) {
@@ -87,7 +86,7 @@ public class PressureSensorController extends BaseSensorController<PressureSenso
         sensorMeasurement.setPressureLower(data.getPressureLower());
         sensorMeasurement.setMeasuredTime(data.getMeasuredTime());
 
-        Optional<Batch> batch = batchRepository.findById(Math.toIntExact(data.getBatchId()));
+        Optional<Batch> batch = batchRepositoryA.findById(Math.toIntExact(data.getBatchId()));
         batch.ifPresent(sensorMeasurement::setBatch);
 
         SensorMeasurement savedMeasurement = repository.save(sensorMeasurement);

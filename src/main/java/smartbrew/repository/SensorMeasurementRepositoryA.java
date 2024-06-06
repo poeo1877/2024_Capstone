@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public interface SensorMeasurementRepository extends JpaRepository<SensorMeasurement, Long> {
+public interface SensorMeasurementRepositoryA extends JpaRepository<SensorMeasurement, Long> {
 //    List<SensorMeasurement> findByBatchId(Long batchId);
     List<SensorMeasurement> findByBatch_BatchId(Long batchId);
     List<SensorMeasurement> findByMeasuredTimeBetween(Timestamp startTime, Timestamp endTime);
