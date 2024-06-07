@@ -1,0 +1,52 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #f7fafc;
+    padding: 10px 50px;
+    border-bottom: 1px solid #e5e7eb;
+    height: 56px;
+    width: 100%;
+}
+
+.nav-buttons {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header button, .nav-button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: #333;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background 0.3s, color 0.3s;
+    height: 36px;
+    line-height: 1.5;
+}
+
+.header button:hover, .nav-button:hover {
+    background: #e2e8f0;
+    color: #007bff;
+}
+
+.container {
+    padding: 1rem;
+    margin-top: 3px; /* 명시적으로 margin-top을 설정 */
+    transition: margin-left 0.3s ease-in-out;
+}
+
+h1 {
+    font-size: 2rem; /* 제목 크기 */
+}
+
+p {
+    font-size: 1.25rem; /* 일반 텍스트 크기 */
+}

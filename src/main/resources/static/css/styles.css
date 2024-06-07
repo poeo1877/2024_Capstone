@@ -8,7 +8,7 @@ body {
     display: flex;
     align-items: center;
     background-color: #f7fafc;
-    padding: 10px 20px; /* 패딩 조정 */
+    padding: 10px 50px; /* 패딩 조정 */
     border-bottom: 1px solid #e5e7eb;
     height: 56px; /* 높이 고정 */
     margin-left: 250px;
@@ -139,6 +139,7 @@ body {
     flex-grow: 1; /* 남은 여백을 채우기 위해 추가 */
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
     margin-left: 250px; /* Sidebar width */
+    margin-top : 3px;
     width: calc(100% - 250px); /* Sidebar width를 제외한 나머지 부분 */
 }
 
