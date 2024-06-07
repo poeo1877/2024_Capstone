@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -88,5 +89,10 @@ public interface SensorMeasurementRepository extends JpaRepository<SensorMeasure
             @Param("minBrix") BigDecimal minBrix,
             @Param("maxBrix") BigDecimal maxBrix,
             @Param("batchId") Long batchId);
+
+
+//    @Query("SELECT sm FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId ORDER BY sm.measuredTime DESC")
+//    List<SensorMeasurement> findTop2ByBatchIdOrderByMeasuredTimeDesc(@Param("batchId") Long batchId);
+    List<SensorMeasurement> findTop2ByBatch_BatchIdOrderByMeasuredTimeDesc(Long batchId);
 
 }

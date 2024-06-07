@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import smartbrew.domain.Product;
 import smartbrew.domain.Sale;
 import smartbrew.domain.SalesDetail;
+import smartbrew.dto.SalesReportDTO;
 import smartbrew.repository.SaleRepository;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ public class SaleService {
     private final SaleRepository saleRepository;
 
     @Transactional(readOnly = true)
-    public List<smartbrew.service.SalesReportDTO> getSalesReport() {
+    public List<SalesReportDTO> getSalesReport() {
         List<Sale> sales = saleRepository.findAll();
 
         return sales.stream().map(sale -> {
@@ -31,7 +32,7 @@ public class SaleService {
             BigDecimal commission = revenue.multiply(sale.getCommissionRate().divide(BigDecimal.valueOf(100)));
             BigDecimal settlementAmount = revenue.subtract(commission);
 
-            return new smartbrew.service.SalesReportDTO(
+            return new SalesReportDTO(
                     sale.getChannel(),
                     sale.getCreatedAt(),
                     quantity,

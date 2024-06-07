@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    document.querySelectorAll(".dynamic-font-size").forEach(function (element) {
+                if (element.textContent.length > 10) {
+                    element.classList.add("small");
+                }
+            });
+
     // Sidebar toggle function
     function toggleSidebar() {
         const sidebar = document.querySelector('.sidebar');

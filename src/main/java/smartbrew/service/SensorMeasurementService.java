@@ -1,5 +1,6 @@
 package smartbrew.service;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smartbrew.component.CurrentBatchComponent;
@@ -11,12 +12,17 @@ import smartbrew.repository.SensorMeasurementRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class SensorMeasurementService {
 
+    @Autowired
+    private Logger logger;
     @Autowired
     private SensorMeasurementRepository sensorMeasurementRepository;
 
@@ -44,6 +50,98 @@ public class SensorMeasurementService {
     public List<SensorMeasurement> findSensorMeasurementsWithinDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
         return sensorMeasurementRepository.findByMeasuredTimeBetween(startTimestamp, endTimestamp);
     }
+
+   /* public List<SensorMeasurement> getMostRecentTwoMeasurementsByBatchId() {
+        Long batchId = currentBatchComponent.getCurrentBatchId();
+        if (batchId == null) {
+            logger.error("Current batch ID is not set");
+            throw new IllegalStateException("Current batch ID is not set");
+        }
+        List<SensorMeasurement> measurements = sensorMeasurementRepository.findTop2ByBatch_BatchIdOrderByMeasuredTimeDesc(batchId);
+        if (measurements == null || measurements.isEmpty()) {
+            logger.error("No measurements found for the current batch ID");
+            throw new IllegalStateException("No measurements found for the current batch ID");
+        }
+        return measurements;
+    }*/
+
+   /* public Map<String, BigDecimal> getPercentagePointDifferences() {
+        try {
+            List<SensorMeasurement> measurements = getMostRecentTwoMeasurementsByBatchId();
+            Map<String, BigDecimal> differences = new HashMap<>();
+
+            if (measurements.size() == 2) {
+                SensorMeasurement recent = measurements.get(0);
+                SensorMeasurement previous = measurements.get(1);
+
+                differences.put("outTemperature", calculatePercentageDifference(previous.getOutTemperature(), recent.getOutTemperature()));
+                differences.put("inTemperature", calculatePercentageDifference(previous.getInTemperature(), recent.getInTemperature()));
+                differences.put("brix", calculatePercentageDifference(previous.getBrix(), recent.getBrix()));
+                differences.put("ph", calculatePercentageDifference(previous.getPh(), recent.getPh()));
+                differences.put("co2Concentration", calculatePercentageDifference(
+                        previous.getCo2Concentration() != null ? BigDecimal.valueOf(previous.getCo2Concentration()) : null,
+                        recent.getCo2Concentration() != null ? BigDecimal.valueOf(recent.getCo2Concentration()) : null));
+            }
+
+            return differences;
+        } catch (Exception e) {
+            logger.error("Error occurred while calculating percentage point differences", e);
+            throw e;
+        }
+    }*/
+
+    /*private BigDecimal calculatePercentageDifference(BigDecimal previousValue, BigDecimal recentValue) {
+        if (previousValue == null || previousValue.equals(BigDecimal.ZERO) || recentValue == null) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal difference = recentValue.subtract(previousValue);
+        return difference.divide(previousValue, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+    }*/
+
+
+    public Map<String, Object> getLatestSensorDataWithChanges() {
+        Long batchId = currentBatchComponent.getCurrentBatchId();
+        List<SensorMeasurement> latestMeasurements = sensorMeasurementRepository.findTop2ByBatch_BatchIdOrderByMeasuredTimeDesc(batchId);
+
+        if (latestMeasurements.size() < 2) {
+            throw new RuntimeException("Not enough data to calculate changes");
+        }
+
+        SensorMeasurement latest = latestMeasurements.get(0);
+        SensorMeasurement previous = latestMeasurements.get(1);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("latest", convertToDTO(latest));
+        result.put("changes", getPercentagePointDifferences(latest, previous));
+
+        return result;
+    }
+
+    private Map<String, BigDecimal> getPercentagePointDifferences(SensorMeasurement latest, SensorMeasurement previous) {
+        Map<String, BigDecimal> changes = new HashMap<>();
+        changes.put("inTemperature", calculatePercentageChange(latest.getInTemperature(), previous.getInTemperature()));
+        changes.put("brix", calculatePercentageChange(latest.getBrix(), previous.getBrix()));
+        changes.put("co2Concentration", calculatePercentageChange(latest.getCo2Concentration(), previous.getCo2Concentration()));
+        changes.put("ph", calculatePercentageChange(latest.getPh(), previous.getPh()));
+        return changes;
+    }
+
+    private BigDecimal calculatePercentageChange(BigDecimal latest, BigDecimal previous) {
+        if (latest == null || previous == null || previous.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
+        return latest.subtract(previous).divide(previous, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+    }
+
+    private BigDecimal calculatePercentageChange(Integer latest, Integer previous) {
+        if (latest == null || previous == null || previous == 0) {
+            return BigDecimal.ZERO;
+        }
+        return BigDecimal.valueOf(latest - previous).divide(BigDecimal.valueOf(previous), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+    }
+
+
+
 
 
 
@@ -82,6 +180,7 @@ public class SensorMeasurementService {
         }
         return measurements.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
+
 
     private SensorMeasurementDTO convertToDTO(SensorMeasurement measurement) {
         return new SensorMeasurementDTO(

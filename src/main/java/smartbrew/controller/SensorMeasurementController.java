@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import smartbrew.component.CurrentBatchComponent;
 import smartbrew.dto.SensorMeasurementDTO;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/sensor")
@@ -27,6 +29,7 @@ public class SensorMeasurementController {
 
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
+
 
     @PostMapping("/measurement")
     public ResponseEntity<String> saveMeasurement(@RequestBody SensorMeasurementDTO dto) {

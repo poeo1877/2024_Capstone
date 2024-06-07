@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import smartbrew.domain.ExcelGenerator;
 import smartbrew.service.SaleService;
-import smartbrew.service.SalesReportDTO;
+import smartbrew.dto.SalesReportDTO;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;

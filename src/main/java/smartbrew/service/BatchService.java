@@ -1,16 +1,18 @@
 package smartbrew.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Sort;
 import smartbrew.domain.Batch;
 import smartbrew.domain.Fermenter;
 import smartbrew.domain.Recipe;
 import smartbrew.dto.BatchDTO;
+import smartbrew.dto.BatchDetailsDTO;
 import smartbrew.repository.BatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 @Service
@@ -18,6 +20,9 @@ public class BatchService {
 
     @Autowired
     private BatchRepository batchRepository;
+
+    @Autowired
+    private Logger logger;
 
 
     public List<BatchDTO> getAllBatches() {
@@ -56,6 +61,16 @@ public class BatchService {
 
         Batch updatedBatch = batchRepository.save(batch);
         return convertToDto(updatedBatch);
+    }
+
+    public String getBatchName(Long batchId) {
+        Batch batch = batchRepository.findBatchWithRecipeAndFermenter(batchId);
+        if (batch == null) {
+            throw new IllegalArgumentException("Batch with ID " + batchId + " not found");
+        }
+        String formattedDate = batch.getStartTime().toLocalDateTime().toLocalDate().format(DateTimeFormatter.ISO_DATE);
+        String fermenterLine = batch.getFermenter().getFermenterLine();
+        return formattedDate + "-" + fermenterLine;
     }
 
     public void deleteBatch(Long id) {

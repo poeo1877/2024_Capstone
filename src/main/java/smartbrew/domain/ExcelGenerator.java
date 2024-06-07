@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import smartbrew.dto.RawMaterialDTO;
 import smartbrew.dto.productDTO;
-import smartbrew.service.SalesReportDTO;
+import smartbrew.dto.SalesReportDTO;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Page</title>
+</head>
+<body>
+<h1 th:text="${message}">Hello, World!</h1>
+<p th:text="'The current date is: ' + ${currentDate}"></p>
+<ul th:each="item : ${items}">
+    <li th:text="${item}"></li>
+</ul>
+</body>
+</html>
