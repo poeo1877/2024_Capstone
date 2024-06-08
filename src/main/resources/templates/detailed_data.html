@@ -9,17 +9,17 @@
     <link rel="stylesheet" href="/css/detailed_data.css">
 </head>
 <body class="bg-gray-100 p-4">
-<div class="header max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
+<div class="header max-w-full bg-white shadow-md rounded-lg p-6">
     <div class="nav-buttons">
         <button type="button" onClick="location.href='/dashboard'">DashBoard</button>
         <button type="button" class="nav-button" onClick="location.href='/detailed_data'">상세 데이터</button>
         <button type="button" class="nav-button" onClick="location.href='/report'">보고서</button>
     </div>
 </div>
-<div class="container max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6 mt-3">
+<div class="container max-w-full bg-white shadow-md rounded-lg p-6 mt-3">
     <form action="/hello" method="post">
         <div class="flex">
-            <div class="w-1/4 p-4 border-r flex flex-col justify-start">
+            <div class="w-1/6 p-4 border-r flex flex-col justify-start">
                 <div>
                     <div class="mb-4">
                         <h2 class="text-xl font-bold mb-4">Feature</h2>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-3/4 p-4">
+            <div class="w-5/6 p-4">
                 <div class="mb-4">
                     <h2 class="text-lg font-bold mb-2" id="chartTitle">온도</h2>
                     <canvas id="myChart"></canvas>

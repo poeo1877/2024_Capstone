@@ -9,9 +9,8 @@ body {
     padding: 10px 50px;
     border-bottom: 1px solid #e5e7eb;
     height: 56px;
-    margin-left: 250px;
-    width: calc(100% - 250px);
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    box-sizing: border-box;
 }
 
 .nav-buttons {
@@ -41,8 +40,6 @@ body {
 
 .container {
     margin-top: 3px; /* 명시적으로 margin-top을 설정 */
-    margin-left: 250px;
-    width: calc(100% - 250px);
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 

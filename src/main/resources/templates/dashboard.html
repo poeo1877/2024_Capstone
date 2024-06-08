@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="bg-gray-100 p-4">
-<div class="header expanded max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
+<div class="header expanded max-w-full bg-white shadow-md rounded-lg p-4">
   <div class="nav-buttons">
     <button type="button" onClick="location.href='/dashboard'">DashBoard</button>
     <button type="button" class="nav-button" onClick="location.href='/detailed_data'">상세 데이터</button>
@@ -34,8 +34,8 @@
     <button style="font-size: 1rem; color: #007bff; cursor: pointer;" onclick="addBatch()">+ Add Batch</button>
   </div>
 </div>
-<div id="batch1Container" class="container active">
-  <div class="max-w-7xl bg-white shadow-md rounded-lg p-6">
+<div id="batch1Container" class="container flex flex-col flex-grow">
+  <div class="max-w-full bg-white shadow-md rounded-lg p-6 flex-grow">
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
       <div class="card lg:col-span-2">
         <div class="flex justify-between items-center mb-4 py-4">
