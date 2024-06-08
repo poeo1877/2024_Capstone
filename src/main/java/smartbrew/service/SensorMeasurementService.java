@@ -130,16 +130,18 @@ public class SensorMeasurementService {
         if (latest == null || previous == null || previous.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }
-        return latest.subtract(previous).divide(previous, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        BigDecimal change = latest.subtract(previous).divide(previous, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        return change.setScale(2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal calculatePercentageChange(Integer latest, Integer previous) {
         if (latest == null || previous == null || previous == 0) {
             return BigDecimal.ZERO;
         }
-        return BigDecimal.valueOf(latest - previous).divide(BigDecimal.valueOf(previous), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        BigDecimal change = BigDecimal.valueOf(latest - previous).divide(BigDecimal.valueOf(previous), 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        return change.setScale(2, RoundingMode.HALF_UP);
     }
-
+/*
     public Map<String, BigDecimal> getTemperatureStats(Long batchId) {
         Map<String, BigDecimal> stats = new HashMap<>();
         stats.put("max", sensorMeasurementRepository.findMaxInTemperatureByBatchId(batchId));
@@ -170,9 +172,7 @@ public class SensorMeasurementService {
         stats.put("min", sensorMeasurementRepository.findMinCo2ByBatchId(batchId));
         stats.put("avg", sensorMeasurementRepository.findAvgCo2ByBatchId(batchId));
         return stats;
-    }
-
-
+    }*/
 
 
     public List<SensorMeasurementDTO> getMeasurementsByBatchId(Long batchId) {

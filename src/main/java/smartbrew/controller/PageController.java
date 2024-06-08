@@ -20,7 +20,7 @@ public class PageController {
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/")
     public String getDashboard(Model model) {
         try {
             Map<String, Object> dataWithChanges = sensorMeasurementService.getLatestSensorDataWithChanges();
@@ -30,22 +30,18 @@ public class PageController {
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
-        return "dashboard";
+        return "index";
     }
 
-    @GetMapping("/detailed_data")
+    @GetMapping("/detail-data")
     public String getDetailedData(Model model) {
         try {
             Long batchId = currentBatchComponent.getCurrentBatchId();
             model.addAttribute("sensorData", sensorMeasurementService.getMeasurementsByBatchId(batchId));
-            model.addAttribute("temperatureStats", sensorMeasurementService.getTemperatureStats(batchId));
-            model.addAttribute("brixStats", sensorMeasurementService.getBrixStats(batchId));
-            model.addAttribute("phStats", sensorMeasurementService.getPhStats(batchId));
-            model.addAttribute("co2Stats", sensorMeasurementService.getCo2Stats(batchId));
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
-        return "detailed_data";
+        return "detail-data";
     }
 
     @GetMapping("/report")
