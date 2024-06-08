@@ -4,19 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import smartbrew.domain.ExcelGenerator;
+import smartbrew.domain.Product;
+import smartbrew.domain.Sale;
+import smartbrew.domain.SalesDetail;
 import smartbrew.service.SaleService;
 import smartbrew.service.SalesReportDTO;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -44,5 +42,39 @@ public class SaleController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<SalesReportDTO> createSale(@RequestParam int quantity_sold,
+                                                     @RequestParam String channel,
+                                                     @RequestParam BigDecimal commissionRate,
+                                                     @RequestParam Long productId,
+                                                     @RequestParam String paymentMethod) {
+        Sale sale = saleService.createSale(quantity_sold, channel, commissionRate, productId, paymentMethod);
+        // Assuming there is a method to convert Sale to SalesReportDTO for the response
+        SalesReportDTO salesReportDTO = convertToDTO(sale);
+        return ResponseEntity.ok(salesReportDTO);
+    }
+
+    private SalesReportDTO convertToDTO(Sale sale) {
+        SalesDetail salesDetail = sale.getSalesDetails().get(0);
+        Product product = salesDetail.getProduct();
+        int price = product.getPrice();
+        int quantity = sale.getQuantitySold();
+        BigDecimal revenue = BigDecimal.valueOf(price).multiply(BigDecimal.valueOf(quantity));
+        BigDecimal commission = revenue.multiply(sale.getCommissionRate().divide(BigDecimal.valueOf(100)));
+        BigDecimal settlementAmount = revenue.subtract(commission);
+
+        return new SalesReportDTO(
+                sale.getChannel(),
+                sale.getCreatedAt(),
+                quantity,
+                price,
+                revenue.intValue(),
+                sale.getCommissionRate(),
+                commission,
+                settlementAmount,
+                product.getProductName()
+        );
     }
 }

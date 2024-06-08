@@ -2,9 +2,11 @@ package smartbrew.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import smartbrew.domain.SalesDetail;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -35,7 +37,6 @@ public class Sale {
     private BigDecimal commissionRate;
 
     @OneToMany(mappedBy = "sale", fetch = FetchType.LAZY)
-    public List<SalesDetail> salesDetails;
-
+    public List<SalesDetail> salesDetails = new ArrayList<>();
 
 }

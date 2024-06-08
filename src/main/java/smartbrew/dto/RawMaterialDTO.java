@@ -1,4 +1,3 @@
-// RawMaterialDTO.java
 package smartbrew.dto;
 
 import java.math.BigDecimal;
@@ -88,4 +87,6 @@ public class RawMaterialDTO {
     public void setTodayStock(BigDecimal todayStock) {
         this.todayStock = todayStock;
     }
+
+
 }

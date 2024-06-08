@@ -2,7 +2,7 @@ package smartbrew.dto;
 
 import java.math.BigDecimal;
 
-public class RawMaterialReceiptDTO {
+public class MaterialReceiptreportDTO {
     private Long rawMaterialId;
     private BigDecimal quantity;
     private int unitPrice;

@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,8 @@ public class BatchController {
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         try {
+            validateDates(startDate, endDate);
+
             Timestamp startTimestamp = Timestamp.valueOf(startDate);
             Timestamp endTimestamp = Timestamp.valueOf(endDate);
 
@@ -55,24 +58,23 @@ public class BatchController {
                         productDTO dto = new productDTO();
                         dto.setComplete_time(sensorMeasurement.getMeasuredTime());
 
-                        // Finding Batch Details
                         Batch batch = sensorMeasurement.getBatch();
                         dto.setBatch_id(sensorMeasurement.getMeasuredTime().toLocalDateTime().toString() + "-" + batch.getBatchId() + "-" + batch.getFermenter().getFermenterLine());
                         dto.setProduct_name(batch.getRecipe().getProductName());
-
-                        // Setting Temperature Data
                         dto.setInTemperature_average(sensorMeasurement.getInTemperature() != null ? sensorMeasurement.getInTemperature() : BigDecimal.ZERO);
                         dto.setOutTemperature_average(sensorMeasurement.getOutTemperature() != null ? sensorMeasurement.getOutTemperature() : BigDecimal.ZERO);
 
                         return dto;
                     }).collect(Collectors.toList());
 
-            // Assigning IDs
             for (int i = 0; i < productDTOs.size(); i++) {
                 productDTOs.get(i).setId(i + 1);
             }
 
             return new ResponseEntity<>(productDTOs, HttpStatus.OK);
+        } catch (DateTimeParseException e) {
+            logger.error("Invalid date format: ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.error("Error retrieving completed batches: ", e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -84,6 +86,8 @@ public class BatchController {
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         try {
+            validateDates(startDate, endDate);
+
             Timestamp startTimestamp = Timestamp.valueOf(startDate);
             Timestamp endTimestamp = Timestamp.valueOf(endDate);
 
@@ -97,19 +101,15 @@ public class BatchController {
                         productDTO dto = new productDTO();
                         dto.setComplete_time(sensorMeasurement.getMeasuredTime());
 
-                        // Finding Batch Details
                         Batch batch = sensorMeasurement.getBatch();
                         dto.setBatch_id(sensorMeasurement.getMeasuredTime().toLocalDateTime().toString() + "-" + batch.getBatchId() + "-" + batch.getFermenter().getFermenterLine());
                         dto.setProduct_name(batch.getRecipe().getProductName());
-
-                        // Setting Temperature Data
                         dto.setInTemperature_average(sensorMeasurement.getInTemperature() != null ? sensorMeasurement.getInTemperature() : BigDecimal.ZERO);
                         dto.setOutTemperature_average(sensorMeasurement.getOutTemperature() != null ? sensorMeasurement.getOutTemperature() : BigDecimal.ZERO);
 
                         return dto;
                     }).collect(Collectors.toList());
 
-            // Assigning IDs
             for (int i = 0; i < productDTOs.size(); i++) {
                 productDTOs.get(i).setId(i + 1);
             }
@@ -121,14 +121,23 @@ public class BatchController {
             headers.add("Content-Disposition", "attachment; filename=completed_batches.xlsx");
             headers.add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-            return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .body(bytes);
+            return ResponseEntity.ok().headers(headers).body(bytes);
 
+        } catch (DateTimeParseException e) {
+            logger.error("Invalid date format: ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             logger.error("Error generating Excel file: ", e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void validateDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null || endDate == null) {
+            throw new DateTimeParseException("Invalid date format", "", 0);
+        }
+        if (endDate.isBefore(startDate)) {
+            throw new DateTimeParseException("End date must be after start date", "", 0);
         }
     }
 }
