@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             updateChart(data, type);
         });
     });
+
+    document.getElementById('zoomInButton').addEventListener('click', zoomIn);
+    document.getElementById('zoomOutButton').addEventListener('click', zoomOut);
+    document.getElementById('panLeftButton').addEventListener('click', panLeft);
+    document.getElementById('panRightButton').addEventListener('click', panRight);
+    document.getElementById('resetZoomButton').addEventListener('click', resetZoom);
 });
 
 function updateChart(data, type) {
@@ -53,6 +59,14 @@ function createTemperatureChart(data) {
     if (currentChart) {
         currentChart.destroy();
     }
+
+    const allData = data.type1.concat(data.type2);
+    const minValue = Math.min(...allData.map(d => d.y));
+    const maxValue = Math.max(...allData.map(d => d.y));
+    const range = maxValue - minValue;
+    const padding = range * 0.1; // 10% padding
+    const yMin = minValue - padding;
+    const yMax = maxValue + padding;
 
     currentChart = new Chart(ctx, {
         type: 'line',
@@ -99,7 +113,8 @@ function createTemperatureChart(data) {
                     }
                 },
                 y: {
-                    beginAtZero: true,
+                    min: yMin,
+                    max: yMax,
                     title: {
                         display: true,
                         text: 'Temperature (°C)'
@@ -158,6 +173,13 @@ function createSingleTypeChart(data, type) {
         currentChart.destroy();
     }
 
+    const minValue = Math.min(...data.map(d => d.y));
+    const maxValue = Math.max(...data.map(d => d.y));
+    const range = maxValue - minValue;
+    const padding = range * 0.1; // 10% padding
+    const yMin = minValue - padding;
+    const yMax = maxValue + padding;
+
     currentChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -194,7 +216,8 @@ function createSingleTypeChart(data, type) {
                     }
                 },
                 y: {
-                    beginAtZero: true,
+                    min: yMin,
+                    max: yMax,
                     title: {
                         display: true,
                         text: type
@@ -244,6 +267,26 @@ function createSingleTypeChart(data, type) {
     if (data.length > 48) {
         currentChart.zoom(1.5); // Adjust zoom level as needed
     }
+}
+
+function zoomIn() {
+    currentChart.zoom(1.1);
+}
+
+function zoomOut() {
+    currentChart.zoom(0.9);
+}
+
+function panLeft() {
+    currentChart.pan({x: -10});
+}
+
+function panRight() {
+    currentChart.pan({x: 10});
+}
+
+function resetZoom() {
+    currentChart.resetZoom();
 }
 
 async function searchData() {
