@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="bg-gray-100 p-4">
-<div class="header expanded">
+<div class="header expanded max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
   <div class="nav-buttons">
-    <button type="button" onClick="location.href='/dashboard'">Dashboard</button>
-    <button type="button" class="nav-button" onClick="location.href='/hello'">Details</button>
+    <button type="button" onClick="location.href='/dashboard'">DashBoard</button>
+    <button type="button" class="nav-button" onClick="location.href='/detailed_data'">상세 데이터</button>
+    <button type="button" class="nav-button" onClick="location.href='/report'">보고서</button>
   </div>
 </div>
 <button class="menu-button">
@@ -26,8 +27,8 @@
       <span th:text="${batchName}">N/A</span>
       <button class="options-button">...</button>
       <div class="batch-options hidden">
-        <button class="rename-button">Rename</button>
-        <button class="remove-button">Remove</button>
+        <button class="rename-button">이름 변경</button>
+        <button class="remove-button">삭제</button>
       </div>
     </div>
     <button style="font-size: 1rem; color: #007bff; cursor: pointer;" onclick="addBatch()">+ Add Batch</button>
@@ -76,10 +77,39 @@
           <input type="range" min="0" max="5" step="0.1" value="3.0" id="aromaticsSlider1">
           <input type="number" min="0" max="5" step="0.1" value="3.0" id="aromaticsInput1">
         </div>
+        <div class="slider-label">
+          <span>Acidity</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="4.0" id="aciditySlider1">
+          <input type="number" min="0" max="5" step="0.1" value="4.0" id="acidityInput1">
+        </div>
+        <div class="slider-label">
+          <span>Sweetness</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="2.0" id="sweetnessSlider1">
+          <input type="number" min="0" max="5" step="0.1" value="2.0" id="sweetnessInput1">
+        </div>
+        <div class="slider-label">
+          <span>Aftertaste</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="5.0" id="aftertasteSlider1">
+          <input type="number" min="0" max="5" step="0.1" value="5.0" id="aftertasteInput1">
+        </div>
+        <div class="slider-label">
+          <span>Body</span>
+        </div>
+        <div class="input-container">
+          <input type="range" min="0" max="5" step="0.1" value="3.0" id="bodySlider1">
+          <input type="number" min="0" max="5" step="0.1" value="3.0" id="bodyInput1">
+        </div>
       </div>
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/scripts.js"></script>
 </body>
 </html>

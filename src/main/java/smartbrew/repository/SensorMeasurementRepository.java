@@ -90,9 +90,41 @@ public interface SensorMeasurementRepository extends JpaRepository<SensorMeasure
             @Param("maxBrix") BigDecimal maxBrix,
             @Param("batchId") Long batchId);
 
-
-//    @Query("SELECT sm FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId ORDER BY sm.measuredTime DESC")
-//    List<SensorMeasurement> findTop2ByBatchIdOrderByMeasuredTimeDesc(@Param("batchId") Long batchId);
     List<SensorMeasurement> findTop2ByBatch_BatchIdOrderByMeasuredTimeDesc(Long batchId);
 
+    @Query("SELECT MAX(sm.inTemperature) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMaxInTemperatureByBatchId(Long batchId);
+
+    @Query("SELECT MIN(sm.inTemperature) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMinInTemperatureByBatchId(Long batchId);
+
+    @Query("SELECT AVG(sm.inTemperature) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findAvgInTemperatureByBatchId(Long batchId);
+
+    @Query("SELECT MAX(sm.brix) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMaxBrixByBatchId(Long batchId);
+
+    @Query("SELECT MIN(sm.brix) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMinBrixByBatchId(Long batchId);
+
+    @Query("SELECT AVG(sm.brix) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findAvgBrixByBatchId(Long batchId);
+
+    @Query("SELECT MAX(sm.ph) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMaxPhByBatchId(Long batchId);
+
+    @Query("SELECT MIN(sm.ph) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findMinPhByBatchId(Long batchId);
+
+    @Query("SELECT AVG(sm.ph) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    BigDecimal findAvgPhByBatchId(Long batchId);
+
+    @Query("SELECT MAX(sm.co2Concentration) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    Integer findMaxCo2ByBatchId(Long batchId);
+
+    @Query("SELECT MIN(sm.co2Concentration) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    Integer findMinCo2ByBatchId(Long batchId);
+
+    @Query("SELECT AVG(sm.co2Concentration) FROM SensorMeasurement sm WHERE sm.batch.batchId = :batchId")
+    Integer findAvgCo2ByBatchId(Long batchId);
 }

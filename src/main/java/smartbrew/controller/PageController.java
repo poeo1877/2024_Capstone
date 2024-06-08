@@ -1,4 +1,5 @@
 package smartbrew.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,13 +8,10 @@ import smartbrew.component.CurrentBatchComponent;
 import smartbrew.service.BatchService;
 import smartbrew.service.SensorMeasurementService;
 
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Map;
 
 @Controller
-public class MyController {
-
+public class PageController {
     @Autowired
     private SensorMeasurementService sensorMeasurementService;
     @Autowired
@@ -21,15 +19,6 @@ public class MyController {
 
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
-
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("message", "Hello, Thymeleaf!");
-        model.addAttribute("currentDate", LocalDate.now());
-        model.addAttribute("items", Arrays.asList("Item 1", "Item 2", "Item 3"));
-        return "index";
-    }
-
 
     @GetMapping("/dashboard")
     public String getDashboard(Model model) {
@@ -44,4 +33,28 @@ public class MyController {
         return "dashboard";
     }
 
+    @GetMapping("/detailed_data")
+    public String getDetailedData(Model model) {
+        try {
+            Long batchId = currentBatchComponent.getCurrentBatchId();
+            model.addAttribute("sensorData", sensorMeasurementService.getMeasurementsByBatchId(batchId));
+            model.addAttribute("temperatureStats", sensorMeasurementService.getTemperatureStats(batchId));
+            model.addAttribute("brixStats", sensorMeasurementService.getBrixStats(batchId));
+            model.addAttribute("phStats", sensorMeasurementService.getPhStats(batchId));
+            model.addAttribute("co2Stats", sensorMeasurementService.getCo2Stats(batchId));
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "detailed_data";
+    }
+
+    @GetMapping("/report")
+    public String getReport(Model model) {
+        try {
+//            model.addAttribute("reportData", sensorMeasurementService.getReportData());
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "report";
+    }
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed_data</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/detailed_data.css}">
+</head>
+<body class="bg-gray-100 p-4">
+<div class="header max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <div class="nav-buttons">
+        <button type="button" onClick="location.href='/dashboard'">DashBoard</button>
+        <button type="button" class="nav-button" onClick="location.href='/detailed_data'">상세 데이터</button>
+        <button type="button" class="nav-button" onClick="location.href='/report'">보고서</button>
+    </div>
+</div>
+<div class="container max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6 mt-3">
+    <form>
+        <div class="flex">
+            <div class="w-1/4 p-4 border-r flex flex-col justify-start">
+                <div>
+                    <div class="mb-4">
+                        <h2 class="text-xl font-bold mb-4">Feature</h2>
+                        <div class="flex flex-col gap-4">
+                            <button type="button" class="feature-button" data-type="temperature">온도</button>
+                            <button type="button" class="feature-button" data-type="sugar">당도</button>
+                            <button type="button" class="feature-button" data-type="ph">pH</button>
+                            <button type="button" class="feature-button" data-type="co2">이산화탄소 농도</button>
+                        </div>
+                    </div>
+                    <div class="mb-4 mt-32">
+                        <h2 class="text-lg font-bold mb-2">상세 검색</h2>
+                        <label for="start-date" class="block text-sm font-medium text-gray-700">시작 날짜</label>
+                        <input type="date" id="start-date" name="start-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <label for="end-date" class="block text-sm font-medium text-gray-700 mt-4">종료 날짜</label>
+                        <input type="date" id="end-date" name="end-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <div class="flex justify-end mt-4">
+                            <button type="button" id="searchButton" class="px-4 py-2" onclick="searchData()">확인</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-3/4 p-4">
+                <div class="mb-4">
+                    <h2 class="text-lg font-bold mb-2" id="chartTitle">온도</h2>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="border p-4 relative">
+                    <h2 class="text-lg font-bold mb-2">데이터 정보</h2>
+                    <p id="maxValue">최고 온도: <span th:text="${maxValue}"></span>℃</p>
+                    <p id="minValue">최저 온도: <span th:text="${minValue}"></span>℃</p>
+                    <p id="avgValue">평균 온도: <span th:text="${avgValue}"></span>℃</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:src="@{/js/detailed_data.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const sensorData = /*[[${sensorData}]]*/ [];
+    const labels = sensorData.map(d => new Date(d.measuredTime).toLocaleString());
+    const temperatureData = sensorData.map(d => d.inTemperature);
+    const sugarData = sensorData.map(d => d.brix);
+    const phData = sensorData.map(d => d.ph);
+    const co2Data = sensorData.map(d => d.co2Concentration);
+
+    function createChart(ctx, label, data, yLabel) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: yLabel
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    createChart(document.getElementById('myChart'), 'Temperature', temperatureData, 'Temperature (°C)');
+    /*]]>*/
+</script>
+</body>
+</html>

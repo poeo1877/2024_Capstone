@@ -140,7 +140,37 @@ public class SensorMeasurementService {
         return BigDecimal.valueOf(latest - previous).divide(BigDecimal.valueOf(previous), RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
     }
 
+    public Map<String, BigDecimal> getTemperatureStats(Long batchId) {
+        Map<String, BigDecimal> stats = new HashMap<>();
+        stats.put("max", sensorMeasurementRepository.findMaxInTemperatureByBatchId(batchId));
+        stats.put("min", sensorMeasurementRepository.findMinInTemperatureByBatchId(batchId));
+        stats.put("avg", sensorMeasurementRepository.findAvgInTemperatureByBatchId(batchId));
+        return stats;
+    }
 
+    public Map<String, BigDecimal> getBrixStats(Long batchId) {
+        Map<String, BigDecimal> stats = new HashMap<>();
+        stats.put("max", sensorMeasurementRepository.findMaxBrixByBatchId(batchId));
+        stats.put("min", sensorMeasurementRepository.findMinBrixByBatchId(batchId));
+        stats.put("avg", sensorMeasurementRepository.findAvgBrixByBatchId(batchId));
+        return stats;
+    }
+
+    public Map<String, BigDecimal> getPhStats(Long batchId) {
+        Map<String, BigDecimal> stats = new HashMap<>();
+        stats.put("max", sensorMeasurementRepository.findMaxPhByBatchId(batchId));
+        stats.put("min", sensorMeasurementRepository.findMinPhByBatchId(batchId));
+        stats.put("avg", sensorMeasurementRepository.findAvgPhByBatchId(batchId));
+        return stats;
+    }
+
+    public Map<String, Integer> getCo2Stats(Long batchId) {
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("max", sensorMeasurementRepository.findMaxCo2ByBatchId(batchId));
+        stats.put("min", sensorMeasurementRepository.findMinCo2ByBatchId(batchId));
+        stats.put("avg", sensorMeasurementRepository.findAvgCo2ByBatchId(batchId));
+        return stats;
+    }
 
 
 

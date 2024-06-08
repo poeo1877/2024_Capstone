@@ -7,34 +7,34 @@ document.addEventListener("DOMContentLoaded", function() {
     const chartData = {
         temperature: {
             label: 'Temperature',
-            data: [5, 10, 15, 10, 20, 15, 25, 20, 15, 10, 5],
-            max: '최고 온도: 4℃',
-            min: '최저 온도: 19℃',
-            avg: '평균 온도: 13℃',
+            data: [],
+            max: '',
+            min: '',
+            avg: '',
             unit: '℃'
         },
         sugar: {
             label: 'Sugar',
-            data: [3, 7, 10, 6, 15, 12, 18, 14, 10, 7, 3],
-            max: '최고 당도: 18',
-            min: '최저 당도: 3',
-            avg: '평균 당도: 10',
+            data: [],
+            max: '',
+            min: '',
+            avg: '',
             unit: ''
         },
         ph: {
             label: 'pH',
-            data: [4, 4.5, 5, 4.8, 5.2, 4.7, 5.5, 5, 4.6, 4.4, 4],
-            max: '최고 pH: 5.5',
-            min: '최저 pH: 4',
-            avg: '평균 pH: 4.7',
+            data: [],
+            max: '',
+            min: '',
+            avg: '',
             unit: ''
         },
         co2: {
             label: 'CO2',
-            data: [400, 420, 450, 430, 470, 460, 480, 470, 450, 420, 400],
-            max: '최고 CO2 농도: 480ppm',
-            min: '최저 CO2 농도: 400ppm',
-            avg: '평균 CO2 농도: 450ppm',
+            data: [],
+            max: '',
+            min: '',
+            avg: '',
             unit: 'ppm'
         }
     };
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
     let myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K'],
+            labels: [],
             datasets: [{
                 label: chartData.temperature.label,
                 data: chartData.temperature.data,
@@ -70,16 +70,38 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll('.feature-button').forEach(button => {
         button.addEventListener('click', function() {
             const featureType = this.getAttribute('data-type');
-            const selectedData = chartData[featureType];
-
-            myChart.data.datasets[0].label = selectedData.label;
-            myChart.data.datasets[0].data = selectedData.data;
-            myChart.update();
-
-            chartTitle.textContent = selectedData.label;
-            maxValue.textContent = selectedData.max;
-            minValue.textContent = selectedData.min;
-            avgValue.textContent = selectedData.avg;
+            fetchData(featureType);
         });
     });
+
+    document.getElementById('searchButton').addEventListener('click', function() {
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
+        const featureType = document.querySelector('.feature-button.active').getAttribute('data-type');
+        fetchData(featureType, startDate, endDate);
+    });
+
+    function fetchData(featureType, startDate = null, endDate = null) {
+        let url = `/sensor/date-range?start=${startDate}&end=${endDate}&batchId=1`; // Assuming batchId is 1 for example
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const selectedData = chartData[featureType];
+                selectedData.data = data.map(d => d[featureType]);
+                selectedData.max = `최고 ${selectedData.label}: ${Math.max(...selectedData.data)}${selectedData.unit}`;
+                selectedData.min = `최저 ${selectedData.label}: ${Math.min(...selectedData.data)}${selectedData.unit}`;
+                selectedData.avg = `평균 ${selectedData.label}: ${(selectedData.data.reduce((a, b) => a + b, 0) / selectedData.data.length).toFixed(2)}${selectedData.unit}`;
+
+                myChart.data.labels = data.map(d => new Date(d.measuredTime).toLocaleTimeString());
+                myChart.data.datasets[0].label = selectedData.label;
+                myChart.data.datasets[0].data = selectedData.data;
+                myChart.update();
+
+                chartTitle.textContent = selectedData.label;
+                maxValue.textContent = selectedData.max;
+                minValue.textContent = selectedData.min;
+                avgValue.textContent = selectedData.avg;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
 });
