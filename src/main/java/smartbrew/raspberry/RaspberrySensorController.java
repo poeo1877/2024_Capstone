@@ -11,10 +11,17 @@ import smartbrew.dto.SensorMeasurementDTO;
 @RequestMapping("/sensor")
 public class RaspberrySensorController {
 
+    @PostMapping("/update")
+    public String updateSensor(@RequestBody SensorMeasurementDTO dto) {
+
+        System.out.println("Received temperature: " + dto);
+        return dto.toString();
+    }
+
     @PostMapping("/temp/update")
-    public String updateTemperature(@RequestBody TemperatureRequest request) {
+    public String updateTemperature(@RequestBody SensorMeasurementDTO dto) {
         // 온도 데이터를 처리합니다 (예: 저장, 로깅 등)
-        System.out.println("Received temperature: " + request.getTemperature() + " °C");
+        System.out.println("Received temperature: " + dto);
         return "Temperature updated";
     }
 
