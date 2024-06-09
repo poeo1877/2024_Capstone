@@ -22,28 +22,28 @@ public class RawMaterial {
     @Column(name = "raw_material_id")
     private Long rawMaterialId;
 
-    @Column(name = "raw_material_name", nullable = false)
+    @Column(name = "raw_material_name", nullable = false, length = 100)
     private String rawMaterialName;
 
-    @Column(name = "category", nullable = false)
+    @Column(name = "category", nullable = false, length = 50)
     private String category;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "unit", nullable = false)
+    @Column(name = "unit", nullable = false, length = 10)
     private String unit;
 
-    @Column(name = "supplier_name")
+    @Column(name = "supplier_name", length = 100)
     private String supplierName;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", length = 15)
     private String phoneNumber;
 
-    @Column(name = "zip_code")
+    @Column(name = "zip_code", length = 6)
     private String zipCode;
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private Timestamp createdAt;
 
     @Column(name = "updated_at")

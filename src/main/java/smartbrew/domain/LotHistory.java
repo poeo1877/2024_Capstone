@@ -27,6 +27,6 @@ public class LotHistory {
     @Column(name = "notes")
     private String notes;
 
-    @Column(name = "lot_location")
+    @Column(name = "lot_location", length = 50)
     private String lotLocation;
 }

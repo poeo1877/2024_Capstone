@@ -16,13 +16,13 @@ public class Product {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 
     @Column(name = "price")
     private int price;
 
-    @Column(name = "category")
+    @Column(name = "category", length = 50)
     private String category;
 
     @ManyToOne
@@ -38,9 +38,9 @@ public class Product {
     @Column(name = "bottling_date")
     private Timestamp bottlingDate;
 
-    @Column(name = "notification_number")
+    @Column(name = "notification_number", length = 30)
     private String notificationNumber;
 
-    @Column(name = "barcode")
+    @Column(name = "barcode", length = 30)
     private String barcode;
 }

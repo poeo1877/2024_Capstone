@@ -16,37 +16,37 @@ public class TastingNote {
     @Column(name = "tasting_note_id")
     private Long tastingNoteId;
 
-    @Column(name = "fermentation_aroma", nullable = false)
+    @Column(name = "fermentation_aroma", nullable = false, precision = 4, scale = 2)
     private BigDecimal fermentationAroma;
 
-    @Column(name = "foam", nullable = false)
+    @Column(name = "foam", nullable = false, precision = 4, scale = 2)
     private BigDecimal foam;
 
-    @Column(name = "mouthfeel", nullable = false)
+    @Column(name = "mouthfeel", nullable = false, precision = 4, scale = 2)
     private BigDecimal mouthfeel;
 
-    @Column(name = "balance", nullable = false)
+    @Column(name = "balance", nullable = false, precision = 4, scale = 2)
     private BigDecimal balance;
 
-    @Column(name = "clarity", nullable = false)
+    @Column(name = "clarity", nullable = false, precision = 4, scale = 2)
     private BigDecimal clarity;
 
-    @Column(name = "sweetness", nullable = false)
+    @Column(name = "sweetness", nullable = false, precision = 4, scale = 2)
     private BigDecimal sweetness;
 
-    @Column(name = "acidity", nullable = false)
+    @Column(name = "acidity", nullable = false, precision = 4, scale = 2)
     private BigDecimal acidity;
 
-    @Column(name = "body", nullable = false)
+    @Column(name = "body", nullable = false, precision = 4, scale = 2)
     private BigDecimal body;
 
-    @Column(name = "grainy_aroma", nullable = false)
+    @Column(name = "grainy_aroma", nullable = false, precision = 4, scale = 2)
     private BigDecimal grainyAroma;
 
-    @Column(name = "finish")
+    @Column(name = "finish", precision = 4, scale = 2)
     private BigDecimal finish;
 
-    @Column(name = "evaluator_name", nullable = false)
+    @Column(name = "evaluator_name", nullable = false, length = 10)
     private String evaluatorName;
 
     @ManyToOne

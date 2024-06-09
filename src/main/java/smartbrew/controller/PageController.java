@@ -20,7 +20,7 @@ public class PageController {
     @Autowired
     private CurrentBatchComponent currentBatchComponent;
 
-    @GetMapping("/")
+    @GetMapping("/dashboard")
     public String getDashboard(Model model) {
         try {
             Map<String, Object> dataWithChanges = sensorMeasurementService.getLatestSensorDataWithChanges();

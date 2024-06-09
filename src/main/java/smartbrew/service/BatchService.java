@@ -129,7 +129,8 @@ public class BatchService {
                 batch.getEndTime(),
                 batch.getRecipeRatio(),
                 batch.getRecipe() != null ? batch.getRecipe().getRecipeId() : null,
-                batch.getFermenter() != null ? batch.getFermenter().getFermenterId() : null
+                batch.getFermenter() != null ? batch.getFermenter().getFermenterId() : null,
+                batch.getRecipe() != null ? batch.getRecipe().getProductName() : null
         );
     }
 

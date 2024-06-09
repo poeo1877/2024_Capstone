@@ -16,4 +16,5 @@ public class BatchDTO {
     private String recipeRatio;
     private Long fermenterId;
     private Long recipeId;
+    private String recipeName;
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "batch")
 public class Batch {
 
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "batch_id")
     private Long batchId;
@@ -37,7 +37,34 @@ public class Batch {
     private Fermenter fermenter;
 
     @OneToMany(mappedBy = "batch")
+    private List<SensorMeasurement> sensorMeasurements;*/
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "batch_id")
+    private Long batchId;
+
+    @Column(name = "start_time")
+    private Timestamp startTime;
+
+    @Column(name = "end_time")
+    private Timestamp endTime;
+
+    @Column(name = "recipe_ratio")
+    private String recipeRatio = "1.0";
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
+
+    @ManyToOne
+    @JoinColumn(name = "fermenter_id")
+    private Fermenter fermenter;
+
+    @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SensorMeasurement> sensorMeasurements;
+
 
     public Batch(Long batchId) {
         this.batchId = batchId;

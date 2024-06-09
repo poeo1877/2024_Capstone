@@ -16,7 +16,7 @@ public class SalesDetail {
     @Column(name = "sale_detail_id")
     private Long saleDetailId;
 
-    @Column(name = "payment_method", nullable = false)
+    @Column(name = "payment_method", nullable = false, length = 50)
     private String paymentMethod;
 
     @Column(name = "discount_yn", nullable = false)
@@ -30,7 +30,7 @@ public class SalesDetail {
     @JoinColumn(name = "sale_id")
     private Sale sale;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "updated_at")

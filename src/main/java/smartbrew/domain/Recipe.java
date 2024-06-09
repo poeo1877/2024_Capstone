@@ -23,9 +23,9 @@ public class Recipe {
     @Column(name = "recipe_detail")
     private String recipeDetail;
 
-    @Column(name = "recipe_name", nullable = false)
+    @Column(name = "recipe_name", nullable = false, length = 100)
     private String recipeName;
 
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
 }

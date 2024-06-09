@@ -17,7 +17,7 @@ public class RawMaterialReceipt {
     @Column(name = "receipt_id")
     private Long receiptId;
 
-    @Column(name = "quantity", nullable = false)
+    @Column(name = "quantity", nullable = false, precision = 10, scale = 2)
     private BigDecimal quantity;
 
     @Column(name = "unit_price", nullable = false)
@@ -27,7 +27,7 @@ public class RawMaterialReceipt {
     @JoinColumn(name = "raw_material_id", referencedColumnName = "raw_material_id")
     private RawMaterial rawMaterial;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
     @Column(name = "updated_at")

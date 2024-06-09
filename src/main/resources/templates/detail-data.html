@@ -14,7 +14,7 @@
 <body class="bg-gray-100 p-4">
 <div class="header max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
     <div class="nav-buttons">
-        <button type="button" onClick="location.href='/dashboard'">DashBoard</button>
+        <button type="button" onClick="location.href='/dashboard'">대시보드</button>
         <button type="button" class="nav-button" onClick="location.href='/detail-data'">상세 데이터</button>
         <button type="button" class="nav-button" onClick="location.href='/report'">보고서</button>
     </div>
@@ -34,13 +34,22 @@
                         </div>
                     </div>
                     <div class="mb-4 mt-32">
-                        <h2 class="text-lg font-bold mb-2">상세 검색</h2>
+                        <h2 class="text-lg font-bold mb-2">배치 검색</h2>
                         <label for="start-date" class="block text-sm font-medium text-gray-700">시작 날짜</label>
                         <input type="date" id="start-date" name="start-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <label for="end-date" class="block text-sm font-medium text-gray-700 mt-4">종료 날짜</label>
                         <input type="date" id="end-date" name="end-date" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <div class="flex justify-end mt-4">
-                            <button type="button" id="searchButton" class="px-4 py-2" onclick="searchData()">확인</button>
+                            <button type="button" id="searchButton" class="px-4 py-2" onclick="searchBatches()">검색</button>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <h2 class="text-lg font-bold mb-2">배치 선택</h2>
+                        <select id="batch-list" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">배치를 선택하세요</option>
+                        </select>
+                        <div class="flex justify-end mt-4">
+                            <button type="button" id="loadBatchButton" class="px-4 py-2" onclick="loadBatchData()">확인</button>
                         </div>
                     </div>
                     <div class="mb-4">
@@ -57,7 +66,6 @@
             </div>
             <div class="w-3/4 p-4">
                 <div class="mb-4">
-                    <h2 class="text-lg font-bold mb-2" id="chartTitle">온도</h2>
                     <canvas id="myChart"></canvas>
                 </div>
             </div>

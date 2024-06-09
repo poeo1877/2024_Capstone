@@ -13,35 +13,33 @@ public class SensorMeasurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "data_id")
     private Long dataId;
 
     @Column(name = "co2_concentration")
     private Integer co2Concentration;
 
-    @Column(name = "brix")
+    @Column(name = "brix", precision = 5, scale = 3)
     private BigDecimal brix;
 
     @Column(name = "measured_time")
     private Timestamp measuredTime;
 
-    @Column(name = "out_temperature")
+    @Column(name = "out_temperature", precision = 5, scale = 3)
     private BigDecimal outTemperature;
 
-    @Column(name = "in_temperature")
+    @Column(name = "in_temperature", precision = 5, scale = 3)
     private BigDecimal inTemperature;
 
-    @Column(name = "ph")
+    @Column(name = "ph", precision = 4, scale = 2)
     private BigDecimal ph;
 
-    @Column(name = "pressure_upper")
+    @Column(name = "pressure_upper", precision = 10, scale = 4)
     private BigDecimal pressureUpper;
 
-    @Column(name = "pressure_lower")
+    @Column(name = "pressure_lower", precision = 10, scale = 4)
     private BigDecimal pressureLower;
 
     @ManyToOne
     @JoinColumn(name = "batch_id")
     private Batch batch;
-
 }
