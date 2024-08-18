@@ -48,22 +48,22 @@
         <div class="grid grid-cols-2 gap-4 py-2">
           <div class="card">
             <div class="value text-orange-500 dynamic-font-size" th:text="${latest.inTemperature} + '°C'">0.0°C</div>
-            <div class="change dynamic-font-size" th:text="${changes.inTemperature} + '%'" th:classappend="${changes.inTemperature > 0} ? 'text-red-500' : (${changes.inTemperature < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
+            <div class="change dynamic-font-size" th:text="${changes.inTemperature} + '%p'" th:classappend="${changes.inTemperature > 0} ? 'text-red-500' : (${changes.inTemperature < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
             <p>내부 온도</p>
           </div>
           <div class="card">
             <div class="value text-orange-500 dynamic-font-size" th:text="${latest.brix} + ' Brix'">0.0 Brix</div>
-            <div class="change dynamic-font-size" th:text="${changes.brix} + '%'" th:classappend="${changes.brix > 0} ? 'text-red-500' : (${changes.brix < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
+            <div class="change dynamic-font-size" th:text="${changes.brix} + '%p'" th:classappend="${changes.brix > 0} ? 'text-red-500' : (${changes.brix < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
             <p>당도</p>
           </div>
           <div class="card">
             <div class="value text-orange-500 dynamic-font-size" th:text="${latest.co2Concentration} + ' ppm'">0.0 ppm</div>
-            <div class="change dynamic-font-size" th:text="${changes.co2Concentration} + '%'" th:classappend="${changes.co2Concentration > 0} ? 'text-red-500' : (${changes.co2Concentration < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
+            <div class="change dynamic-font-size" th:text="${changes.co2Concentration} + '%p'" th:classappend="${changes.co2Concentration > 0} ? 'text-red-500' : (${changes.co2Concentration < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
             <p>이산화탄소 농도</p>
           </div>
           <div class="card">
             <div class="value text-orange-500 dynamic-font-size" th:text="${latest.ph}">0.0</div>
-            <div class="change dynamic-font-size" th:text="${changes.ph} + '%'" th:classappend="${changes.ph > 0} ? 'text-red-500' : (${changes.ph < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
+            <div class="change dynamic-font-size" th:text="${changes.ph} + '%p'" th:classappend="${changes.ph > 0} ? 'text-red-500' : (${changes.ph < 0} ? 'text-blue-500' : 'text-black')">0.0%</div>
             <p>pH</p>
           </div>
         </div>
