@@ -10,4 +10,8 @@ router.get('/dashboard', async (req, res) => {
     res.render('dashboard.ejs');
 });
 
+router.get('/report', async (req, res) => {
+    res.render('report.ejs');
+});
+
 module.exports = router;

@@ -1,31 +1,32 @@
 <!--**********************************
             Content body start
         ***********************************-->
-<div class="content-body">
-    <!-- row -->
-    <div class="container-fluid">
-        <!-- 최근 센서 데이터 표기 -->
-        <div class="row">
-            <div class="col-lg col-sm-6">
-                <div class="card">
-                    <!-- 아래 태그에는 onClick 이벤트를 줘서 해당 태그 클릭시 아래 차트가 바뀌게 구현한다. -->
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <!-- 해당 태그의 id를 주고 서버에서 어떤 센서 데이터를 요구하는지 구별할 수 있게 한다. -->
-                            <div class="stat-text">온도</div>
-                            <div class="stat-digit">31.812°C</div>
+
+<div class="container-fluid">
+    <!-- 최근 센서 데이터 표기 -->
+    <div class="row">
+        <div class="col-lg col-sm-6">
+            <div class="card">
+                <!-- 아래 태그에는 onClick 이벤트를 줘서 해당 태그 클릭시 아래 차트가 바뀌게 구현한다. -->
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <!-- 해당 태그의 id를 주고 서버에서 어떤 센서 데이터를 요구하는지 구별할 수 있게 한다. -->
+                        <div class="stat-text">온도</div>
+                        <div class="stat-digit">
+                            <strong id="temperature">Loading...</strong>
                         </div>
-                        <div>
-                            <i class="fa fa-caret-up"></i>
-                            <span class="change-value">2.312</span>
-                            <br />
-                            <span class="percent-point">+85%p</span>
-                        </div>
+                    </div>
+                    <div>
+                        <i class="fa fa-caret-up"></i>
+                        <span class="change-value">2.312</span>
+                        <br />
+                        <span class="percent-point">+85%p</span>
                     </div>
                 </div>
             </div>
-            <!-- pH 센서 고장으로 제거된 영역 -->
-            <!-- <div class="col-lg col-sm-6">
+        </div>
+        <!-- pH 센서 고장으로 제거된 영역 -->
+        <!-- <div class="col-lg col-sm-6">
                             <div class="card">
                                 <div class="stat-widget-two card-body">
                                     <div class="stat-content">
@@ -41,313 +42,322 @@
                                 </div>
                             </div>
                         </div> -->
-            <div class="col-lg col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">이산화탄소</div>
-                            <div class="stat-digit">6854 ppm</div>
-                        </div>
-                        <div>
-                            <i class="fa fa-caret-down"></i>
-                            <span class="change-value">685</span>
-                            <br />
-                            <span class="percent-point">-20%p</span>
-                        </div>
+        <div class="col-lg col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">이산화탄소</div>
+                        <div class="stat-digit">6854 ppm</div>
+                    </div>
+                    <div>
+                        <i class="fa fa-caret-down"></i>
+                        <span class="change-value">685</span>
+                        <br />
+                        <span class="percent-point">-20%p</span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">압력</div>
-                            <div class="stat-digit">1005.39 psi</div>
-                        </div>
-                        <div>
-                            <i class="fa fa-caret-down"></i>
-                            <span class="change-value">1.234</span>
-                            <br />
-                            <span class="percent-point">-5%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">발효조 상태</div>
-                        </div>
-                        <div class="stat-digit">
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                style="width: 40%"
-                            >
-                                시작
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                style="width: 40%"
-                            >
-                                종료
-                            </button>
-                        </div>
-                        <div class="stat-digit">
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                style="width: 40%"
-                            >
-                                정지
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                style="width: 40%"
-                            >
-                                재생
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- /# card -->
         </div>
-        <!-- /# column -->
-        <div class="row">
-            <div class="col-xl col-lg col-md">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Data Overview</h4>
+        <div class="col-lg col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">압력</div>
+                        <div class="stat-digit">1005.39 psi</div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl col-lg">
-                                <canvas id="lineChart"></canvas>
-                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                                <script>
-                                    var ctx = document
-                                        .getElementById('lineChart')
-                                        .getContext('2d');
-                                    var lineChart = new Chart(ctx, {
-                                        type: 'line',
-                                        data: {
-                                            labels: [
-                                                '2024-07-28 20:01',
-                                                '2024-07-28 20:02',
-                                                '2024-07-28 20:03',
-                                                '2024-07-28 20:04',
-                                                '2024-07-28 20:05',
-                                                '2024-07-28 20:06',
-                                            ],
-                                            datasets: [
-                                                {
-                                                    label: 'Temperature',
-                                                    data: [
-                                                        32.75, 29.75, 20.75,
-                                                        32.75, 32.75, 3.687,
-                                                    ],
-                                                    backgroundColor:
-                                                        'rgba(75, 192, 192, 0.2)',
-                                                    borderColor:
-                                                        'rgba(75, 192, 192, 1)',
-                                                    borderWidth: 1,
-                                                },
-                                            ],
-                                        },
-                                        options: {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            scales: {
-                                                y: {
-                                                    beginAtZero: false,
-                                                },
+                    <div>
+                        <i class="fa fa-caret-down"></i>
+                        <span class="change-value">1.234</span>
+                        <br />
+                        <span class="percent-point">-5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg col-sm-6">
+            <div class="card">
+                <div class="stat-widget-two card-body">
+                    <div class="stat-content">
+                        <div class="stat-text">발효조 상태</div>
+                    </div>
+                    <div class="stat-digit">
+                        <button
+                            type="button"
+                            class="btn btn-rounded btn-outline-dark"
+                            style="width: 40%"
+                        >
+                            시작
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-rounded btn-outline-dark"
+                            style="width: 40%"
+                        >
+                            종료
+                        </button>
+                    </div>
+                    <div class="stat-digit">
+                        <button
+                            type="button"
+                            class="btn btn-rounded btn-outline-dark"
+                            style="width: 40%"
+                        >
+                            정지
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-rounded btn-outline-dark"
+                            style="width: 40%"
+                        >
+                            재생
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /# card -->
+    </div>
+    <!-- /# column -->
+    <div class="row">
+        <div class="col-xl col-lg col-md">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Data Overview</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl col-lg">
+                            <canvas id="lineChart"></canvas>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                            <script>
+                                var ctx = document
+                                    .getElementById('lineChart')
+                                    .getContext('2d');
+                                var lineChart = new Chart(ctx, {
+                                    type: 'line',
+                                    data: {
+                                        labels: [
+                                            '2024-07-28 20:01',
+                                            '2024-07-28 20:02',
+                                            '2024-07-28 20:03',
+                                            '2024-07-28 20:04',
+                                            '2024-07-28 20:05',
+                                            '2024-07-28 20:06',
+                                        ],
+                                        datasets: [
+                                            {
+                                                label: 'Temperature',
+                                                data: [
+                                                    32.75, 29.75, 20.75, 32.75,
+                                                    32.75, 3.687,
+                                                ],
+                                                backgroundColor:
+                                                    'rgba(75, 192, 192, 0.2)',
+                                                borderColor:
+                                                    'rgba(75, 192, 192, 1)',
+                                                borderWidth: 1,
+                                            },
+                                        ],
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                            y: {
+                                                beginAtZero: false,
                                             },
                                         },
-                                    });
-                                </script>
-                            </div>
+                                    },
+                                });
+                            </script>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <style>
-            #lineChart {
-                width: 100%;
-                height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
-            }
-        </style>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">알림 범위 설정하기</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-validation">
-                            <form class="form-valide" action="#" method="post">
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-lg-4 col-form-label"
-                                                for="val-daterange"
-                                            >
-                                                기간
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input
-                                                    type="text"
-                                                    class="form-control input-daterange-timepicker"
-                                                    name="daterange"
-                                                    placeholder="미입력시 자동으로 처음부터 지금까지 설정됩니다."
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-lg-4 col-form-label"
-                                                for="val-note"
-                                            >
-                                                메모
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <textarea
-                                                    class="form-control"
-                                                    id="val-note"
-                                                    name="val-note"
-                                                    rows="5"
-                                                    placeholder="설명을 입력해 주세요."
-                                                ></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6">
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-lg-4 col-form-label"
-                                                for="val-sensor"
-                                            >
-                                                센서 종류
-                                                <span class="text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <select
-                                                    class="form-control"
-                                                    id="val-sensor"
-                                                    name="val-sensor"
-                                                >
-                                                    <option value="">
-                                                        데이터를 선택해 주세요
-                                                    </option>
-                                                    <option value="temperature">
-                                                        온도
-                                                    </option>
-                                                    <option value="co2">
-                                                        이산화탄소
-                                                    </option>
-                                                    <option value="pressure">
-                                                        압력
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-lg-4 col-form-label"
-                                                for="val-upper-limit"
-                                            >
-                                                상한값
-                                                <span class="text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    id="val-upper-limit"
-                                                    name="val-upper-limit"
-                                                    placeholder="이 값을 넘어서면 알림"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label
-                                                class="col-lg-4 col-form-label"
-                                                for="val-lower-limit"
-                                            >
-                                                하한값
-                                                <span class="text-danger">
-                                                    *
-                                                </span>
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input
-                                                    type="text"
-                                                    class="form-control"
-                                                    id="val-lower-limit"
-                                                    name="val-lower-limit"
-                                                    placeholder="이 값을 내려가면 알림"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-8 ml-auto">
-                                                <button
-                                                    type="submit"
-                                                    class="btn btn-dark"
-                                                >
-                                                    알림 설정
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
-        <!-- 이 아래에서 통계 같은 것 시각화-->
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">데이터</h4>
-                    </div>
-                    <div class="card-body">--- heatmap --- 만들기</div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">데이터 2</h4>
-                    </div>
-                    <div class="card-body">---Density Plot--- 만들기</div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">데이터 3</h4>
-                    </div>
-                    <div class="card-body">아직 정하지 못했습니다.</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        #lineChart {
+            width: 100%;
+            height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">알림 범위 설정하기</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-validation">
+                        <form class="form-valide" action="#" method="post">
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-4 col-form-label"
+                                            for="val-daterange"
+                                        >
+                                            기간
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input
+                                                type="text"
+                                                class="form-control input-daterange-timepicker"
+                                                name="daterange"
+                                                placeholder="미입력시 자동으로 처음부터 지금까지 설정됩니다."
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-4 col-form-label"
+                                            for="val-note"
+                                        >
+                                            메모
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <textarea
+                                                class="form-control"
+                                                id="val-note"
+                                                name="val-note"
+                                                rows="5"
+                                                placeholder="설명을 입력해 주세요."
+                                            ></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-4 col-form-label"
+                                            for="val-sensor"
+                                        >
+                                            센서 종류
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <select
+                                                class="form-control"
+                                                id="val-sensor"
+                                                name="val-sensor"
+                                            >
+                                                <option value="">
+                                                    데이터를 선택해 주세요
+                                                </option>
+                                                <option value="temperature">
+                                                    온도
+                                                </option>
+                                                <option value="co2">
+                                                    이산화탄소
+                                                </option>
+                                                <option value="pressure">
+                                                    압력
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-4 col-form-label"
+                                            for="val-upper-limit"
+                                        >
+                                            상한값
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="val-upper-limit"
+                                                name="val-upper-limit"
+                                                placeholder="이 값을 넘어서면 알림"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label
+                                            class="col-lg-4 col-form-label"
+                                            for="val-lower-limit"
+                                        >
+                                            하한값
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="val-lower-limit"
+                                                name="val-lower-limit"
+                                                placeholder="이 값을 내려가면 알림"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-8 ml-auto">
+                                            <button
+                                                type="submit"
+                                                class="btn btn-dark"
+                                            >
+                                                알림 설정
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
+    <!-- 이 아래에서 통계 같은 것 시각화-->
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터</h4>
+                </div>
+                <div class="card-body">--- heatmap --- 만들기</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터 2</h4>
+                </div>
+                <div class="card-body">---Density Plot--- 만들기</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터 3</h4>
+                </div>
+                <div class="card-body">아직 정하지 못했습니다.</div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <!--**********************************
             Content body end
         ***********************************-->
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/temperature',
+            method: 'GET',
+            success: function (data) {
+                $('#temperature').text(data.temperature);
+            },
+            error: function () {
+                $('#temperature').text('Error loading data');
+            },
+        });
+    });
+</script>

@@ -272,12 +272,27 @@
                                 href="javascript:void()"
                                 aria-expanded="false"
                             >
-                                <i class="icon icon-single-04"></i>
+                                <i class="icon icon-chart-bar-33"></i>
                                 <span class="nav-text">Dashboard</span>
                             </a>
                             <ul aria-expanded="false">
-                                <li><a href="./index.html">Dashboard 1</a></li>
+                                <li><a href="/dashboard">Dashboard 1</a></li>
                                 <li><a href="./index2.html">Dashboard 2</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a
+                                class="has-arrow"
+                                href="javascript:void()"
+                                aria-expanded="false"
+                            >
+                                <i class="icon icon-single-copy-06"></i>
+                                <span class="nav-text">Report</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="/report">생산보고서</a></li>
+                                <li><a href="/">원료수불부</a></li>
                             </ul>
                         </li>
 
@@ -571,7 +586,10 @@
             <!--**********************************
             Content body start
         ***********************************-->
-            <%- body %>
+            <div class="content-body">
+                <!-- row -->
+                <%- body %>
+            </div>
             <!--    <div class="container-fluid">
                     <div class="row page-titles mx-0">
                         <div class="col-sm-6 p-md-0">
