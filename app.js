@@ -12,18 +12,22 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var DashboardRouter = require('./routes/dashboard');
 var BatchRouter = require('./routes/batch');
+var RecipeRouter = require('./routes/recipe');
+
+var sequelize = require('./models/index.js').sequelize;
 
 var app = express();
 
+sequelize.sync();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(expressLayouts);
 app.set('layout', 'layout');
 app.set('layout extractScripts', true);
 app.set('layout extractStyles', true);
 app.set('layout extractMetas', true);
-app.use(expressLayouts);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -35,6 +39,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/dashboard', DashboardRouter);
 app.use('/batch', BatchRouter);
+app.use('/recipe', RecipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
