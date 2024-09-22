@@ -1,16 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const { Batch, Recipe, Fermenter } = require('../models');
-const moment = require("moment-timezone");
+const moment = require('moment-timezone');
 
-const { Client } = require("pg");
+const { Client } = require('pg');
 
 const dbClient = new Client({
-	user: process.env.DB_USER,
-	host: process.env.DB_HOST,
-	database: process.env.DB_NAME,
-	password: process.env.DB_PASS,
-	port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASS,
+    port: process.env.DB_PORT,
 });
 
 dbClient.connect();
@@ -32,7 +32,18 @@ router.get('/', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
+router.get('/create', async (req, res) => {
+    try {
+        // Batch와 Recipe를 조인하여 데이터 가져오기
+        const recipes = await Recipe.findAll({});
+        const fermenters = await Fermenter.findAll({});
+        // EJS 템플릿에 데이터를 전달하여 렌더링
+        res.render('batch/create', { recipes, fermenters });
+    } catch (error) {
+        console.error('Error fetching batch list:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 // 배치 생성 POST 요청
 router.post('/create', async (req, res) => {
     const { recipe_id, fermenter_id } = req.body;
@@ -64,35 +75,35 @@ router.get('/:id', (req, res) => {
     res.render('batch/dashboard', { batchId }); // 'batchDetail'은 뷰 파일 이름
 });
 
-router.get("/archive", async (req, res) => {
-	try {
-		const result = await dbClient.query(
-			"SELECT * FROM sensor_measurement WHERE batch_id = 5 ORDER BY data_id ASC"
-		);
-		const data = result.rows;
-		// 날짜 형식 변환
-		const timestamps = data.map((row) => {
-			return moment(row.measured_time)
-				.tz("Asia/Seoul")
-				.format("YYYY-MM-DD HH:mm");
-		});
-		const dataId = data.map((row) => row.data_id);
-		const temperatureData = data.map((row) => row.in_temperature);
-		const co2Data = data.map((row) => row.co2_concentration);
-		const pressureData = data.map((row) => row.pressure_upper);
+router.get('/archive', async (req, res) => {
+    try {
+        const result = await dbClient.query(
+            'SELECT * FROM sensor_measurement WHERE batch_id = 5 ORDER BY data_id ASC',
+        );
+        const data = result.rows;
+        // 날짜 형식 변환
+        const timestamps = data.map((row) => {
+            return moment(row.measured_time)
+                .tz('Asia/Seoul')
+                .format('YYYY-MM-DD HH:mm');
+        });
+        const dataId = data.map((row) => row.data_id);
+        const temperatureData = data.map((row) => row.in_temperature);
+        const co2Data = data.map((row) => row.co2_concentration);
+        const pressureData = data.map((row) => row.pressure_upper);
 
-		res.render("batch-archive.ejs", {
-			title: "archive",
-			timestamps: JSON.stringify(timestamps),
-			dataId: JSON.stringify(dataId),
-			temperatureData: JSON.stringify(temperatureData),
-			co2Data: JSON.stringify(co2Data),
-			pressureData: JSON.stringify(pressureData),
-		});
-	} catch (err) {
-		console.error(err);
-		res.status(500).send("Server Error");
-	}
+        res.render('batch-archive.ejs', {
+            title: 'archive',
+            timestamps: JSON.stringify(timestamps),
+            dataId: JSON.stringify(dataId),
+            temperatureData: JSON.stringify(temperatureData),
+            co2Data: JSON.stringify(co2Data),
+            pressureData: JSON.stringify(pressureData),
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 module.exports = router;
