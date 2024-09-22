@@ -14,4 +14,8 @@ router.get('/report', async (req, res) => {
     res.render('report.ejs');
 });
 
+router.get('/create-batch', async (req, res) => {
+    res.render('createBatch.ejs');
+});
+
 module.exports = router;
