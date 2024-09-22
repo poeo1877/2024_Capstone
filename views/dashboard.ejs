@@ -350,7 +350,7 @@
 <script>
     $(document).ready(function () {
         $.ajax({
-            url: '/temperature',
+            url: 'dashboard/temperature',
             method: 'GET',
             success: function (data) {
                 $('#temperature').text(data.temperature);

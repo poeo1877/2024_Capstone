@@ -1,0 +1,3567 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Dashboard</title>
+		<!-- Favicon icon -->
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="16x16"
+			href="./images/favicon.png"
+		/>
+		<link
+			rel="stylesheet"
+			href="./vendor/owl-carousel/css/owl.carousel.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="./vendor/owl-carousel/css/owl.theme.default.min.css"
+		/>
+		<link href="./vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+		<link href="./css/style.css" rel="stylesheet" />
+		<!-- Daterange picker -->
+		<link
+			href="./vendor/bootstrap-daterangepicker/daterangepicker.css"
+			rel="stylesheet"
+		/>
+		<!-- Datatable -->
+		<link
+			href="./vendor/datatables/css/jquery.dataTables.min.css"
+			rel="stylesheet"
+		/>
+	</head>
+
+	<body>
+		<!--*******************
+        Preloader start
+    ********************-->
+		<div id="preloader">
+			<div class="sk-three-bounce">
+				<div class="sk-child sk-bounce1"></div>
+				<div class="sk-child sk-bounce2"></div>
+				<div class="sk-child sk-bounce3"></div>
+			</div>
+		</div>
+		<!--*******************
+        Preloader end
+    ********************-->
+
+		<!--**********************************
+        Main wrapper start
+    ***********************************-->
+		<div id="main-wrapper">
+			<!--**********************************
+            Nav header start
+        ***********************************-->
+			<div class="nav-header">
+				<a href="index.html" class="brand-logo">
+					<img class="logo-abbr" src="./images/logo.png" alt="" />
+					<img
+						class="logo-compact"
+						src="./images/logo-text.png"
+						alt=""
+					/>
+					<img
+						class="brand-title"
+						src="./images/logo-text.png"
+						alt=""
+					/>
+				</a>
+
+				<div class="nav-control">
+					<div class="hamburger">
+						<span class="line"></span>
+						<span class="line"></span>
+						<span class="line"></span>
+					</div>
+				</div>
+			</div>
+			<!--**********************************
+            Nav header end
+        ***********************************-->
+
+			<!--**********************************
+            Header start
+        ***********************************-->
+			<div class="header">
+				<div class="header-content">
+					<nav class="navbar navbar-expand">
+						<div
+							class="collapse navbar-collapse justify-content-between"
+						>
+							<div class="header-left">
+								<!-- <div class="search_bar dropdown">
+                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                                <div class="dropdown-menu p-0 m-0">
+                                    <form>
+                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                    </form>
+                                </div> -->
+								<!-- </div> -->
+							</div>
+
+							<ul class="navbar-nav header-right">
+								<li
+									class="nav-item dropdown notification_dropdown"
+								>
+									<a
+										class="nav-link"
+										href="#"
+										role="button"
+										data-toggle="dropdown"
+									>
+										<i class="mdi mdi-bell"></i>
+										<div class="pulse-css"></div>
+									</a>
+									<div
+										class="dropdown-menu dropdown-menu-right"
+									>
+										<ul class="list-unstyled">
+											<li class="media dropdown-item">
+												<span class="success">
+													<i class="ti-user"></i>
+												</span>
+												<div class="media-body">
+													<a href="#">
+														<p>
+															<strong>
+																Martin
+															</strong>
+															has added a
+															<strong>
+																customer
+															</strong>
+															Successfully
+														</p>
+													</a>
+												</div>
+												<span class="notify-time">
+													3:20 am
+												</span>
+											</li>
+											<li class="media dropdown-item">
+												<span class="primary">
+													<i
+														class="ti-shopping-cart"
+													></i>
+												</span>
+												<div class="media-body">
+													<a href="#">
+														<p>
+															<strong>
+																Jennifer
+															</strong>
+															purchased Light
+															Dashboard 2.0.
+														</p>
+													</a>
+												</div>
+												<span class="notify-time">
+													3:20 am
+												</span>
+											</li>
+											<li class="media dropdown-item">
+												<span class="danger">
+													<i class="ti-bookmark"></i>
+												</span>
+												<div class="media-body">
+													<a href="#">
+														<p>
+															<strong>
+																Robin
+															</strong>
+															marked a
+															<strong>
+																ticket
+															</strong>
+															as unsolved.
+														</p>
+													</a>
+												</div>
+												<span class="notify-time">
+													3:20 am
+												</span>
+											</li>
+											<li class="media dropdown-item">
+												<span class="primary">
+													<i class="ti-heart"></i>
+												</span>
+												<div class="media-body">
+													<a href="#">
+														<p>
+															<strong>
+																David
+															</strong>
+															purchased Light
+															Dashboard 1.0.
+														</p>
+													</a>
+												</div>
+												<span class="notify-time">
+													3:20 am
+												</span>
+											</li>
+											<li class="media dropdown-item">
+												<span class="success">
+													<i class="ti-image"></i>
+												</span>
+												<div class="media-body">
+													<a href="#">
+														<p>
+															<strong>
+																James.
+															</strong>
+															has added a
+															<strong>
+																customer
+															</strong>
+															Successfully
+														</p>
+													</a>
+												</div>
+												<span class="notify-time">
+													3:20 am
+												</span>
+											</li>
+										</ul>
+										<a class="all-notification" href="#">
+											See all notifications
+											<i class="ti-arrow-right"></i>
+										</a>
+									</div>
+								</li>
+								<li class="nav-item dropdown header-profile">
+									<a
+										class="nav-link"
+										href="#"
+										role="button"
+										data-toggle="dropdown"
+									>
+										<i class="mdi mdi-account"></i>
+									</a>
+									<div
+										class="dropdown-menu dropdown-menu-right"
+									>
+										<a
+											href="./app-profile.html"
+											class="dropdown-item"
+										>
+											<i class="icon-user"></i>
+											<span class="ml-2">Profile</span>
+										</a>
+										<a
+											href="./email-inbox.html"
+											class="dropdown-item"
+										>
+											<i class="icon-envelope-open"></i>
+											<span class="ml-2">Inbox</span>
+										</a>
+										<a
+											href="./page-login.html"
+											class="dropdown-item"
+										>
+											<i class="icon-key"></i>
+											<span class="ml-2">Logout</span>
+										</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</div>
+			</div>
+			<!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+			<!--**********************************
+            Sidebar start
+        ***********************************-->
+			<div class="quixnav">
+				<div class="quixnav-scroll">
+					<ul class="metismenu" id="menu">
+						<li class="nav-label first">Main Menu</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-single-04"></i>
+								<span class="nav-text">Dashboard</span>
+							</a>
+							<ul aria-expanded="false">
+								<li><a href="./index.html">Dashboard 1</a></li>
+								<li><a href="./index2.html">Dashboard 2</a></li>
+							</ul>
+						</li>
+						<li class="nav-label">Apps</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-app-store"></i>
+								<span class="nav-text">Apps</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="./app-profile.html">Profile</a>
+								</li>
+								<li>
+									<a
+										class="has-arrow"
+										href="javascript:void()"
+										aria-expanded="false"
+									>
+										Email
+									</a>
+									<ul aria-expanded="false">
+										<li>
+											<a href="./email-compose.html">
+												Compose
+											</a>
+										</li>
+										<li>
+											<a href="./email-inbox.html">
+												Inbox
+											</a>
+										</li>
+										<li>
+											<a href="./email-read.html">Read</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="./app-calender.html">Calendar</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-chart-bar-33"></i>
+								<span class="nav-text">Charts</span>
+							</a>
+							<ul aria-expanded="false">
+								<li><a href="./chart-flot.html">Flot</a></li>
+								<li>
+									<a href="./chart-morris.html">Morris</a>
+								</li>
+								<li>
+									<a href="./chart-chartjs.html">Chartjs</a>
+								</li>
+								<li>
+									<a href="./chart-chartist.html">Chartist</a>
+								</li>
+								<li>
+									<a href="./chart-sparkline.html">
+										Sparkline
+									</a>
+								</li>
+								<li><a href="./chart-peity.html">Peity</a></li>
+							</ul>
+						</li>
+						<li class="nav-label">Components</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-world-2"></i>
+								<span class="nav-text">Bootstrap</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="./ui-accordion.html">Accordion</a>
+								</li>
+								<li><a href="./ui-alert.html">Alert</a></li>
+								<li><a href="./ui-badge.html">Badge</a></li>
+								<li><a href="./ui-button.html">Button</a></li>
+								<li><a href="./ui-modal.html">Modal</a></li>
+								<li>
+									<a href="./ui-button-group.html">
+										Button Group
+									</a>
+								</li>
+								<li>
+									<a href="./ui-list-group.html">
+										List Group
+									</a>
+								</li>
+								<li>
+									<a href="./ui-media-object.html">
+										Media Object
+									</a>
+								</li>
+								<li><a href="./ui-card.html">Cards</a></li>
+								<li>
+									<a href="./ui-carousel.html">Carousel</a>
+								</li>
+								<li>
+									<a href="./ui-dropdown.html">Dropdown</a>
+								</li>
+								<li><a href="./ui-popover.html">Popover</a></li>
+								<li>
+									<a href="./ui-progressbar.html">
+										Progressbar
+									</a>
+								</li>
+								<li><a href="./ui-tab.html">Tab</a></li>
+								<li>
+									<a href="./ui-typography.html">
+										Typography
+									</a>
+								</li>
+								<li>
+									<a href="./ui-pagination.html">
+										Pagination
+									</a>
+								</li>
+								<li><a href="./ui-grid.html">Grid</a></li>
+							</ul>
+						</li>
+
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-plug"></i>
+								<span class="nav-text">Plugins</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="./uc-select2.html">Select 2</a>
+								</li>
+								<li>
+									<a href="./uc-nestable.html">Nestedable</a>
+								</li>
+								<li>
+									<a href="./uc-noui-slider.html">
+										Noui Slider
+									</a>
+								</li>
+								<li>
+									<a href="./uc-sweetalert.html">
+										Sweet Alert
+									</a>
+								</li>
+								<li><a href="./uc-toastr.html">Toastr</a></li>
+								<li><a href="./map-jqvmap.html">Jqv Map</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="widget-basic.html" aria-expanded="false">
+								<i class="icon icon-globe-2"></i>
+								<span class="nav-text">Widget</span>
+							</a>
+						</li>
+						<li class="nav-label">Forms</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-form"></i>
+								<span class="nav-text">Forms</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="./form-element.html">
+										Form Elements
+									</a>
+								</li>
+								<li><a href="./form-wizard.html">Wizard</a></li>
+								<li>
+									<a href="./form-editor-summernote.html">
+										Summernote
+									</a>
+								</li>
+								<li><a href="form-pickers.html">Pickers</a></li>
+								<li>
+									<a href="form-validation-jquery.html">
+										Jquery Validate
+									</a>
+								</li>
+							</ul>
+						</li>
+						<li class="nav-label">Table</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-layout-25"></i>
+								<span class="nav-text">Table</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="table-bootstrap-basic.html">
+										Bootstrap
+									</a>
+								</li>
+								<li>
+									<a href="table-datatable-basic.html">
+										Datatable
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="nav-label">Extra</li>
+						<li>
+							<a
+								class="has-arrow"
+								href="javascript:void()"
+								aria-expanded="false"
+							>
+								<i class="icon icon-single-copy-06"></i>
+								<span class="nav-text">Pages</span>
+							</a>
+							<ul aria-expanded="false">
+								<li>
+									<a href="./page-register.html">Register</a>
+								</li>
+								<li><a href="./page-login.html">Login</a></li>
+								<li>
+									<a
+										class="has-arrow"
+										href="javascript:void()"
+										aria-expanded="false"
+									>
+										Error
+									</a>
+									<ul aria-expanded="false">
+										<li>
+											<a href="./page-error-400.html">
+												Error 400
+											</a>
+										</li>
+										<li>
+											<a href="./page-error-403.html">
+												Error 403
+											</a>
+										</li>
+										<li>
+											<a href="./page-error-404.html">
+												Error 404
+											</a>
+										</li>
+										<li>
+											<a href="./page-error-500.html">
+												Error 500
+											</a>
+										</li>
+										<li>
+											<a href="./page-error-503.html">
+												Error 503
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<a href="./page-lock-screen.html">
+										Lock Screen
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<!--**********************************
+            Sidebar end
+        ***********************************-->
+
+			<!--**********************************
+            Content body start
+        ***********************************-->
+			<div class="content-body">
+				<!-- row -->
+				<div class="container-fluid">
+					<!-- 최근 센서 데이터 표기 -->
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="card">
+								<div
+									class="card-body"
+									style="
+										display: flex;
+										justify-content: center;
+										align-items: center;
+									"
+								>
+									<button
+										type="button"
+										class="btn btn-rounded btn-outline-dark"
+										id="temp-btn"
+										style="width: 50%"
+									>
+										온도
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="card">
+								<div
+									class="card-body"
+									style="
+										display: flex;
+										justify-content: center;
+										align-items: center;
+									"
+								>
+									<button
+										type="button"
+										class="btn btn-rounded btn-outline-dark"
+										id="co2-btn"
+										style="width: 50%"
+									>
+										이산화탄소
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="card">
+								<div
+									class="card-body"
+									style="
+										display: flex;
+										justify-content: center;
+										align-items: center;
+									"
+								>
+									<button
+										type="button"
+										class="btn btn-rounded btn-outline-dark"
+										id="pressure-btn"
+										style="width: 50%"
+									>
+										압력
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- /# column -->
+					<div class="row">
+						<div class="col-xl col-lg col-md">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Data Overview</h4>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										<div class="col-xl col-lg">
+											<canvas id="lineChart"></canvas>
+											<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+											<script>
+												var ctx = document
+													.getElementById("lineChart")
+													.getContext("2d");
+												var lineChart = new Chart(ctx, {
+													type: "line",
+													data: {
+														labels: [
+															"2024-07-28 20:01",
+															"2024-07-28 20:02",
+															"2024-07-28 20:03",
+															"2024-07-28 20:04",
+															"2024-07-28 20:05",
+															"2024-07-28 20:06",
+														],
+														datasets: [
+															{
+																label: "Temperature",
+																data: [
+																	32.75,
+																	29.75,
+																	20.75,
+																	32.75,
+																	32.75,
+																	3.687,
+																],
+																backgroundColor:
+																	"rgba(75, 192, 192, 0.2)",
+																borderColor:
+																	"rgba(75, 192, 192, 1)",
+																borderWidth: 1,
+															},
+														],
+													},
+													options: {
+														responsive: true,
+														maintainAspectRatio: false,
+														scales: {
+															y: {
+																beginAtZero: false,
+															},
+														},
+													},
+												});
+											</script>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<style>
+						#lineChart {
+							width: 100%;
+							height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
+						}
+					</style>
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">Datatable</h4>
+									<button
+										type="submit"
+										class="btn btn-dark"
+										id="downloadExcel"
+									>
+										Excel로 다운로드
+									</button>
+								</div>
+								<div class="card-body">
+									<div class="table-responsive">
+										<table
+											id="example"
+											class="display"
+											style="min-width: 845px"
+										>
+											<thead>
+												<tr>
+													<th>data_id</th>
+													<th>측정시간</th>
+													<th>온도</th>
+													<th>이산화탄소</th>
+													<th>압력</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1</td>
+													<td>2024-06-09 10:00</td>
+													<td>23.106</td>
+													<td>11</td>
+													<td>103970.4149</td>
+												</tr>
+
+												<tr>
+													<td>2</td>
+													<td>2024-06-09 11:00</td>
+													<td>24.67</td>
+													<td>23</td>
+													<td>103969.8299</td>
+												</tr>
+
+												<tr>
+													<td>3</td>
+													<td>2024-06-09 12:00</td>
+													<td>23.084</td>
+													<td>35</td>
+													<td>103969.2448</td>
+												</tr>
+
+												<tr>
+													<td>4</td>
+													<td>2024-06-09 13:00</td>
+													<td>23.324</td>
+													<td>47</td>
+													<td>103968.6597</td>
+												</tr>
+
+												<tr>
+													<td>5</td>
+													<td>2024-06-09 14:00</td>
+													<td>24.124</td>
+													<td>59</td>
+													<td>103968.0746</td>
+												</tr>
+
+												<tr>
+													<td>6</td>
+													<td>2024-06-09 15:00</td>
+													<td>21.677</td>
+													<td>71</td>
+													<td>103967.4896</td>
+												</tr>
+
+												<tr>
+													<td>7</td>
+													<td>2024-06-09 16:00</td>
+													<td>21.577</td>
+													<td>83</td>
+													<td>103966.9045</td>
+												</tr>
+
+												<tr>
+													<td>8</td>
+													<td>2024-06-09 17:00</td>
+													<td>24.442</td>
+													<td>95</td>
+													<td>103966.3194</td>
+												</tr>
+
+												<tr>
+													<td>9</td>
+													<td>2024-06-09 18:00</td>
+													<td>20.696</td>
+													<td>107</td>
+													<td>103965.7343</td>
+												</tr>
+
+												<tr>
+													<td>10</td>
+													<td>2024-06-09 19:00</td>
+													<td>22.041</td>
+													<td>119</td>
+													<td>103965.1493</td>
+												</tr>
+
+												<tr>
+													<td>11</td>
+													<td>2024-06-09 20:00</td>
+													<td>21.581</td>
+													<td>131</td>
+													<td>103964.5642</td>
+												</tr>
+
+												<tr>
+													<td>12</td>
+													<td>2024-06-09 21:00</td>
+													<td>24.07</td>
+													<td>143</td>
+													<td>103963.9791</td>
+												</tr>
+
+												<tr>
+													<td>13</td>
+													<td>2024-06-09 22:00</td>
+													<td>21.915</td>
+													<td>155</td>
+													<td>103963.394</td>
+												</tr>
+
+												<tr>
+													<td>14</td>
+													<td>2024-06-09 23:00</td>
+													<td>21.096</td>
+													<td>167</td>
+													<td>103962.809</td>
+												</tr>
+
+												<tr>
+													<td>15</td>
+													<td>2024-06-10 0:00</td>
+													<td>23.62</td>
+													<td>179</td>
+													<td>103962.2239</td>
+												</tr>
+
+												<tr>
+													<td>16</td>
+													<td>2024-06-10 1:00</td>
+													<td>20.206</td>
+													<td>191</td>
+													<td>103961.6388</td>
+												</tr>
+
+												<tr>
+													<td>17</td>
+													<td>2024-06-10 2:00</td>
+													<td>20.117</td>
+													<td>202</td>
+													<td>103961.0537</td>
+												</tr>
+
+												<tr>
+													<td>18</td>
+													<td>2024-06-10 3:00</td>
+													<td>24.044</td>
+													<td>214</td>
+													<td>103960.4687</td>
+												</tr>
+
+												<tr>
+													<td>19</td>
+													<td>2024-06-10 4:00</td>
+													<td>20.816</td>
+													<td>226</td>
+													<td>103959.8836</td>
+												</tr>
+
+												<tr>
+													<td>20</td>
+													<td>2024-06-10 5:00</td>
+													<td>21.68</td>
+													<td>238</td>
+													<td>103959.2985</td>
+												</tr>
+
+												<tr>
+													<td>21</td>
+													<td>2024-06-10 6:00</td>
+													<td>22.445</td>
+													<td>250</td>
+													<td>103958.7134</td>
+												</tr>
+
+												<tr>
+													<td>22</td>
+													<td>2024-06-10 7:00</td>
+													<td>20.893</td>
+													<td>262</td>
+													<td>103958.1284</td>
+												</tr>
+
+												<tr>
+													<td>23</td>
+													<td>2024-06-10 8:00</td>
+													<td>21.093</td>
+													<td>274</td>
+													<td>103957.5433</td>
+												</tr>
+
+												<tr>
+													<td>24</td>
+													<td>2024-06-10 9:00</td>
+													<td>20.326</td>
+													<td>286</td>
+													<td>103956.9582</td>
+												</tr>
+
+												<tr>
+													<td>25</td>
+													<td>2024-06-10 10:00</td>
+													<td>21.022</td>
+													<td>298</td>
+													<td>103956.3731</td>
+												</tr>
+
+												<tr>
+													<td>26</td>
+													<td>2024-06-10 11:00</td>
+													<td>22.301</td>
+													<td>310</td>
+													<td>103955.7881</td>
+												</tr>
+
+												<tr>
+													<td>27</td>
+													<td>2024-06-10 12:00</td>
+													<td>24.59</td>
+													<td>322</td>
+													<td>103955.203</td>
+												</tr>
+
+												<tr>
+													<td>28</td>
+													<td>2024-06-10 13:00</td>
+													<td>22.364</td>
+													<td>334</td>
+													<td>103954.6179</td>
+												</tr>
+
+												<tr>
+													<td>29</td>
+													<td>2024-06-10 14:00</td>
+													<td>22.985</td>
+													<td>346</td>
+													<td>103954.0328</td>
+												</tr>
+
+												<tr>
+													<td>30</td>
+													<td>2024-06-10 15:00</td>
+													<td>23.777</td>
+													<td>358</td>
+													<td>103953.4478</td>
+												</tr>
+
+												<tr>
+													<td>31</td>
+													<td>2024-06-10 16:00</td>
+													<td>24.634</td>
+													<td>370</td>
+													<td>103952.8627</td>
+												</tr>
+
+												<tr>
+													<td>32</td>
+													<td>2024-06-10 17:00</td>
+													<td>21.128</td>
+													<td>382</td>
+													<td>103952.2776</td>
+												</tr>
+
+												<tr>
+													<td>33</td>
+													<td>2024-06-10 18:00</td>
+													<td>21.271</td>
+													<td>394</td>
+													<td>103951.6925</td>
+												</tr>
+
+												<tr>
+													<td>34</td>
+													<td>2024-06-10 19:00</td>
+													<td>22.288</td>
+													<td>405</td>
+													<td>103951.1075</td>
+												</tr>
+
+												<tr>
+													<td>35</td>
+													<td>2024-06-10 20:00</td>
+													<td>20.516</td>
+													<td>417</td>
+													<td>103950.5224</td>
+												</tr>
+
+												<tr>
+													<td>36</td>
+													<td>2024-06-10 21:00</td>
+													<td>20.119</td>
+													<td>429</td>
+													<td>103949.9373</td>
+												</tr>
+
+												<tr>
+													<td>37</td>
+													<td>2024-06-10 22:00</td>
+													<td>21.722</td>
+													<td>441</td>
+													<td>103949.3522</td>
+												</tr>
+
+												<tr>
+													<td>38</td>
+													<td>2024-06-10 23:00</td>
+													<td>22.611</td>
+													<td>453</td>
+													<td>103948.7672</td>
+												</tr>
+
+												<tr>
+													<td>39</td>
+													<td>2024-06-11 0:00</td>
+													<td>24.495</td>
+													<td>465</td>
+													<td>103948.1821</td>
+												</tr>
+
+												<tr>
+													<td>40</td>
+													<td>2024-06-11 1:00</td>
+													<td>23.78</td>
+													<td>477</td>
+													<td>103947.597</td>
+												</tr>
+
+												<tr>
+													<td>41</td>
+													<td>2024-06-11 2:00</td>
+													<td>22.27</td>
+													<td>489</td>
+													<td>103947.0119</td>
+												</tr>
+
+												<tr>
+													<td>42</td>
+													<td>2024-06-11 3:00</td>
+													<td>21.471</td>
+													<td>501</td>
+													<td>103946.4269</td>
+												</tr>
+
+												<tr>
+													<td>43</td>
+													<td>2024-06-11 4:00</td>
+													<td>24.231</td>
+													<td>513</td>
+													<td>103945.8418</td>
+												</tr>
+
+												<tr>
+													<td>44</td>
+													<td>2024-06-11 5:00</td>
+													<td>22.716</td>
+													<td>525</td>
+													<td>103945.2567</td>
+												</tr>
+
+												<tr>
+													<td>45</td>
+													<td>2024-06-11 6:00</td>
+													<td>24.599</td>
+													<td>537</td>
+													<td>103944.6716</td>
+												</tr>
+
+												<tr>
+													<td>46</td>
+													<td>2024-06-11 7:00</td>
+													<td>22.066</td>
+													<td>549</td>
+													<td>103944.0866</td>
+												</tr>
+
+												<tr>
+													<td>47</td>
+													<td>2024-06-11 8:00</td>
+													<td>24.323</td>
+													<td>561</td>
+													<td>103943.5015</td>
+												</tr>
+
+												<tr>
+													<td>48</td>
+													<td>2024-06-11 9:00</td>
+													<td>23.153</td>
+													<td>573</td>
+													<td>103942.9164</td>
+												</tr>
+
+												<tr>
+													<td>49</td>
+													<td>2024-06-11 10:00</td>
+													<td>20.432</td>
+													<td>585</td>
+													<td>103942.3313</td>
+												</tr>
+
+												<tr>
+													<td>50</td>
+													<td>2024-06-11 11:00</td>
+													<td>20.166</td>
+													<td>597</td>
+													<td>103941.7463</td>
+												</tr>
+
+												<tr>
+													<td>51</td>
+													<td>2024-06-11 12:00</td>
+													<td>23.606</td>
+													<td>608</td>
+													<td>103941.1612</td>
+												</tr>
+
+												<tr>
+													<td>52</td>
+													<td>2024-06-11 13:00</td>
+													<td>21.497</td>
+													<td>620</td>
+													<td>103940.5761</td>
+												</tr>
+
+												<tr>
+													<td>53</td>
+													<td>2024-06-11 14:00</td>
+													<td>23.796</td>
+													<td>632</td>
+													<td>103939.991</td>
+												</tr>
+
+												<tr>
+													<td>54</td>
+													<td>2024-06-11 15:00</td>
+													<td>20.873</td>
+													<td>644</td>
+													<td>103939.406</td>
+												</tr>
+
+												<tr>
+													<td>55</td>
+													<td>2024-06-11 16:00</td>
+													<td>23.512</td>
+													<td>656</td>
+													<td>103938.8209</td>
+												</tr>
+
+												<tr>
+													<td>56</td>
+													<td>2024-06-11 17:00</td>
+													<td>23.474</td>
+													<td>668</td>
+													<td>103938.2358</td>
+												</tr>
+
+												<tr>
+													<td>57</td>
+													<td>2024-06-11 18:00</td>
+													<td>22.117</td>
+													<td>680</td>
+													<td>103937.6507</td>
+												</tr>
+
+												<tr>
+													<td>58</td>
+													<td>2024-06-11 19:00</td>
+													<td>22.5</td>
+													<td>692</td>
+													<td>103937.0657</td>
+												</tr>
+
+												<tr>
+													<td>59</td>
+													<td>2024-06-11 20:00</td>
+													<td>23.337</td>
+													<td>704</td>
+													<td>103936.4806</td>
+												</tr>
+
+												<tr>
+													<td>60</td>
+													<td>2024-06-11 21:00</td>
+													<td>20.015</td>
+													<td>716</td>
+													<td>103935.8955</td>
+												</tr>
+
+												<tr>
+													<td>61</td>
+													<td>2024-06-11 22:00</td>
+													<td>21.591</td>
+													<td>728</td>
+													<td>103935.3104</td>
+												</tr>
+
+												<tr>
+													<td>62</td>
+													<td>2024-06-11 23:00</td>
+													<td>20.076</td>
+													<td>740</td>
+													<td>103934.7254</td>
+												</tr>
+
+												<tr>
+													<td>63</td>
+													<td>2024-06-12 0:00</td>
+													<td>21.37</td>
+													<td>752</td>
+													<td>103934.1403</td>
+												</tr>
+
+												<tr>
+													<td>64</td>
+													<td>2024-06-12 1:00</td>
+													<td>21.967</td>
+													<td>764</td>
+													<td>103933.5552</td>
+												</tr>
+
+												<tr>
+													<td>65</td>
+													<td>2024-06-12 2:00</td>
+													<td>20.067</td>
+													<td>776</td>
+													<td>103932.9701</td>
+												</tr>
+
+												<tr>
+													<td>66</td>
+													<td>2024-06-12 3:00</td>
+													<td>20.443</td>
+													<td>788</td>
+													<td>103932.3851</td>
+												</tr>
+
+												<tr>
+													<td>67</td>
+													<td>2024-06-12 4:00</td>
+													<td>22.732</td>
+													<td>800</td>
+													<td>103931.8</td>
+												</tr>
+
+												<tr>
+													<td>68</td>
+													<td>2024-06-12 5:00</td>
+													<td>22.695</td>
+													<td>811</td>
+													<td>103931.2149</td>
+												</tr>
+
+												<tr>
+													<td>69</td>
+													<td>2024-06-12 6:00</td>
+													<td>22.116</td>
+													<td>823</td>
+													<td>103930.6299</td>
+												</tr>
+
+												<tr>
+													<td>70</td>
+													<td>2024-06-12 7:00</td>
+													<td>22.8</td>
+													<td>835</td>
+													<td>103930.0448</td>
+												</tr>
+
+												<tr>
+													<td>71</td>
+													<td>2024-06-12 8:00</td>
+													<td>24.556</td>
+													<td>847</td>
+													<td>103929.4597</td>
+												</tr>
+
+												<tr>
+													<td>72</td>
+													<td>2024-06-12 9:00</td>
+													<td>21.083</td>
+													<td>859</td>
+													<td>103928.8746</td>
+												</tr>
+
+												<tr>
+													<td>73</td>
+													<td>2024-06-12 10:00</td>
+													<td>24.094</td>
+													<td>871</td>
+													<td>103928.2896</td>
+												</tr>
+
+												<tr>
+													<td>74</td>
+													<td>2024-06-12 11:00</td>
+													<td>23.21</td>
+													<td>883</td>
+													<td>103927.7045</td>
+												</tr>
+
+												<tr>
+													<td>75</td>
+													<td>2024-06-12 12:00</td>
+													<td>22.969</td>
+													<td>895</td>
+													<td>103927.1194</td>
+												</tr>
+
+												<tr>
+													<td>76</td>
+													<td>2024-06-12 13:00</td>
+													<td>20.201</td>
+													<td>907</td>
+													<td>103926.5343</td>
+												</tr>
+
+												<tr>
+													<td>77</td>
+													<td>2024-06-12 14:00</td>
+													<td>22.711</td>
+													<td>919</td>
+													<td>103925.9493</td>
+												</tr>
+
+												<tr>
+													<td>78</td>
+													<td>2024-06-12 15:00</td>
+													<td>24.953</td>
+													<td>931</td>
+													<td>103925.3642</td>
+												</tr>
+
+												<tr>
+													<td>79</td>
+													<td>2024-06-12 16:00</td>
+													<td>21.668</td>
+													<td>943</td>
+													<td>103924.7791</td>
+												</tr>
+
+												<tr>
+													<td>80</td>
+													<td>2024-06-12 17:00</td>
+													<td>22.046</td>
+													<td>955</td>
+													<td>103924.194</td>
+												</tr>
+
+												<tr>
+													<td>81</td>
+													<td>2024-06-12 18:00</td>
+													<td>20.659</td>
+													<td>967</td>
+													<td>103923.609</td>
+												</tr>
+
+												<tr>
+													<td>82</td>
+													<td>2024-06-12 19:00</td>
+													<td>23.05</td>
+													<td>979</td>
+													<td>103923.0239</td>
+												</tr>
+
+												<tr>
+													<td>83</td>
+													<td>2024-06-12 20:00</td>
+													<td>24.086</td>
+													<td>991</td>
+													<td>103922.4388</td>
+												</tr>
+
+												<tr>
+													<td>84</td>
+													<td>2024-06-12 21:00</td>
+													<td>22.02</td>
+													<td>1002</td>
+													<td>103921.8537</td>
+												</tr>
+
+												<tr>
+													<td>85</td>
+													<td>2024-06-12 22:00</td>
+													<td>23.016</td>
+													<td>1014</td>
+													<td>103921.2687</td>
+												</tr>
+
+												<tr>
+													<td>86</td>
+													<td>2024-06-12 23:00</td>
+													<td>23.119</td>
+													<td>1026</td>
+													<td>103920.6836</td>
+												</tr>
+
+												<tr>
+													<td>87</td>
+													<td>2024-06-13 0:00</td>
+													<td>20.977</td>
+													<td>1038</td>
+													<td>103920.0985</td>
+												</tr>
+
+												<tr>
+													<td>88</td>
+													<td>2024-06-13 1:00</td>
+													<td>24.31</td>
+													<td>1050</td>
+													<td>103919.5134</td>
+												</tr>
+
+												<tr>
+													<td>89</td>
+													<td>2024-06-13 2:00</td>
+													<td>20.602</td>
+													<td>1062</td>
+													<td>103918.9284</td>
+												</tr>
+
+												<tr>
+													<td>90</td>
+													<td>2024-06-13 3:00</td>
+													<td>23.995</td>
+													<td>1074</td>
+													<td>103918.3433</td>
+												</tr>
+
+												<tr>
+													<td>91</td>
+													<td>2024-06-13 4:00</td>
+													<td>20.17</td>
+													<td>1086</td>
+													<td>103917.7582</td>
+												</tr>
+
+												<tr>
+													<td>92</td>
+													<td>2024-06-13 5:00</td>
+													<td>24.536</td>
+													<td>1098</td>
+													<td>103917.1731</td>
+												</tr>
+
+												<tr>
+													<td>93</td>
+													<td>2024-06-13 6:00</td>
+													<td>24.235</td>
+													<td>1110</td>
+													<td>103916.5881</td>
+												</tr>
+
+												<tr>
+													<td>94</td>
+													<td>2024-06-13 7:00</td>
+													<td>22.656</td>
+													<td>1122</td>
+													<td>103916.003</td>
+												</tr>
+
+												<tr>
+													<td>95</td>
+													<td>2024-06-13 8:00</td>
+													<td>23.369</td>
+													<td>1134</td>
+													<td>103915.4179</td>
+												</tr>
+
+												<tr>
+													<td>96</td>
+													<td>2024-06-13 9:00</td>
+													<td>20.254</td>
+													<td>1146</td>
+													<td>103914.8328</td>
+												</tr>
+
+												<tr>
+													<td>97</td>
+													<td>2024-06-13 10:00</td>
+													<td>23.802</td>
+													<td>1158</td>
+													<td>103914.2478</td>
+												</tr>
+
+												<tr>
+													<td>98</td>
+													<td>2024-06-13 11:00</td>
+													<td>21.421</td>
+													<td>1170</td>
+													<td>103913.6627</td>
+												</tr>
+
+												<tr>
+													<td>99</td>
+													<td>2024-06-13 12:00</td>
+													<td>23.225</td>
+													<td>1182</td>
+													<td>103913.0776</td>
+												</tr>
+
+												<tr>
+													<td>100</td>
+													<td>2024-06-13 13:00</td>
+													<td>24.08</td>
+													<td>1194</td>
+													<td>103912.4925</td>
+												</tr>
+
+												<tr>
+													<td>101</td>
+													<td>2024-06-13 14:00</td>
+													<td>20.928</td>
+													<td>1205</td>
+													<td>103911.9075</td>
+												</tr>
+
+												<tr>
+													<td>102</td>
+													<td>2024-06-13 15:00</td>
+													<td>20.821</td>
+													<td>1217</td>
+													<td>103911.3224</td>
+												</tr>
+
+												<tr>
+													<td>103</td>
+													<td>2024-06-13 16:00</td>
+													<td>21.003</td>
+													<td>1229</td>
+													<td>103910.7373</td>
+												</tr>
+
+												<tr>
+													<td>104</td>
+													<td>2024-06-13 17:00</td>
+													<td>22.489</td>
+													<td>1241</td>
+													<td>103910.1522</td>
+												</tr>
+
+												<tr>
+													<td>105</td>
+													<td>2024-06-13 18:00</td>
+													<td>24.935</td>
+													<td>1253</td>
+													<td>103909.5672</td>
+												</tr>
+
+												<tr>
+													<td>106</td>
+													<td>2024-06-13 19:00</td>
+													<td>21.677</td>
+													<td>1265</td>
+													<td>103908.9821</td>
+												</tr>
+
+												<tr>
+													<td>107</td>
+													<td>2024-06-13 20:00</td>
+													<td>20.329</td>
+													<td>1277</td>
+													<td>103908.397</td>
+												</tr>
+
+												<tr>
+													<td>108</td>
+													<td>2024-06-13 21:00</td>
+													<td>24.604</td>
+													<td>1289</td>
+													<td>103907.8119</td>
+												</tr>
+
+												<tr>
+													<td>109</td>
+													<td>2024-06-13 22:00</td>
+													<td>23.253</td>
+													<td>1301</td>
+													<td>103907.2269</td>
+												</tr>
+
+												<tr>
+													<td>110</td>
+													<td>2024-06-13 23:00</td>
+													<td>22.266</td>
+													<td>1313</td>
+													<td>103906.6418</td>
+												</tr>
+
+												<tr>
+													<td>111</td>
+													<td>2024-06-14 0:00</td>
+													<td>20.371</td>
+													<td>1325</td>
+													<td>103906.0567</td>
+												</tr>
+
+												<tr>
+													<td>112</td>
+													<td>2024-06-14 1:00</td>
+													<td>20.608</td>
+													<td>1337</td>
+													<td>103905.4716</td>
+												</tr>
+
+												<tr>
+													<td>113</td>
+													<td>2024-06-14 2:00</td>
+													<td>20.502</td>
+													<td>1349</td>
+													<td>103904.8866</td>
+												</tr>
+
+												<tr>
+													<td>114</td>
+													<td>2024-06-14 3:00</td>
+													<td>24.893</td>
+													<td>1361</td>
+													<td>103904.3015</td>
+												</tr>
+
+												<tr>
+													<td>115</td>
+													<td>2024-06-14 4:00</td>
+													<td>24.292</td>
+													<td>1373</td>
+													<td>103903.7164</td>
+												</tr>
+
+												<tr>
+													<td>116</td>
+													<td>2024-06-14 5:00</td>
+													<td>20.054</td>
+													<td>1385</td>
+													<td>103903.1313</td>
+												</tr>
+
+												<tr>
+													<td>117</td>
+													<td>2024-06-14 6:00</td>
+													<td>21.215</td>
+													<td>1397</td>
+													<td>103902.5463</td>
+												</tr>
+
+												<tr>
+													<td>118</td>
+													<td>2024-06-14 7:00</td>
+													<td>22.551</td>
+													<td>1408</td>
+													<td>103901.9612</td>
+												</tr>
+
+												<tr>
+													<td>119</td>
+													<td>2024-06-14 8:00</td>
+													<td>24.316</td>
+													<td>1420</td>
+													<td>103901.3761</td>
+												</tr>
+
+												<tr>
+													<td>120</td>
+													<td>2024-06-14 9:00</td>
+													<td>24.503</td>
+													<td>1432</td>
+													<td>103900.791</td>
+												</tr>
+
+												<tr>
+													<td>121</td>
+													<td>2024-06-14 10:00</td>
+													<td>24.295</td>
+													<td>1444</td>
+													<td>103900.206</td>
+												</tr>
+
+												<tr>
+													<td>122</td>
+													<td>2024-06-14 11:00</td>
+													<td>20.007</td>
+													<td>1456</td>
+													<td>103899.6209</td>
+												</tr>
+
+												<tr>
+													<td>123</td>
+													<td>2024-06-14 12:00</td>
+													<td>23.178</td>
+													<td>1468</td>
+													<td>103899.0358</td>
+												</tr>
+
+												<tr>
+													<td>124</td>
+													<td>2024-06-14 13:00</td>
+													<td>22.146</td>
+													<td>1480</td>
+													<td>103898.4507</td>
+												</tr>
+
+												<tr>
+													<td>125</td>
+													<td>2024-06-14 14:00</td>
+													<td>24.822</td>
+													<td>1492</td>
+													<td>103897.8657</td>
+												</tr>
+
+												<tr>
+													<td>126</td>
+													<td>2024-06-14 15:00</td>
+													<td>21.921</td>
+													<td>1504</td>
+													<td>103897.2806</td>
+												</tr>
+
+												<tr>
+													<td>127</td>
+													<td>2024-06-14 16:00</td>
+													<td>23.675</td>
+													<td>1516</td>
+													<td>103896.6955</td>
+												</tr>
+
+												<tr>
+													<td>128</td>
+													<td>2024-06-14 17:00</td>
+													<td>21.411</td>
+													<td>1528</td>
+													<td>103896.1104</td>
+												</tr>
+
+												<tr>
+													<td>129</td>
+													<td>2024-06-14 18:00</td>
+													<td>21.125</td>
+													<td>1540</td>
+													<td>103895.5254</td>
+												</tr>
+
+												<tr>
+													<td>130</td>
+													<td>2024-06-14 19:00</td>
+													<td>20.514</td>
+													<td>1552</td>
+													<td>103894.9403</td>
+												</tr>
+
+												<tr>
+													<td>131</td>
+													<td>2024-06-14 20:00</td>
+													<td>20.052</td>
+													<td>1564</td>
+													<td>103894.3552</td>
+												</tr>
+
+												<tr>
+													<td>132</td>
+													<td>2024-06-14 21:00</td>
+													<td>20.563</td>
+													<td>1576</td>
+													<td>103893.7701</td>
+												</tr>
+
+												<tr>
+													<td>133</td>
+													<td>2024-06-14 22:00</td>
+													<td>23.318</td>
+													<td>1588</td>
+													<td>103893.1851</td>
+												</tr>
+
+												<tr>
+													<td>134</td>
+													<td>2024-06-14 23:00</td>
+													<td>23.91</td>
+													<td>1599</td>
+													<td>103892.6</td>
+												</tr>
+
+												<tr>
+													<td>135</td>
+													<td>2024-06-15 0:00</td>
+													<td>22.309</td>
+													<td>1611</td>
+													<td>103892.0149</td>
+												</tr>
+
+												<tr>
+													<td>136</td>
+													<td>2024-06-15 1:00</td>
+													<td>22.105</td>
+													<td>1623</td>
+													<td>103891.4299</td>
+												</tr>
+
+												<tr>
+													<td>137</td>
+													<td>2024-06-15 2:00</td>
+													<td>22.223</td>
+													<td>1635</td>
+													<td>103890.8448</td>
+												</tr>
+
+												<tr>
+													<td>138</td>
+													<td>2024-06-15 3:00</td>
+													<td>24.931</td>
+													<td>1647</td>
+													<td>103890.2597</td>
+												</tr>
+
+												<tr>
+													<td>139</td>
+													<td>2024-06-15 4:00</td>
+													<td>24.073</td>
+													<td>1659</td>
+													<td>103889.6746</td>
+												</tr>
+
+												<tr>
+													<td>140</td>
+													<td>2024-06-15 5:00</td>
+													<td>23.461</td>
+													<td>1671</td>
+													<td>103889.0896</td>
+												</tr>
+
+												<tr>
+													<td>141</td>
+													<td>2024-06-15 6:00</td>
+													<td>22.781</td>
+													<td>1683</td>
+													<td>103888.5045</td>
+												</tr>
+
+												<tr>
+													<td>142</td>
+													<td>2024-06-15 7:00</td>
+													<td>20.732</td>
+													<td>1695</td>
+													<td>103887.9194</td>
+												</tr>
+
+												<tr>
+													<td>143</td>
+													<td>2024-06-15 8:00</td>
+													<td>20.799</td>
+													<td>1707</td>
+													<td>103887.3343</td>
+												</tr>
+
+												<tr>
+													<td>144</td>
+													<td>2024-06-15 9:00</td>
+													<td>24.643</td>
+													<td>1719</td>
+													<td>103886.7493</td>
+												</tr>
+
+												<tr>
+													<td>145</td>
+													<td>2024-06-15 10:00</td>
+													<td>23.625</td>
+													<td>1731</td>
+													<td>103886.1642</td>
+												</tr>
+
+												<tr>
+													<td>146</td>
+													<td>2024-06-15 11:00</td>
+													<td>24.245</td>
+													<td>1743</td>
+													<td>103885.5791</td>
+												</tr>
+
+												<tr>
+													<td>147</td>
+													<td>2024-06-15 12:00</td>
+													<td>22.374</td>
+													<td>1755</td>
+													<td>103884.994</td>
+												</tr>
+
+												<tr>
+													<td>148</td>
+													<td>2024-06-15 13:00</td>
+													<td>20.284</td>
+													<td>1767</td>
+													<td>103884.409</td>
+												</tr>
+
+												<tr>
+													<td>149</td>
+													<td>2024-06-15 14:00</td>
+													<td>24.568</td>
+													<td>1779</td>
+													<td>103883.8239</td>
+												</tr>
+
+												<tr>
+													<td>150</td>
+													<td>2024-06-15 15:00</td>
+													<td>24.135</td>
+													<td>1791</td>
+													<td>103883.2388</td>
+												</tr>
+
+												<tr>
+													<td>151</td>
+													<td>2024-06-15 16:00</td>
+													<td>22.26</td>
+													<td>1802</td>
+													<td>103882.6537</td>
+												</tr>
+
+												<tr>
+													<td>152</td>
+													<td>2024-06-15 17:00</td>
+													<td>22.039</td>
+													<td>1814</td>
+													<td>103882.0687</td>
+												</tr>
+
+												<tr>
+													<td>153</td>
+													<td>2024-06-15 18:00</td>
+													<td>20.305</td>
+													<td>1826</td>
+													<td>103881.4836</td>
+												</tr>
+
+												<tr>
+													<td>154</td>
+													<td>2024-06-15 19:00</td>
+													<td>23.864</td>
+													<td>1838</td>
+													<td>103880.8985</td>
+												</tr>
+
+												<tr>
+													<td>155</td>
+													<td>2024-06-15 20:00</td>
+													<td>21.33</td>
+													<td>1850</td>
+													<td>103880.3134</td>
+												</tr>
+
+												<tr>
+													<td>156</td>
+													<td>2024-06-15 21:00</td>
+													<td>24.382</td>
+													<td>1862</td>
+													<td>103879.7284</td>
+												</tr>
+
+												<tr>
+													<td>157</td>
+													<td>2024-06-15 22:00</td>
+													<td>23.15</td>
+													<td>1874</td>
+													<td>103879.1433</td>
+												</tr>
+
+												<tr>
+													<td>158</td>
+													<td>2024-06-15 23:00</td>
+													<td>22.99</td>
+													<td>1886</td>
+													<td>103878.5582</td>
+												</tr>
+
+												<tr>
+													<td>159</td>
+													<td>2024-06-16 0:00</td>
+													<td>20.402</td>
+													<td>1898</td>
+													<td>103877.9731</td>
+												</tr>
+
+												<tr>
+													<td>160</td>
+													<td>2024-06-16 1:00</td>
+													<td>20.262</td>
+													<td>1910</td>
+													<td>103877.3881</td>
+												</tr>
+
+												<tr>
+													<td>161</td>
+													<td>2024-06-16 2:00</td>
+													<td>23.175</td>
+													<td>1922</td>
+													<td>103876.803</td>
+												</tr>
+
+												<tr>
+													<td>162</td>
+													<td>2024-06-16 3:00</td>
+													<td>24.586</td>
+													<td>1934</td>
+													<td>103876.2179</td>
+												</tr>
+
+												<tr>
+													<td>163</td>
+													<td>2024-06-16 4:00</td>
+													<td>21.565</td>
+													<td>1946</td>
+													<td>103875.6328</td>
+												</tr>
+
+												<tr>
+													<td>164</td>
+													<td>2024-06-16 5:00</td>
+													<td>21.839</td>
+													<td>1958</td>
+													<td>103875.0478</td>
+												</tr>
+
+												<tr>
+													<td>165</td>
+													<td>2024-06-16 6:00</td>
+													<td>21.137</td>
+													<td>1970</td>
+													<td>103874.4627</td>
+												</tr>
+
+												<tr>
+													<td>166</td>
+													<td>2024-06-16 7:00</td>
+													<td>23.943</td>
+													<td>1982</td>
+													<td>103873.8776</td>
+												</tr>
+
+												<tr>
+													<td>167</td>
+													<td>2024-06-16 8:00</td>
+													<td>24.75</td>
+													<td>1994</td>
+													<td>103873.2925</td>
+												</tr>
+
+												<tr>
+													<td>168</td>
+													<td>2024-06-16 9:00</td>
+													<td>22.983</td>
+													<td>2005</td>
+													<td>103872.7075</td>
+												</tr>
+
+												<tr>
+													<td>169</td>
+													<td>2024-06-16 10:00</td>
+													<td>24.257</td>
+													<td>2017</td>
+													<td>103872.1224</td>
+												</tr>
+
+												<tr>
+													<td>170</td>
+													<td>2024-06-16 11:00</td>
+													<td>23.898</td>
+													<td>2029</td>
+													<td>103871.5373</td>
+												</tr>
+
+												<tr>
+													<td>171</td>
+													<td>2024-06-16 12:00</td>
+													<td>23.425</td>
+													<td>2041</td>
+													<td>103870.9522</td>
+												</tr>
+
+												<tr>
+													<td>172</td>
+													<td>2024-06-16 13:00</td>
+													<td>20.112</td>
+													<td>2053</td>
+													<td>103870.3672</td>
+												</tr>
+
+												<tr>
+													<td>173</td>
+													<td>2024-06-16 14:00</td>
+													<td>21.059</td>
+													<td>2065</td>
+													<td>103869.7821</td>
+												</tr>
+
+												<tr>
+													<td>174</td>
+													<td>2024-06-16 15:00</td>
+													<td>23.414</td>
+													<td>2077</td>
+													<td>103869.197</td>
+												</tr>
+
+												<tr>
+													<td>175</td>
+													<td>2024-06-16 16:00</td>
+													<td>20.903</td>
+													<td>2089</td>
+													<td>103868.6119</td>
+												</tr>
+
+												<tr>
+													<td>176</td>
+													<td>2024-06-16 17:00</td>
+													<td>23.179</td>
+													<td>2101</td>
+													<td>103868.0269</td>
+												</tr>
+
+												<tr>
+													<td>177</td>
+													<td>2024-06-16 18:00</td>
+													<td>24.212</td>
+													<td>2113</td>
+													<td>103867.4418</td>
+												</tr>
+
+												<tr>
+													<td>178</td>
+													<td>2024-06-16 19:00</td>
+													<td>24.471</td>
+													<td>2125</td>
+													<td>103866.8567</td>
+												</tr>
+
+												<tr>
+													<td>179</td>
+													<td>2024-06-16 20:00</td>
+													<td>23.608</td>
+													<td>2137</td>
+													<td>103866.2716</td>
+												</tr>
+
+												<tr>
+													<td>180</td>
+													<td>2024-06-16 21:00</td>
+													<td>21.803</td>
+													<td>2149</td>
+													<td>103865.6866</td>
+												</tr>
+
+												<tr>
+													<td>181</td>
+													<td>2024-06-16 22:00</td>
+													<td>22.838</td>
+													<td>2161</td>
+													<td>103865.1015</td>
+												</tr>
+
+												<tr>
+													<td>182</td>
+													<td>2024-06-16 23:00</td>
+													<td>24.429</td>
+													<td>2173</td>
+													<td>103864.5164</td>
+												</tr>
+
+												<tr>
+													<td>183</td>
+													<td>2024-06-17 0:00</td>
+													<td>24.679</td>
+													<td>2185</td>
+													<td>103863.9313</td>
+												</tr>
+
+												<tr>
+													<td>184</td>
+													<td>2024-06-17 1:00</td>
+													<td>22.115</td>
+													<td>2197</td>
+													<td>103863.3463</td>
+												</tr>
+
+												<tr>
+													<td>185</td>
+													<td>2024-06-17 2:00</td>
+													<td>22.73</td>
+													<td>2208</td>
+													<td>103862.7612</td>
+												</tr>
+
+												<tr>
+													<td>186</td>
+													<td>2024-06-17 3:00</td>
+													<td>21.422</td>
+													<td>2220</td>
+													<td>103862.1761</td>
+												</tr>
+
+												<tr>
+													<td>187</td>
+													<td>2024-06-17 4:00</td>
+													<td>22.277</td>
+													<td>2232</td>
+													<td>103861.591</td>
+												</tr>
+
+												<tr>
+													<td>188</td>
+													<td>2024-06-17 5:00</td>
+													<td>21.667</td>
+													<td>2244</td>
+													<td>103861.006</td>
+												</tr>
+
+												<tr>
+													<td>189</td>
+													<td>2024-06-17 6:00</td>
+													<td>24.616</td>
+													<td>2256</td>
+													<td>103860.4209</td>
+												</tr>
+
+												<tr>
+													<td>190</td>
+													<td>2024-06-17 7:00</td>
+													<td>24.929</td>
+													<td>2268</td>
+													<td>103859.8358</td>
+												</tr>
+
+												<tr>
+													<td>191</td>
+													<td>2024-06-17 8:00</td>
+													<td>21.395</td>
+													<td>2280</td>
+													<td>103859.2507</td>
+												</tr>
+
+												<tr>
+													<td>192</td>
+													<td>2024-06-17 9:00</td>
+													<td>23.964</td>
+													<td>2292</td>
+													<td>103858.6657</td>
+												</tr>
+
+												<tr>
+													<td>193</td>
+													<td>2024-06-17 10:00</td>
+													<td>22.983</td>
+													<td>2304</td>
+													<td>103858.0806</td>
+												</tr>
+
+												<tr>
+													<td>194</td>
+													<td>2024-06-17 11:00</td>
+													<td>23.744</td>
+													<td>2316</td>
+													<td>103857.4955</td>
+												</tr>
+
+												<tr>
+													<td>195</td>
+													<td>2024-06-17 12:00</td>
+													<td>24.063</td>
+													<td>2328</td>
+													<td>103856.9104</td>
+												</tr>
+
+												<tr>
+													<td>196</td>
+													<td>2024-06-17 13:00</td>
+													<td>22.73</td>
+													<td>2340</td>
+													<td>103856.3254</td>
+												</tr>
+
+												<tr>
+													<td>197</td>
+													<td>2024-06-17 14:00</td>
+													<td>24.526</td>
+													<td>2352</td>
+													<td>103855.7403</td>
+												</tr>
+
+												<tr>
+													<td>198</td>
+													<td>2024-06-17 15:00</td>
+													<td>23.903</td>
+													<td>2364</td>
+													<td>103855.1552</td>
+												</tr>
+
+												<tr>
+													<td>199</td>
+													<td>2024-06-17 16:00</td>
+													<td>22.797</td>
+													<td>2376</td>
+													<td>103854.5701</td>
+												</tr>
+
+												<tr>
+													<td>200</td>
+													<td>2024-06-17 17:00</td>
+													<td>21.023</td>
+													<td>2388</td>
+													<td>103853.9851</td>
+												</tr>
+
+												<tr>
+													<td>201</td>
+													<td>2024-06-17 18:00</td>
+													<td>21.816</td>
+													<td>2399</td>
+													<td>103853.4</td>
+												</tr>
+
+												<tr>
+													<td>202</td>
+													<td>2024-06-17 19:00</td>
+													<td>22.03</td>
+													<td>2411</td>
+													<td>103852.8149</td>
+												</tr>
+
+												<tr>
+													<td>203</td>
+													<td>2024-06-17 20:00</td>
+													<td>21.647</td>
+													<td>2423</td>
+													<td>103852.2299</td>
+												</tr>
+
+												<tr>
+													<td>204</td>
+													<td>2024-06-17 21:00</td>
+													<td>20.987</td>
+													<td>2435</td>
+													<td>103851.6448</td>
+												</tr>
+
+												<tr>
+													<td>205</td>
+													<td>2024-06-17 22:00</td>
+													<td>23.865</td>
+													<td>2447</td>
+													<td>103851.0597</td>
+												</tr>
+
+												<tr>
+													<td>206</td>
+													<td>2024-06-17 23:00</td>
+													<td>20.076</td>
+													<td>2459</td>
+													<td>103850.4746</td>
+												</tr>
+
+												<tr>
+													<td>207</td>
+													<td>2024-06-18 0:00</td>
+													<td>24.016</td>
+													<td>2471</td>
+													<td>103849.8896</td>
+												</tr>
+
+												<tr>
+													<td>208</td>
+													<td>2024-06-18 1:00</td>
+													<td>20.511</td>
+													<td>2483</td>
+													<td>103849.3045</td>
+												</tr>
+
+												<tr>
+													<td>209</td>
+													<td>2024-06-18 2:00</td>
+													<td>23.372</td>
+													<td>2495</td>
+													<td>103848.7194</td>
+												</tr>
+
+												<tr>
+													<td>210</td>
+													<td>2024-06-18 3:00</td>
+													<td>21.074</td>
+													<td>2507</td>
+													<td>103848.1343</td>
+												</tr>
+
+												<tr>
+													<td>211</td>
+													<td>2024-06-18 4:00</td>
+													<td>24.704</td>
+													<td>2519</td>
+													<td>103847.5493</td>
+												</tr>
+
+												<tr>
+													<td>212</td>
+													<td>2024-06-18 5:00</td>
+													<td>20.726</td>
+													<td>2531</td>
+													<td>103846.9642</td>
+												</tr>
+
+												<tr>
+													<td>213</td>
+													<td>2024-06-18 6:00</td>
+													<td>22.923</td>
+													<td>2543</td>
+													<td>103846.3791</td>
+												</tr>
+
+												<tr>
+													<td>214</td>
+													<td>2024-06-18 7:00</td>
+													<td>23.835</td>
+													<td>2555</td>
+													<td>103845.794</td>
+												</tr>
+
+												<tr>
+													<td>215</td>
+													<td>2024-06-18 8:00</td>
+													<td>22.1</td>
+													<td>2567</td>
+													<td>103845.209</td>
+												</tr>
+
+												<tr>
+													<td>216</td>
+													<td>2024-06-18 9:00</td>
+													<td>21.603</td>
+													<td>2579</td>
+													<td>103844.6239</td>
+												</tr>
+
+												<tr>
+													<td>217</td>
+													<td>2024-06-18 10:00</td>
+													<td>22.481</td>
+													<td>2591</td>
+													<td>103844.0388</td>
+												</tr>
+
+												<tr>
+													<td>218</td>
+													<td>2024-06-18 11:00</td>
+													<td>20.496</td>
+													<td>2602</td>
+													<td>103843.4537</td>
+												</tr>
+
+												<tr>
+													<td>219</td>
+													<td>2024-06-18 12:00</td>
+													<td>22.443</td>
+													<td>2614</td>
+													<td>103842.8687</td>
+												</tr>
+
+												<tr>
+													<td>220</td>
+													<td>2024-06-18 13:00</td>
+													<td>22.153</td>
+													<td>2626</td>
+													<td>103842.2836</td>
+												</tr>
+
+												<tr>
+													<td>221</td>
+													<td>2024-06-18 14:00</td>
+													<td>24.065</td>
+													<td>2638</td>
+													<td>103841.6985</td>
+												</tr>
+
+												<tr>
+													<td>222</td>
+													<td>2024-06-18 15:00</td>
+													<td>23.357</td>
+													<td>2650</td>
+													<td>103841.1134</td>
+												</tr>
+
+												<tr>
+													<td>223</td>
+													<td>2024-06-18 16:00</td>
+													<td>22.506</td>
+													<td>2662</td>
+													<td>103840.5284</td>
+												</tr>
+
+												<tr>
+													<td>224</td>
+													<td>2024-06-18 17:00</td>
+													<td>23.935</td>
+													<td>2674</td>
+													<td>103839.9433</td>
+												</tr>
+
+												<tr>
+													<td>225</td>
+													<td>2024-06-18 18:00</td>
+													<td>21.075</td>
+													<td>2686</td>
+													<td>103839.3582</td>
+												</tr>
+
+												<tr>
+													<td>226</td>
+													<td>2024-06-18 19:00</td>
+													<td>20.892</td>
+													<td>2698</td>
+													<td>103838.7731</td>
+												</tr>
+
+												<tr>
+													<td>227</td>
+													<td>2024-06-18 20:00</td>
+													<td>23.273</td>
+													<td>2710</td>
+													<td>103838.1881</td>
+												</tr>
+
+												<tr>
+													<td>228</td>
+													<td>2024-06-18 21:00</td>
+													<td>22.744</td>
+													<td>2722</td>
+													<td>103837.603</td>
+												</tr>
+
+												<tr>
+													<td>229</td>
+													<td>2024-06-18 22:00</td>
+													<td>24.412</td>
+													<td>2734</td>
+													<td>103837.0179</td>
+												</tr>
+
+												<tr>
+													<td>230</td>
+													<td>2024-06-18 23:00</td>
+													<td>22.545</td>
+													<td>2746</td>
+													<td>103836.4328</td>
+												</tr>
+
+												<tr>
+													<td>231</td>
+													<td>2024-06-19 0:00</td>
+													<td>21.272</td>
+													<td>2758</td>
+													<td>103835.8478</td>
+												</tr>
+
+												<tr>
+													<td>232</td>
+													<td>2024-06-19 1:00</td>
+													<td>24.406</td>
+													<td>2770</td>
+													<td>103835.2627</td>
+												</tr>
+
+												<tr>
+													<td>233</td>
+													<td>2024-06-19 2:00</td>
+													<td>24.293</td>
+													<td>2782</td>
+													<td>103834.6776</td>
+												</tr>
+
+												<tr>
+													<td>234</td>
+													<td>2024-06-19 3:00</td>
+													<td>24.033</td>
+													<td>2794</td>
+													<td>103834.0925</td>
+												</tr>
+
+												<tr>
+													<td>235</td>
+													<td>2024-06-19 4:00</td>
+													<td>21.909</td>
+													<td>2805</td>
+													<td>103833.5075</td>
+												</tr>
+
+												<tr>
+													<td>236</td>
+													<td>2024-06-19 5:00</td>
+													<td>24.979</td>
+													<td>2817</td>
+													<td>103832.9224</td>
+												</tr>
+
+												<tr>
+													<td>237</td>
+													<td>2024-06-19 6:00</td>
+													<td>22.423</td>
+													<td>2829</td>
+													<td>103832.3373</td>
+												</tr>
+
+												<tr>
+													<td>238</td>
+													<td>2024-06-19 7:00</td>
+													<td>24.837</td>
+													<td>2841</td>
+													<td>103831.7522</td>
+												</tr>
+
+												<tr>
+													<td>239</td>
+													<td>2024-06-19 8:00</td>
+													<td>20.75</td>
+													<td>2853</td>
+													<td>103831.1672</td>
+												</tr>
+
+												<tr>
+													<td>240</td>
+													<td>2024-06-19 9:00</td>
+													<td>23.82</td>
+													<td>2865</td>
+													<td>103830.5821</td>
+												</tr>
+
+												<tr>
+													<td>241</td>
+													<td>2024-06-19 10:00</td>
+													<td>23.897</td>
+													<td>2877</td>
+													<td>103829.997</td>
+												</tr>
+
+												<tr>
+													<td>242</td>
+													<td>2024-06-19 11:00</td>
+													<td>21.187</td>
+													<td>2889</td>
+													<td>103829.4119</td>
+												</tr>
+
+												<tr>
+													<td>243</td>
+													<td>2024-06-19 12:00</td>
+													<td>24.723</td>
+													<td>2901</td>
+													<td>103828.8269</td>
+												</tr>
+
+												<tr>
+													<td>244</td>
+													<td>2024-06-19 13:00</td>
+													<td>22.115</td>
+													<td>2913</td>
+													<td>103828.2418</td>
+												</tr>
+
+												<tr>
+													<td>245</td>
+													<td>2024-06-19 14:00</td>
+													<td>21.038</td>
+													<td>2925</td>
+													<td>103827.6567</td>
+												</tr>
+
+												<tr>
+													<td>246</td>
+													<td>2024-06-19 15:00</td>
+													<td>22.079</td>
+													<td>2937</td>
+													<td>103827.0716</td>
+												</tr>
+
+												<tr>
+													<td>247</td>
+													<td>2024-06-19 16:00</td>
+													<td>24.684</td>
+													<td>2949</td>
+													<td>103826.4866</td>
+												</tr>
+
+												<tr>
+													<td>248</td>
+													<td>2024-06-19 17:00</td>
+													<td>21.618</td>
+													<td>2961</td>
+													<td>103825.9015</td>
+												</tr>
+
+												<tr>
+													<td>249</td>
+													<td>2024-06-19 18:00</td>
+													<td>20.731</td>
+													<td>2973</td>
+													<td>103825.3164</td>
+												</tr>
+
+												<tr>
+													<td>250</td>
+													<td>2024-06-19 19:00</td>
+													<td>24.595</td>
+													<td>2985</td>
+													<td>103824.7313</td>
+												</tr>
+
+												<tr>
+													<td>251</td>
+													<td>2024-06-19 20:00</td>
+													<td>24.503</td>
+													<td>2997</td>
+													<td>103824.1463</td>
+												</tr>
+
+												<tr>
+													<td>252</td>
+													<td>2024-06-19 21:00</td>
+													<td>24.74</td>
+													<td>3008</td>
+													<td>103823.5612</td>
+												</tr>
+
+												<tr>
+													<td>253</td>
+													<td>2024-06-19 22:00</td>
+													<td>23.87</td>
+													<td>3020</td>
+													<td>103822.9761</td>
+												</tr>
+
+												<tr>
+													<td>254</td>
+													<td>2024-06-19 23:00</td>
+													<td>21.389</td>
+													<td>3032</td>
+													<td>103822.391</td>
+												</tr>
+
+												<tr>
+													<td>255</td>
+													<td>2024-06-20 0:00</td>
+													<td>23.399</td>
+													<td>3044</td>
+													<td>103821.806</td>
+												</tr>
+
+												<tr>
+													<td>256</td>
+													<td>2024-06-20 1:00</td>
+													<td>20.753</td>
+													<td>3056</td>
+													<td>103821.2209</td>
+												</tr>
+
+												<tr>
+													<td>257</td>
+													<td>2024-06-20 2:00</td>
+													<td>22.349</td>
+													<td>3068</td>
+													<td>103820.6358</td>
+												</tr>
+
+												<tr>
+													<td>258</td>
+													<td>2024-06-20 3:00</td>
+													<td>20.591</td>
+													<td>3080</td>
+													<td>103820.0507</td>
+												</tr>
+
+												<tr>
+													<td>259</td>
+													<td>2024-06-20 4:00</td>
+													<td>24.832</td>
+													<td>3092</td>
+													<td>103819.4657</td>
+												</tr>
+
+												<tr>
+													<td>260</td>
+													<td>2024-06-20 5:00</td>
+													<td>24.668</td>
+													<td>3104</td>
+													<td>103818.8806</td>
+												</tr>
+
+												<tr>
+													<td>261</td>
+													<td>2024-06-20 6:00</td>
+													<td>21.255</td>
+													<td>3116</td>
+													<td>103818.2955</td>
+												</tr>
+
+												<tr>
+													<td>262</td>
+													<td>2024-06-20 7:00</td>
+													<td>24.813</td>
+													<td>3128</td>
+													<td>103817.7104</td>
+												</tr>
+
+												<tr>
+													<td>263</td>
+													<td>2024-06-20 8:00</td>
+													<td>24.301</td>
+													<td>3140</td>
+													<td>103817.1254</td>
+												</tr>
+
+												<tr>
+													<td>264</td>
+													<td>2024-06-20 9:00</td>
+													<td>24.634</td>
+													<td>3152</td>
+													<td>103816.5403</td>
+												</tr>
+
+												<tr>
+													<td>265</td>
+													<td>2024-06-20 10:00</td>
+													<td>20.021</td>
+													<td>3164</td>
+													<td>103815.9552</td>
+												</tr>
+
+												<tr>
+													<td>266</td>
+													<td>2024-06-20 11:00</td>
+													<td>23.998</td>
+													<td>3176</td>
+													<td>103815.3701</td>
+												</tr>
+
+												<tr>
+													<td>267</td>
+													<td>2024-06-20 12:00</td>
+													<td>24.029</td>
+													<td>3188</td>
+													<td>103814.7851</td>
+												</tr>
+
+												<tr>
+													<td>268</td>
+													<td>2024-06-20 13:00</td>
+													<td>23.03</td>
+													<td>3200</td>
+													<td>103814.2</td>
+												</tr>
+
+												<tr>
+													<td>269</td>
+													<td>2024-06-20 14:00</td>
+													<td>21.649</td>
+													<td>3211</td>
+													<td>103813.6149</td>
+												</tr>
+
+												<tr>
+													<td>270</td>
+													<td>2024-06-20 15:00</td>
+													<td>21.034</td>
+													<td>3223</td>
+													<td>103813.0299</td>
+												</tr>
+
+												<tr>
+													<td>271</td>
+													<td>2024-06-20 16:00</td>
+													<td>24.965</td>
+													<td>3235</td>
+													<td>103812.4448</td>
+												</tr>
+
+												<tr>
+													<td>272</td>
+													<td>2024-06-20 17:00</td>
+													<td>22.248</td>
+													<td>3247</td>
+													<td>103811.8597</td>
+												</tr>
+
+												<tr>
+													<td>273</td>
+													<td>2024-06-20 18:00</td>
+													<td>21.796</td>
+													<td>3259</td>
+													<td>103811.2746</td>
+												</tr>
+
+												<tr>
+													<td>274</td>
+													<td>2024-06-20 19:00</td>
+													<td>21.984</td>
+													<td>3271</td>
+													<td>103810.6896</td>
+												</tr>
+
+												<tr>
+													<td>275</td>
+													<td>2024-06-20 20:00</td>
+													<td>23.073</td>
+													<td>3283</td>
+													<td>103810.1045</td>
+												</tr>
+
+												<tr>
+													<td>276</td>
+													<td>2024-06-20 21:00</td>
+													<td>24.081</td>
+													<td>3295</td>
+													<td>103809.5194</td>
+												</tr>
+
+												<tr>
+													<td>277</td>
+													<td>2024-06-20 22:00</td>
+													<td>21.198</td>
+													<td>3307</td>
+													<td>103808.9343</td>
+												</tr>
+
+												<tr>
+													<td>278</td>
+													<td>2024-06-20 23:00</td>
+													<td>23.847</td>
+													<td>3319</td>
+													<td>103808.3493</td>
+												</tr>
+
+												<tr>
+													<td>279</td>
+													<td>2024-06-21 0:00</td>
+													<td>20.77</td>
+													<td>3331</td>
+													<td>103807.7642</td>
+												</tr>
+
+												<tr>
+													<td>280</td>
+													<td>2024-06-21 1:00</td>
+													<td>24.778</td>
+													<td>3343</td>
+													<td>103807.1791</td>
+												</tr>
+
+												<tr>
+													<td>281</td>
+													<td>2024-06-21 2:00</td>
+													<td>20.729</td>
+													<td>3355</td>
+													<td>103806.594</td>
+												</tr>
+
+												<tr>
+													<td>282</td>
+													<td>2024-06-21 3:00</td>
+													<td>24.105</td>
+													<td>3367</td>
+													<td>103806.009</td>
+												</tr>
+
+												<tr>
+													<td>283</td>
+													<td>2024-06-21 4:00</td>
+													<td>21.107</td>
+													<td>3379</td>
+													<td>103805.4239</td>
+												</tr>
+
+												<tr>
+													<td>284</td>
+													<td>2024-06-21 5:00</td>
+													<td>24.56</td>
+													<td>3391</td>
+													<td>103804.8388</td>
+												</tr>
+
+												<tr>
+													<td>285</td>
+													<td>2024-06-21 6:00</td>
+													<td>24.785</td>
+													<td>3402</td>
+													<td>103804.2537</td>
+												</tr>
+
+												<tr>
+													<td>286</td>
+													<td>2024-06-21 7:00</td>
+													<td>22.43</td>
+													<td>3414</td>
+													<td>103803.6687</td>
+												</tr>
+
+												<tr>
+													<td>287</td>
+													<td>2024-06-21 8:00</td>
+													<td>21.475</td>
+													<td>3426</td>
+													<td>103803.0836</td>
+												</tr>
+
+												<tr>
+													<td>288</td>
+													<td>2024-06-21 9:00</td>
+													<td>20.619</td>
+													<td>3438</td>
+													<td>103802.4985</td>
+												</tr>
+
+												<tr>
+													<td>289</td>
+													<td>2024-06-21 10:00</td>
+													<td>21.372</td>
+													<td>3450</td>
+													<td>103801.9134</td>
+												</tr>
+
+												<tr>
+													<td>290</td>
+													<td>2024-06-21 11:00</td>
+													<td>22.054</td>
+													<td>3462</td>
+													<td>103801.3284</td>
+												</tr>
+
+												<tr>
+													<td>291</td>
+													<td>2024-06-21 12:00</td>
+													<td>20.376</td>
+													<td>3474</td>
+													<td>103800.7433</td>
+												</tr>
+
+												<tr>
+													<td>292</td>
+													<td>2024-06-21 13:00</td>
+													<td>21.735</td>
+													<td>3486</td>
+													<td>103800.1582</td>
+												</tr>
+
+												<tr>
+													<td>293</td>
+													<td>2024-06-21 14:00</td>
+													<td>20.872</td>
+													<td>3498</td>
+													<td>103799.5731</td>
+												</tr>
+
+												<tr>
+													<td>294</td>
+													<td>2024-06-21 15:00</td>
+													<td>22.888</td>
+													<td>3510</td>
+													<td>103798.9881</td>
+												</tr>
+
+												<tr>
+													<td>295</td>
+													<td>2024-06-21 16:00</td>
+													<td>24.067</td>
+													<td>3522</td>
+													<td>103798.403</td>
+												</tr>
+
+												<tr>
+													<td>296</td>
+													<td>2024-06-21 17:00</td>
+													<td>22.228</td>
+													<td>3534</td>
+													<td>103797.8179</td>
+												</tr>
+
+												<tr>
+													<td>297</td>
+													<td>2024-06-21 18:00</td>
+													<td>20.823</td>
+													<td>3546</td>
+													<td>103797.2328</td>
+												</tr>
+
+												<tr>
+													<td>298</td>
+													<td>2024-06-21 19:00</td>
+													<td>23.423</td>
+													<td>3558</td>
+													<td>103796.6478</td>
+												</tr>
+
+												<tr>
+													<td>299</td>
+													<td>2024-06-21 20:00</td>
+													<td>24.508</td>
+													<td>3570</td>
+													<td>103796.0627</td>
+												</tr>
+
+												<tr>
+													<td>300</td>
+													<td>2024-06-21 21:00</td>
+													<td>20.833</td>
+													<td>3582</td>
+													<td>103795.4776</td>
+												</tr>
+
+												<tr>
+													<td>301</td>
+													<td>2024-06-21 22:00</td>
+													<td>20.053</td>
+													<td>3594</td>
+													<td>103794.8925</td>
+												</tr>
+
+												<tr>
+													<td>302</td>
+													<td>2024-06-21 23:00</td>
+													<td>20.451</td>
+													<td>3605</td>
+													<td>103794.3075</td>
+												</tr>
+
+												<tr>
+													<td>303</td>
+													<td>2024-06-22 0:00</td>
+													<td>23.005</td>
+													<td>3617</td>
+													<td>103793.7224</td>
+												</tr>
+
+												<tr>
+													<td>304</td>
+													<td>2024-06-22 1:00</td>
+													<td>23.009</td>
+													<td>3629</td>
+													<td>103793.1373</td>
+												</tr>
+
+												<tr>
+													<td>305</td>
+													<td>2024-06-22 2:00</td>
+													<td>20.815</td>
+													<td>3641</td>
+													<td>103792.5522</td>
+												</tr>
+
+												<tr>
+													<td>306</td>
+													<td>2024-06-22 3:00</td>
+													<td>21.506</td>
+													<td>3653</td>
+													<td>103791.9672</td>
+												</tr>
+
+												<tr>
+													<td>307</td>
+													<td>2024-06-22 4:00</td>
+													<td>22.066</td>
+													<td>3665</td>
+													<td>103791.3821</td>
+												</tr>
+
+												<tr>
+													<td>308</td>
+													<td>2024-06-22 5:00</td>
+													<td>21.123</td>
+													<td>3677</td>
+													<td>103790.797</td>
+												</tr>
+
+												<tr>
+													<td>309</td>
+													<td>2024-06-22 6:00</td>
+													<td>20.362</td>
+													<td>3689</td>
+													<td>103790.2119</td>
+												</tr>
+
+												<tr>
+													<td>310</td>
+													<td>2024-06-22 7:00</td>
+													<td>21.76</td>
+													<td>3701</td>
+													<td>103789.6269</td>
+												</tr>
+
+												<tr>
+													<td>311</td>
+													<td>2024-06-22 8:00</td>
+													<td>20.38</td>
+													<td>3713</td>
+													<td>103789.0418</td>
+												</tr>
+
+												<tr>
+													<td>312</td>
+													<td>2024-06-22 9:00</td>
+													<td>22.4</td>
+													<td>3725</td>
+													<td>103788.4567</td>
+												</tr>
+
+												<tr>
+													<td>313</td>
+													<td>2024-06-22 10:00</td>
+													<td>24.839</td>
+													<td>3737</td>
+													<td>103787.8716</td>
+												</tr>
+
+												<tr>
+													<td>314</td>
+													<td>2024-06-22 11:00</td>
+													<td>23.338</td>
+													<td>3749</td>
+													<td>103787.2866</td>
+												</tr>
+
+												<tr>
+													<td>315</td>
+													<td>2024-06-22 12:00</td>
+													<td>20.665</td>
+													<td>3761</td>
+													<td>103786.7015</td>
+												</tr>
+
+												<tr>
+													<td>316</td>
+													<td>2024-06-22 13:00</td>
+													<td>21.018</td>
+													<td>3773</td>
+													<td>103786.1164</td>
+												</tr>
+
+												<tr>
+													<td>317</td>
+													<td>2024-06-22 14:00</td>
+													<td>22.435</td>
+													<td>3785</td>
+													<td>103785.5313</td>
+												</tr>
+
+												<tr>
+													<td>318</td>
+													<td>2024-06-22 15:00</td>
+													<td>24.722</td>
+													<td>3797</td>
+													<td>103784.9463</td>
+												</tr>
+
+												<tr>
+													<td>319</td>
+													<td>2024-06-22 16:00</td>
+													<td>24.866</td>
+													<td>3808</td>
+													<td>103784.3612</td>
+												</tr>
+
+												<tr>
+													<td>320</td>
+													<td>2024-06-22 17:00</td>
+													<td>20.999</td>
+													<td>3820</td>
+													<td>103783.7761</td>
+												</tr>
+
+												<tr>
+													<td>321</td>
+													<td>2024-06-22 18:00</td>
+													<td>22.797</td>
+													<td>3832</td>
+													<td>103783.191</td>
+												</tr>
+
+												<tr>
+													<td>322</td>
+													<td>2024-06-22 19:00</td>
+													<td>24.311</td>
+													<td>3844</td>
+													<td>103782.606</td>
+												</tr>
+
+												<tr>
+													<td>323</td>
+													<td>2024-06-22 20:00</td>
+													<td>20.156</td>
+													<td>3856</td>
+													<td>103782.0209</td>
+												</tr>
+
+												<tr>
+													<td>324</td>
+													<td>2024-06-22 21:00</td>
+													<td>24.007</td>
+													<td>3868</td>
+													<td>103781.4358</td>
+												</tr>
+
+												<tr>
+													<td>325</td>
+													<td>2024-06-22 22:00</td>
+													<td>24.676</td>
+													<td>3880</td>
+													<td>103780.8507</td>
+												</tr>
+
+												<tr>
+													<td>326</td>
+													<td>2024-06-22 23:00</td>
+													<td>22.655</td>
+													<td>3892</td>
+													<td>103780.2657</td>
+												</tr>
+
+												<tr>
+													<td>327</td>
+													<td>2024-06-23 0:00</td>
+													<td>24.836</td>
+													<td>3904</td>
+													<td>103779.6806</td>
+												</tr>
+
+												<tr>
+													<td>328</td>
+													<td>2024-06-23 1:00</td>
+													<td>24.352</td>
+													<td>3916</td>
+													<td>103779.0955</td>
+												</tr>
+
+												<tr>
+													<td>329</td>
+													<td>2024-06-23 2:00</td>
+													<td>21.672</td>
+													<td>3928</td>
+													<td>103778.5104</td>
+												</tr>
+
+												<tr>
+													<td>330</td>
+													<td>2024-06-23 3:00</td>
+													<td>21.27</td>
+													<td>3940</td>
+													<td>103777.9254</td>
+												</tr>
+
+												<tr>
+													<td>331</td>
+													<td>2024-06-23 4:00</td>
+													<td>22.686</td>
+													<td>3952</td>
+													<td>103777.3403</td>
+												</tr>
+
+												<tr>
+													<td>332</td>
+													<td>2024-06-23 5:00</td>
+													<td>22.94</td>
+													<td>3964</td>
+													<td>103776.7552</td>
+												</tr>
+
+												<tr>
+													<td>333</td>
+													<td>2024-06-23 6:00</td>
+													<td>23.335</td>
+													<td>3976</td>
+													<td>103776.1701</td>
+												</tr>
+
+												<tr>
+													<td>334</td>
+													<td>2024-06-23 7:00</td>
+													<td>20.758</td>
+													<td>3988</td>
+													<td>103775.5851</td>
+												</tr>
+
+												<tr>
+													<td>335</td>
+													<td>2024-06-23 8:00</td>
+													<td>20.091</td>
+													<td>4000</td>
+													<td>103775.0</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<th>data_id</th>
+													<th>측정시간</th>
+													<th>온도</th>
+													<th>이산화탄소</th>
+													<th>압력</th>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
+					<!-- 이 아래에서 통계 같은 것 시각화-->
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">데이터</h4>
+								</div>
+								<div class="card-body">
+									--- heatmap --- 만들기
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">데이터 2</h4>
+								</div>
+								<div class="card-body">
+									---Density Plot--- 만들기
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="card">
+								<div class="card-header">
+									<h4 class="card-title">데이터 3</h4>
+								</div>
+								<div class="card-body">
+									아직 정하지 못했습니다.
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--**********************************
+            Content body end
+        ***********************************-->
+
+			<!--**********************************
+            Footer start
+        ***********************************-->
+			<!-- <div class="footer">
+        <div class="copyright">
+          <p>
+            Copyright © Designed &amp; Developed by
+            <a href="#" target="_blank">Quixkit</a> 2019
+          </p>
+          <p>
+            Distributed by
+            <a href="https://themewagon.com/" target="_blank">Themewagon</a>
+          </p>
+        </div>
+      </div> -->
+			<!--**********************************
+            Footer end
+        ***********************************-->
+
+			<!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+			<!--**********************************
+           Support ticket button end
+        ***********************************-->
+		</div>
+		<!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+		<!-- Required vendors -->
+		<script src="./vendor/global/global.min.js"></script>
+		<script src="./js/quixnav-init.js"></script>
+		<script src="./js/custom.min.js"></script>
+
+		<!-- Vectormap -->
+		<script src="./vendor/raphael/raphael.min.js"></script>
+
+		<script src="./vendor/circle-progress/circle-progress.min.js"></script>
+		<script src="./vendor/chart.js/Chart.bundle.min.js"></script>
+
+		<script src="./vendor/gaugeJS/dist/gauge.min.js"></script>
+
+		<!--  flot-chart js -->
+		<script src="./vendor/flot/jquery.flot.js"></script>
+		<script src="./vendor/flot/jquery.flot.resize.js"></script>
+
+		<!-- Owl Carousel -->
+		<script src="./vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+		<!-- Counter Up -->
+		<script src="./vendor/jqvmap/js/jquery.vmap.min.js"></script>
+		<script src="./vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+		<script src="./vendor/jquery.counterup/jquery.counterup.min.js"></script>
+
+		<script src="./js/dashboard/dashboard-1.js"></script>
+
+		<!-- Daterangepicker -->
+		<!-- momment js is must -->
+		<script src="./vendor/moment/moment.min.js"></script>
+		<script src="./vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+		<!-- Daterangepicker -->
+		<script src="./js/plugins-init/bs-daterange-picker-init.js"></script>
+
+		<!-- Datatable -->
+		<script src="./vendor/datatables/js/jquery.dataTables.min.js"></script>
+		<script src="./js/plugins-init/datatables.init.js"></script>
+	</body>
+</html>

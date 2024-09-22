@@ -1,0 +1,256 @@
+<link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css" />
+<link
+	rel="stylesheet"
+	href="/vendor/owl-carousel/css/owl.theme.default.min.css"
+/>
+<link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+<link href="/css/style.css" rel="stylesheet" />
+<!-- Daterange picker -->
+<link
+	href="/vendor/bootstrap-daterangepicker/daterangepicker.css"
+	rel="stylesheet"
+/>
+<!-- Datatable -->
+<link
+	href="/vendor/datatables/css/jquery.dataTables.min.css"
+	rel="stylesheet"
+/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+
+<!--**********************************
+            Content body start
+        ***********************************-->
+<!-- row -->
+<div class="container-fluid">
+	<!-- 최근 센서 데이터 표기 -->
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="card">
+				<div
+					class="card-body"
+					style="
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					"
+				>
+					<button
+						type="button"
+						class="btn btn-rounded btn-outline-dark"
+						id="temperature-btn"
+						style="width: 50%"
+					>
+						온도
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div
+					class="card-body"
+					style="
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					"
+				>
+					<button
+						type="button"
+						class="btn btn-rounded btn-outline-dark"
+						id="co2-btn"
+						style="width: 50%"
+					>
+						이산화탄소
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div
+					class="card-body"
+					style="
+						display: flex;
+						justify-content: center;
+						align-items: center;
+					"
+				>
+					<button
+						type="button"
+						class="btn btn-rounded btn-outline-dark"
+						id="pressure-btn"
+						style="width: 50%"
+					>
+						압력
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- /# column -->
+	<div class="row">
+		<div class="col-xl col-lg col-md">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Data Overview</h4>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-xl col-lg">
+							<canvas id="lineChart"></canvas>
+							<script src="/js/chart.js"></script>
+							<div id="timestamps" style="display: none">
+								<%- timestamps %>
+							</div>
+							<div id="temperatureData" style="display: none">
+								<%- temperatureData %>
+							</div>
+							<div id="co2Data" style="display: none">
+								<%- co2Data %>
+							</div>
+							<div id="pressureData" style="display: none">
+								<%- pressureData %>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<style>
+		#lineChart {
+			width: 100%;
+			height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
+		}
+	</style>
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Datatable</h4>
+					<button
+						type="submit"
+						class="btn btn-dark"
+						id="downloadExcel"
+					>
+						Excel로 다운로드
+					</button>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table
+							id="example"
+							class="display"
+							style="min-width: 845px"
+						>
+							<thead>
+								<tr>
+									<th>data_id</th>
+									<th>측정시간</th>
+									<th>온도</th>
+									<th>이산화탄소</th>
+									<th>압력</th>
+								</tr>
+							</thead>
+							<tbody>
+								<% for (let i = 0; i < 100; i++) { %>
+								<tr>
+									<td><%= dataId[i] %></td>
+									<td><%= timestamps[i] %></td>
+									<td><%= temperatureData[i] %></td>
+									<td><%= co2Data[i] %></td>
+									<td><%= pressureData[i] %></td>
+								</tr>
+								<% } %>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th>data_id</th>
+									<th>측정시간</th>
+									<th>온도</th>
+									<th>이산화탄소</th>
+									<th>압력</th>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
+	<!-- 이 아래에서 통계 같은 것 시각화-->
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터</h4>
+				</div>
+				<div class="card-body">
+					<div id="heatmap"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터 2</h4>
+				</div>
+				<div class="card-body">
+					<div id="density-plot"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터 3</h4>
+				</div>
+				<div class="card-body">
+					<div id="histogram">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--**********************************
+        Content body end
+    ***********************************-->
+
+<!-- Vectormap -->
+<script src="/vendor/raphael/raphael.min.js"></script>
+
+<script src="/vendor/circle-progress/circle-progress.min.js"></script>
+<script src="/vendor/chart.js/Chart.bundle.min.js"></script>
+
+<script src="/vendor/gaugeJS/dist/gauge.min.js"></script>
+
+<!--  flot-chart js -->
+<script src="/vendor/flot/jquery.flot.js"></script>
+<script src="/vendor/flot/jquery.flot.resize.js"></script>
+
+<!-- Owl Carousel -->
+<script src="/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+<!-- Counter Up -->
+<script src="/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+<script src="/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+<script src="/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+
+<script src="/js/dashboard/dashboard-1.js"></script>
+
+<!-- Daterangepicker -->
+<!-- momment js is must -->
+<script src="/vendor/moment/moment.min.js"></script>
+<script src="/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- Daterangepicker -->
+<script src="/js/plugins-init/bs-daterange-picker-init.js"></script>
+
+<!-- Datatable -->
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/js/plugins-init/datatables.init.js"></script>
