@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-	var ctx = document.getElementById("lineChart").getContext("2d");
+	var ctxLineChart = document.getElementById("lineChart").getContext("2d");
+	var ctxDensityPlot = document
+		.getElementById("density-plot")
+		.getContext("2d");
+
 	var timestamps = JSON.parse(
 		document.getElementById("timestamps").textContent
 	);
@@ -24,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		],
 	};
 
-	var lineChart = new Chart(ctx, {
+	var lineChart = new Chart(ctxLineChart, {
 		type: "line",
 		data: chartData,
 		options: {
@@ -52,6 +56,54 @@ document.addEventListener("DOMContentLoaded", function () {
 					zoom: {
 						enabled: true,
 						mode: "x",
+					},
+				},
+			},
+		},
+	});
+
+	// Combine data into a single array for the density plot
+	var densityDataPoints = [];
+	for (var i = 0; i < timestamps.length; i++) {
+		densityDataPoints.push({
+			x: temperatureData[i],
+			y: co2Data[i],
+			r: pressureData[i] / 50, // Adjust the divisor to scale the bubble size appropriately
+		});
+	}
+
+	var densityData = {
+		datasets: [
+			{
+				label: "Density Plot",
+				data: densityDataPoints,
+				backgroundColor: "rgba(54, 162, 235, 0.5)",
+			},
+		],
+	};
+
+	var densityChart = new Chart(ctxDensityPlot, {
+		type: "bubble",
+		data: densityData,
+		options: {
+			scales: {
+				x: {
+					title: { display: true, text: "Temperature (°C)" },
+					beginAtZero: true,
+				},
+				y: {
+					title: { display: true, text: "CO2 Concentration (ppm)" },
+					beginAtZero: true,
+				},
+			},
+			plugins: {
+				tooltip: {
+					callbacks: {
+						label: function (context) {
+							return `Temp: ${context.raw.x}°C, CO2: ${
+								context.raw.y
+							}ppm, Pressure: ${context.raw.r * 50} hPa`;
+						},
 					},
 				},
 			},
