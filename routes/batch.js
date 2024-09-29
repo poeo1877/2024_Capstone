@@ -15,7 +15,7 @@ const dbClient = new Client({
 
 dbClient.connect();
 
-router.get('/', async (req, res) => {
+router.get('/list', async (req, res) => {
     try {
         // Batch와 Recipe를 조인하여 데이터 가져오기
         const batches = await Batch.findAll({

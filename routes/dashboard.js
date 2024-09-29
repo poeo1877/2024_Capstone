@@ -37,7 +37,7 @@ router.get('/recent', function (req, res, next) {
 
 router.get('/chart-data', (req, res) => {
     const query =
-        'SELECT in_temperature, co2_concentration, pressure_upper, measured_time, batch_id FROM public.sensor_measurement WHERE batch_id = 4;';
+        'SELECT in_temperature, co2_concentration, pressure_upper, measured_time, batch_id FROM public.sensor_measurement WHERE batch_id = 5;';
     dbClient.query(query, (err, results) => {
         if (err) {
             return res.status(500).json({ error: err.message });
