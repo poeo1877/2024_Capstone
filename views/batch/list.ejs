@@ -49,12 +49,11 @@
                                         'In Progress' %>
                                     </td>
                                     <td>
-                                        <a
-                                            href="/batch/<%= batch.batch_id %>"
-                                            class="btn btn-primary"
+                                        <input 
+                                            type="checkbox"
+                                            id= "<%= batch.batch_id %>"
+                                            value=""
                                         >
-                                            Check
-                                        </a>
                                     </td>
                                     <td><input type="checkbox" /></td>
                                 </tr>
@@ -62,6 +61,8 @@
                             </tbody>
                         </table>
                     </div>
+                    <button type="button" class="btn btn-outline-success"
+                        style="padding: 0.5rem 1.875rem; font-size: 1.2rem; float: right;margin-right: 0.725rem">View</button>
                 </div>
             </div>
         </div>

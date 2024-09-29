@@ -1,19 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const { Batch, Recipe, Fermenter } = require('../models');
-const moment = require('moment-timezone');
+const { Batch, Recipe, Fermenter, SensorMeasurement } = require('../models');
+const { getSensorDataByBatchIds } = require('../services/db_services');
 
-const { Client } = require('pg');
-
-const dbClient = new Client({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT,
-});
-
-dbClient.connect();
+const db = require('../models'); // /models/index.js를 import
 
 router.get('/list', async (req, res) => {
     try {
@@ -70,17 +60,16 @@ router.post('/create', async (req, res) => {
 
 router.get('/archive', async (req, res) => {
     try {
-        const result = await dbClient.query(
-            'SELECT * FROM sensor_measurement WHERE batch_id = 5 ORDER BY data_id ASC',
-        );
-        const data = result.rows;
-        console.log(data);
-        // 날짜 형식 변환
-        const timestamps = data.map((row) => {
-            return moment(row.measured_time)
-                .tz('Asia/Seoul')
-                .format('YYYY-MM-DD HH:mm');
-        });
+        //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
+        var batchIds = [1, 5];
+
+        const data = await getSensorDataByBatchIds(batchIds);
+        // data가 배열인지 확인 (에러 방지)
+        if (!Array.isArray(data)) {
+            throw new Error('Expected data to be an array');
+        }
+
+        const timestamps = data.map((row) => row.measured_time);
         const dataId = data.map((row) => row.data_id);
         const temperatureData = data.map((row) => row.in_temperature);
         const co2Data = data.map((row) => row.co2_concentration);

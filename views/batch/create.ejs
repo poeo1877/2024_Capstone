@@ -34,61 +34,45 @@
                             <h4>레시피</h4>
                             <section>
                                 <div class="card-body">
-                                    <div class="col-lg-6 mb-4 ml-2">
-                                        <div class="form-group">
-                                            <label class="text-label">
-                                                레시피 선택
-                                            </label>
-                                            <select
-                                                class="form-control"
-                                                id="recipeSelect"
-                                                onchange="populateRecipeDetails()"
-                                            >
-                                                <option value="">
-                                                    레시피를 선택하세요
-                                                </option>
-                                                <%
-                                                recipes.forEach(function(recipe)
-                                                { %>
-                                                <option
-                                                    value="<%= recipe.id %>"
-                                                    data-name="<%= recipe.recipe_name %>"
-                                                    data-info="<%= recipe.recipe_detail %>"
-                                                    data-product="<%= recipe.product_name %>"
+                                    <div class="row ml-2">
+                                        <div class="col-lg-6 mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    레시피 선택
+                                                </label>
+                                                <select
+                                                    class="form-control"
+                                                    id="recipeSelect"
+                                                    onchange="populateRecipeDetails()"
                                                 >
-                                                    <%= recipe.recipe_name %>
-                                                </option>
-                                                <% }); %>
-                                            </select>
+                                                    <option value="" required>
+                                                        레시피를 선택하세요
+                                                    </option>
+                                                    <%
+                                                    recipes.forEach(function(recipe)
+                                                    { %>
+                                                    <option
+                                                        value="<%= recipe.id %>"
+                                                        data-name="<%= recipe.recipe_name %>"
+                                                        data-info="<%= recipe.recipe_detail %>"
+                                                        data-product="<%= recipe.product_name %>"
+                                                    >
+                                                        <%= recipe.recipe_name %>
+                                                    </option>
+                                                    <% }); %>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="form-group">
-                                            <label class="text-label">
-                                                레시피 이름
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="recipeName"
-                                                class="form-control"
-                                                placeholder=""
-                                                required
-                                                readonly
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12 mb-4">
-                                        <div class="form-group">
-                                            <label class="text-label">
-                                                레시피 정보
-                                            </label>
-                                            <div class="input-group">
+                                    <div class="row ml-2">
+                                        <div class="col-lg mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    레시피 이름
+                                                </label>
                                                 <input
                                                     type="text"
-                                                    id="recipeInfo"
+                                                    id="recipeName"
                                                     class="form-control"
                                                     placeholder=""
                                                     required
@@ -96,8 +80,27 @@
                                                 />
                                             </div>
                                         </div>
+
+                                        <div class="col-lg mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    레시피 정보
+                                                </label>
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        id="recipeInfo"
+                                                        class="form-control"
+                                                        placeholder=""
+                                                        required
+                                                        readonly
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-12 mb-4">
+
+                                    <div class="col-lg-6 mb-4 ml-2">
                                         <div class="form-group">
                                             <label class="text-label">
                                                 제품 이름
@@ -148,42 +151,42 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="form-group">
-                                            <label class="text-label">
-                                                발효조 크기
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="fermentationSize"
-                                                class="form-control"
-                                                placeholder=""
-                                                required
-                                                readonly
-                                            />
+                                    <div class="row ml-2">
+                                        <div class="col-lg mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    발효조 크기
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="fermentationSize"
+                                                    class="form-control"
+                                                    placeholder=""
+                                                    required
+                                                    readonly
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6 mb-4">
-                                        <div class="form-group">
-                                            <label class="text-label">
-                                                발효조 이름
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="fermentationName"
-                                                class="form-control"
-                                                placeholder=""
-                                                required
-                                                readonly
-                                            />
+                                        <div class="col-lg mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    발효조 이름
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="fermentationName"
+                                                    class="form-control"
+                                                    placeholder=""
+                                                    required
+                                                    readonly
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </section>
                         </div>
-                        <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-end ">
                             <a
                                 type="button"
                                 class="btn btn-primary"
@@ -232,11 +235,42 @@
             const fermenterId = fermenterSelect.selectedIndex;
             console.log('Selected Recipe ID:', recipeId);
             console.log('Selected Fermenter ID:', fermenterId);
+
+        let isValid = true;
+
+        // 발효조 선택 상태 확인
+        if (!fermenterId) {
+            $("#fermenterSelect").css({
+                "background": "rgb(251, 227, 228)",
+                "border": "1px solid #fbc2c4",
+                "color": "#8a1f11"
+            });
+            isValid = false;
+        }
+
+        // 레시피 선택 상태 확인
+        if (!recipeId) {
+            $("#recipeSelect").css({
+                "background": "rgb(251, 227, 228)",
+                "border": "1px solid #fbc2c4",
+                "color": "#8a1f11"
+            });
+            isValid = false;
+        }
+
+            // Select 창 클릭시 색깔 초기화
+            $("#fermenterSelect, #recipeSelect").on("focus", function () {
+                $(this).css({
+                    "background": "",
+                    "border": "",
+                    "color": ""
+                });
+            });
             if (!recipeId || !fermenterId) {
                 alert('레시피와 발효조를 선택하세요.');
                 return;
             }
-
+            
             // Send data to the server
             fetch('./create', {
                 method: 'POST',
@@ -266,4 +300,5 @@
                     alert('An error occurred while creating the batch');
                 });
         });
+        
 </script>
