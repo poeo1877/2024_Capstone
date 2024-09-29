@@ -5,7 +5,7 @@ const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 
 // DB 연결 환경 설정 정보
-const config = require(path.join(__dirname, '..', 'config', 'config.json'))[
+const config = require(path.join(__dirname, '..', 'config', 'config.js'))[
     env
 ];
 
