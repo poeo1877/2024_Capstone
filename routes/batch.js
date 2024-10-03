@@ -9,10 +9,16 @@ router.get('/list', async (req, res) => {
     try {
         // Batch와 Recipe를 조인하여 데이터 가져오기
         const batches = await Batch.findAll({
-            include: {
-                model: Recipe,
-                attributes: ['recipe_name'], // 필요한 recipe_name만 가져오기
-            },
+            include: [
+                {
+                    model: Recipe,
+                    attributes: ['recipe_name'], // 필요한 recipe_name만 가져오기
+                },
+                {
+                    model: Fermenter,
+                    attributes: ['status','fermenter_line'], // 필요한 status, fermenter_line만 가져오기
+                },
+            ],
         });
 
         // EJS 템플릿에 데이터를 전달하여 렌더링
@@ -61,16 +67,17 @@ router.post('/create', async (req, res) => {
 router.get('/archive', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
-        var batchIds = [1, 5];
+        var batchIds = req.query.batchIds;
 
         const data = await getSensorDataByBatchIds(batchIds);
+
         // data가 배열인지 확인 (에러 방지)
         if (!Array.isArray(data)) {
             throw new Error('Expected data to be an array');
         }
 
         const timestamps = data.map((row) => row.measured_time);
-        const dataId = data.map((row) => row.data_id);
+        const batchId = data.map((row) => row.batch_id);
         const temperatureData = data.map((row) => row.in_temperature);
         const co2Data = data.map((row) => row.co2_concentration);
         const pressureData = data.map((row) => row.pressure_upper);
@@ -78,7 +85,7 @@ router.get('/archive', async (req, res) => {
         res.render('batch-archive.ejs', {
             title: 'archive',
             timestamps: JSON.stringify(timestamps),
-            dataId: JSON.stringify(dataId),
+            batchId: JSON.stringify(batchId),
             temperatureData: JSON.stringify(temperatureData),
             co2Data: JSON.stringify(co2Data),
             pressureData: JSON.stringify(pressureData),

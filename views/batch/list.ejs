@@ -1,3 +1,9 @@
+<!-- Datatable -->
+<link
+    href="/vendor/datatables/css/jquery.dataTables.min.css"
+    rel="stylesheet"
+/>
+
 <div class="container-fluid">
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
@@ -21,11 +27,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-responsive-sm">
+                        <table id="example" class="table table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
                                     <th>Recipe Name</th>
+                                    <th>Fermenter Line</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th></th>
@@ -40,6 +47,11 @@
                                         batch.Recipe.recipe_name : 'N/A' %>
                                     </td>
                                     <td>
+                                        <%= batch.Fermenter?
+                                        batch.Fermenter.fermenter_line : 'N/A'
+                                        %>
+                                    </td>
+                                    <td>
                                         <%=
                                         batch.start_time.toLocaleDateString() %>
                                     </td>
@@ -49,22 +61,63 @@
                                         'In Progress' %>
                                     </td>
                                     <td>
-                                        <input 
+                                        <input
                                             type="checkbox"
-                                            id= "<%= batch.batch_id %>"
+                                            id="<%= batch.batch_id %>"
                                             value=""
-                                        >
+                                        />
                                     </td>
-                                    <td><input type="checkbox" /></td>
                                 </tr>
+
                                 <% }); %>
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" class="btn btn-outline-success"
-                        style="padding: 0.5rem 1.875rem; font-size: 1.2rem; float: right;margin-right: 0.725rem">View</button>
+                    <a
+                        id="viewButton"
+                        type="button"
+                        class="btn btn-outline-success"
+                        style="
+                            padding: 0.5rem 1.875rem;
+                            font-size: 1.2rem;
+                            float: right;
+                            margin-right: 0.725rem;
+                            margin-top: 1rem;
+                        "
+                    >
+                        View
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    // View 버튼 클릭 시 선택된 batch_id들을 모아서 /archive로 이동하는 함수
+    document
+        .getElementById('viewButton')
+        .addEventListener('click', function () {
+            // 선택된 체크박스들의 batch_id를 수집
+            const selectedBatchIds = Array.from(
+                document.querySelectorAll('input[type="checkbox"]:checked'),
+            ).map((checkbox) => checkbox.id);
+
+            // 선택된 batch_id가 없는 경우 경고창을 띄우고 중단
+            if (selectedBatchIds.length === 0) {
+                alert('Please select at least one batch.');
+                return;
+            }
+
+            // 선택된 batch_id를 쿼리스트링으로 변환
+            const queryString = selectedBatchIds
+                .map((id) => `batchIds=${id}`)
+                .join('&');
+
+            // /archive 경로로 이동 (쿼리스트링 전달)
+            window.location.href = `./archive?${queryString}`;
+        });
+</script>
+
+<!-- Datatable -->
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/js/plugins-init/datatables.init.js"></script>

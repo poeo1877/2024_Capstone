@@ -1,200 +1,278 @@
-<link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css" />
-<link
-	rel="stylesheet"
-	href="/vendor/owl-carousel/css/owl.theme.default.min.css"
-/>
-<link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
-<link href="/css/style.css" rel="stylesheet" />
-<!-- Daterange picker -->
-<link
-	href="/vendor/bootstrap-daterangepicker/daterangepicker.css"
-	rel="stylesheet"
-/>
-
-<!--**********************************
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link
+            rel="stylesheet"
+            href="/vendor/owl-carousel/css/owl.carousel.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="/vendor/owl-carousel/css/owl.theme.default.min.css"
+        />
+        <link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+        <link href="/css/style.css" rel="stylesheet" />
+        <link
+            href="/vendor/bootstrap-daterangepicker/daterangepicker.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <!--**********************************
             Content body start
         ***********************************-->
-<!-- row -->
-<div class="container-fluid">
-	<!-- 최근 센서 데이터 표기 -->
-	<div class="row">
-		<div class="col-lg-4">
-			<div class="card">
-				<div
-					class="card-body"
-					style="
-						display: flex;
-						justify-content: center;
-						align-items: center;
-					"
-				>
-					<button
-						type="button"
-						class="btn btn-rounded btn-outline-dark"
-						id="temperature-btn"
-						style="width: 50%"
-					>
-						온도
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div
-					class="card-body"
-					style="
-						display: flex;
-						justify-content: center;
-						align-items: center;
-					"
-				>
-					<button
-						type="button"
-						class="btn btn-rounded btn-outline-dark"
-						id="co2-btn"
-						style="width: 50%"
-					>
-						이산화탄소
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div
-					class="card-body"
-					style="
-						display: flex;
-						justify-content: center;
-						align-items: center;
-					"
-				>
-					<button
-						type="button"
-						class="btn btn-rounded btn-outline-dark"
-						id="pressure-btn"
-						style="width: 50%"
-					>
-						압력
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div
+                            class="card-body"
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-rounded btn-outline-dark"
+                                id="temperature-btn"
+                                style="width: 50%"
+                            >
+                                온도
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div
+                            class="card-body"
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-rounded btn-outline-dark"
+                                id="co2-btn"
+                                style="width: 50%"
+                            >
+                                이산화탄소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div
+                            class="card-body"
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                            "
+                        >
+                            <button
+                                type="button"
+                                class="btn btn-rounded btn-outline-dark"
+                                id="pressure-btn"
+                                style="width: 50%"
+                            >
+                                압력
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-	<!-- /# column -->
-	<div class="row">
-		<div class="col-xl col-lg col-md">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">Data Overview</h4>
-					<button
-						type="submit"
-						class="btn btn-dark"
-						id="downloadExcel"
-					>
-						Excel로 다운로드
-					</button>
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col-xl col-lg">
-							<canvas id="lineChart"></canvas>
-							<div id="timestamps" style="display: none">
-								<%- timestamps %>
-							</div>
-							<div id="temperatureData" style="display: none">
-								<%- temperatureData %>
-							</div>
-							<div id="co2Data" style="display: none">
-								<%- co2Data %>
-							</div>
-							<div id="pressureData" style="display: none">
-								<%- pressureData %>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<style>
-		#lineChart {
-			width: 100%;
-			height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
-		}
-	</style>
-	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
-	<!-- 이 아래에서 통계 같은 것 시각화-->
-	<div class="row">
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터</h4>
-				</div>
-				<div class="card-body">
-					<canvas id="heatmap"></canvas>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터 2</h4>
-				</div>
-				<div class="card-body">
-					<canvas id="density-plot"></canvas>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터 3</h4>
-				</div>
-				<div class="card-body">
-					<div id="histogram"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<!--**********************************
+            <div class="row">
+                <div class="col-xl col-lg col-md">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Data Overview</h4>
+                            <button
+                                type="submit"
+                                class="btn btn-dark"
+                                id="downloadExcel"
+                            >
+                                Excel로 다운로드
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                canvas {
+                    width: 100%;
+                    height: 600px; /* Increased height for the chart */
+                }
+            </style>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">데이터</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="heatmap"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">데이터 2</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="density-plot"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">데이터 3</h4>
+                        </div>
+                        <div class="card-body">
+                            <div id="histogram"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
         Content body end
     ***********************************-->
 
-<!-- Vectormap -->
-<script src="/vendor/raphael/raphael.min.js"></script>
+        <script src="/vendor/raphael/raphael.min.js"></script>
+        <script src="/vendor/circle-progress/circle-progress.min.js"></script>
+        <script src="/vendor/chart.js/Chart.bundle.min.js"></script>
+        <script src="/vendor/gaugeJS/dist/gauge.min.js"></script>
+        <script src="/vendor/flot/jquery.flot.js"></script>
+        <script src="/vendor/flot/jquery.flot.resize.js"></script>
+        <script src="/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+        <script src="/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+        <script src="/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+        <script src="/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+        <script src="/js/dashboard/dashboard-1.js"></script>
+        <script src="/vendor/moment/moment.min.js"></script>
+        <script src="/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+        <script src="/js/plugins-init/bs-daterange-picker-init.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+        <script src="/js/chart.js"></script>
 
-<script src="/vendor/circle-progress/circle-progress.min.js"></script>
-<script src="/vendor/chart.js/Chart.bundle.min.js"></script>
+        <script>
+            const colors = [
+                'rgba(255, 99, 132, 1)', // 배치 1 색상
+                'rgba(54, 162, 235, 1)', // 배치 2 색상
+                'rgba(255, 206, 86, 1)', // 배치 3 색상
+                'rgba(75, 192, 192, 1)', // 배치 4 색상
+                'rgba(153, 102, 255, 1)', // 배치 5 색상
+                'rgba(255, 159, 64, 1)', // 배치 6 색상
+            ];
 
-<script src="/vendor/gaugeJS/dist/gauge.min.js"></script>
+            // JSON.parse to convert the received data
+            const timestamps = JSON.parse('<%- timestamps %>');
+            const batchIds = JSON.parse('<%- batchId %>');
+            const temperatureData = JSON.parse('<%- temperatureData %>');
+            const co2Data = JSON.parse('<%- co2Data %>');
+            const pressureData = JSON.parse('<%- pressureData %>');
 
-<!--  flot-chart js -->
-<script src="/vendor/flot/jquery.flot.js"></script>
-<script src="/vendor/flot/jquery.flot.resize.js"></script>
+            // Create initial datasets for the chart
+            let datasets = [];
 
-<!-- Owl Carousel -->
-<script src="/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+            const uniqueBatchIds = [...new Set(batchIds)]; // Create a unique batchId list
 
-<!-- Counter Up -->
-<script src="/vendor/jqvmap/js/jquery.vmap.min.js"></script>
-<script src="/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
-<script src="/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+            uniqueBatchIds.forEach((batchId, index) => {
+                // Push datasets for temperature, CO2, and pressure
+                datasets.push({
+                    label: `Batch ${batchId} - 온도`,
+                    data: temperatureData.filter(
+                        (_, i) => batchIds[i] === batchId,
+                    ),
+                    borderColor: colors[index % colors.length],
+                    backgroundColor: colors[index % colors.length].replace(
+                        '1)',
+                        '0.2)',
+                    ),
+                    fill: false,
+                    hidden: true, // Initially hidden
+                });
+                datasets.push({
+                    label: `Batch ${batchId} - 이산화탄소`,
+                    data: co2Data.filter((_, i) => batchIds[i] === batchId),
+                    borderColor:
+                        colors[(index + uniqueBatchIds.length) % colors.length],
+                    backgroundColor: colors[
+                        (index + uniqueBatchIds.length) % colors.length
+                    ].replace('1)', '0.2)'),
+                    fill: false,
+                    hidden: true, // Initially hidden
+                });
+                datasets.push({
+                    label: `Batch ${batchId} - 압력`,
+                    data: pressureData.filter(
+                        (_, i) => batchIds[i] === batchId,
+                    ),
+                    borderColor:
+                        colors[
+                            (index + 2 * uniqueBatchIds.length) % colors.length
+                        ],
+                    backgroundColor: colors[
+                        (index + 2 * uniqueBatchIds.length) % colors.length
+                    ].replace('1)', '0.2)'),
+                    fill: false,
+                    hidden: true, // Initially hidden
+                });
+            });
 
-<script src="/js/dashboard/dashboard-1.js"></script>
+            // Create the initial chart
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: timestamps,
+                    datasets: datasets,
+                },
+                options: {
+                    legend: false,
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
 
-<!-- Daterangepicker -->
-<!-- momment js is must -->
-<script src="/vendor/moment/moment.min.js"></script>
-<script src="/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
-<!-- Daterangepicker -->
-<script src="/js/plugins-init/bs-daterange-picker-init.js"></script>
+            // Function to filter datasets based on selected button
+            function updateChart(dataType) {
+                myChart.data.datasets.forEach((dataset) => {
+                    dataset.hidden = !dataset.label.includes(dataType); // Show or hide datasets based on button
+                });
+                myChart.update();
+            }
 
-<!-- Load Chart.js library first -->
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-
-<!-- Load your custom chart script after Chart.js library -->
-<script src="/js/chart.js"></script>
+            // Event listeners for buttons
+            document
+                .getElementById('temperature-btn')
+                .addEventListener('click', () => updateChart('온도'));
+            document
+                .getElementById('co2-btn')
+                .addEventListener('click', () => updateChart('이산화탄소'));
+            document
+                .getElementById('pressure-btn')
+                .addEventListener('click', () => updateChart('압력'));
+        </script>
+    </body>
+</html>
