@@ -1,15 +1,12 @@
-<link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css" />
-<link
-	rel="stylesheet"
-	href="/vendor/owl-carousel/css/owl.theme.default.min.css"
-/>
-<link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" />
+<!-- <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css" /> -->
+<!-- <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.theme.default.min.css" /> -->
+<!-- <link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" /> -->
 <link href="/css/style.css" rel="stylesheet" />
 <!-- Daterange picker -->
-<link
+<!-- <link
 	href="/vendor/bootstrap-daterangepicker/daterangepicker.css"
 	rel="stylesheet"
-/>
+/> -->
 
 <!--**********************************
             Content body start
@@ -101,18 +98,13 @@
 					<div class="row">
 						<div class="col-xl col-lg">
 							<canvas id="lineChart"></canvas>
-							<div id="timestamps" style="display: none">
-								<%- timestamps %>
-							</div>
-							<div id="temperatureData" style="display: none">
-								<%- temperatureData %>
-							</div>
-							<div id="co2Data" style="display: none">
-								<%- co2Data %>
-							</div>
-							<div id="pressureData" style="display: none">
-								<%- pressureData %>
-							</div>
+							<!-- 차트에 사용될 데이터. ejs 렌더링 할 때 전달 받는다. -->
+							<script>
+								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
+								var batchIds = JSON.parse('<%- batchIds %>');
+								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
+								var temperatureData = JSON.parse('<%- temperatureData %>');
+							</script>
 						</div>
 					</div>
 				</div>
@@ -164,37 +156,11 @@
         Content body end
     ***********************************-->
 
-<!-- Vectormap -->
-<script src="/vendor/raphael/raphael.min.js"></script>
-
-<script src="/vendor/circle-progress/circle-progress.min.js"></script>
-<script src="/vendor/chart.js/Chart.bundle.min.js"></script>
-
-<script src="/vendor/gaugeJS/dist/gauge.min.js"></script>
-
-<!--  flot-chart js -->
-<script src="/vendor/flot/jquery.flot.js"></script>
-<script src="/vendor/flot/jquery.flot.resize.js"></script>
-
-<!-- Owl Carousel -->
-<script src="/vendor/owl-carousel/js/owl.carousel.min.js"></script>
-
-<!-- Counter Up -->
-<script src="/vendor/jqvmap/js/jquery.vmap.min.js"></script>
-<script src="/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
-<script src="/vendor/jquery.counterup/jquery.counterup.min.js"></script>
-
-<script src="/js/dashboard/dashboard-1.js"></script>
-
-<!-- Daterangepicker -->
-<!-- momment js is must -->
-<script src="/vendor/moment/moment.min.js"></script>
-<script src="/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
-<!-- Daterangepicker -->
-<script src="/js/plugins-init/bs-daterange-picker-init.js"></script>
-
 <!-- Load Chart.js library first -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
 <!-- Load your custom chart script after Chart.js library -->
-<script src="/js/chart.js"></script>
+<script src="/js/archive-linechart.js"></script>
