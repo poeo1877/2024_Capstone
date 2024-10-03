@@ -59,15 +59,14 @@ async function getLatestSensorDataByBatchId(batchId) {
             FROM sensor_measurement
             WHERE batch_id = :batchId
             ORDER BY measured_time DESC
-            LIMIT 1
+            LIMIT 2
         `;
 		const data = await db.sequelize.query(query, {
 			replacements: { batchId },
 			type: db.Sequelize.QueryTypes.SELECT,
 		});
-		console.log('데이터', data);
 
-		return data[0] || {}; // 최신 데이터가 없을 경우 빈 객체 반환
+		return data || []; // 최신 데이터가 없을 경우 빈 배열 반환
 	} catch (err) {
 		console.error(err);
 		throw new Error("Error fetching latest sensor data");

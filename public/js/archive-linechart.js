@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	var co2Data = []; // CO2 데이터를 저장할 배열
 	var pressureData = []; // 압력 데이터를 저장할 배열
 
+	var annotations = []; // 주석을 저장할 배열
+
 	var timestamps = temperatureData.map((entry) => entry.measured_time);
 
 	var temperatureValues = temperatureData.map(

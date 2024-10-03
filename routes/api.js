@@ -2,7 +2,10 @@ var express = require("express");
 var router = express.Router();
 const db = require("../models"); // /models/index.js를 import
 const { SensorMeasurement } = require("../models");
-const { getSensorDataByBatchIds, getLatestSensorDataByBatchId } = require("../services/db_services");
+const {
+	getSensorDataByBatchIds,
+	getLatestSensorDataByBatchId,
+} = require("../services/db_services");
 
 /**
  * @swagger
@@ -101,26 +104,84 @@ router.get("/sensor/pressure", async (req, res) => {
 	}
 });
 
-
 router.get("/sensor/latest", async (req, res) => {
 	try {
-        // 요청에서 batchIds를 추출 (예: ?batchIds=1)
-        const batchId = req.query.batchId;
+		// 요청에서 batchIds를 추출 (예: ?batchIds=1)
+		const batchId = req.query.batchId;
 
-        if (!batchId) {
-            return res.status(400).json({ error: "batchId query parameter is required" });
-        }
+		if (!batchId) {
+			return res
+				.status(400)
+				.json({ error: "batchId query parameter is required" });
+		}
 
-        // getLatestSensorDataByBatchId 함수 호출
-        const latestSensorData = await getLatestSensorDataByBatchId(batchId);
+		// getLatestSensorDataByBatchId 함수 호출
+        const latestTwoSensorData = await getLatestSensorDataByBatchId(batchId);
+        console.log("두 개", latestTwoSensorData);
 
-        // 결과 반환
-        res.json(latestSensorData);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
+		if (latestTwoSensorData.length < 2) {
+			return res
+				.status(400)
+				.json({ error: "Not enough data to calculate difference" });
+		}
+
+		// Extract the latest and previous sensor data
+		const latestData = latestTwoSensorData[0];
+		const previousData = latestTwoSensorData[1];
+
+		// Calculate the differences and percentage differences
+		const co2Difference = parseFloat(
+			(latestData.co2_concentration - previousData.co2_concentration).toFixed(3)
+		);
+		const co2PercentageDifference = parseFloat(
+			((co2Difference / previousData.co2_concentration) * 100).toFixed(3)
+		);
+
+		const tempDifference = parseFloat(
+			(parseFloat(latestData.in_temperature) - parseFloat(previousData.in_temperature)).toFixed(3)
+		);
+		const tempPercentageDifference = parseFloat(
+			((tempDifference / parseFloat(previousData.in_temperature)) * 100).toFixed(3)
+		);
+
+		const pressureDifference = parseFloat(
+			(parseFloat(latestData.pressure_upper) - parseFloat(previousData.pressure_upper)).toFixed(3)
+		);
+		const pressurePercentageDifference = parseFloat(
+			((pressureDifference / parseFloat(previousData.pressure_upper)) * 100).toFixed(3)
+		);
+
+		console.log("데이터", {
+			latestData: latestData,
+			differences: {
+				co2_concentration: co2Difference,
+				in_temperature: tempDifference,
+				pressure_upper: pressureDifference,
+			},
+			percentageDifferences: {
+				co2_concentration: co2PercentageDifference,
+				in_temperature: tempPercentageDifference,
+				pressure_upper: pressurePercentageDifference,
+			},
+		});
+		// 결과 반환
+		res.json({
+			latestData: latestData,
+			differences: {
+				co2_concentration: co2Difference,
+				in_temperature: tempDifference,
+				pressure_upper: pressureDifference,
+			},
+			percentageDifferences: {
+				co2_concentration: co2PercentageDifference,
+				in_temperature: tempPercentageDifference,
+				pressure_upper: pressurePercentageDifference,
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
 });
-
 
 module.exports = router;
