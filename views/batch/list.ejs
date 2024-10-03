@@ -1,3 +1,10 @@
+<!-- Datatable -->
+<link
+	href="/vendor/datatables/css/jquery.dataTables.min.css"
+	rel="stylesheet"
+/>
+
+
 <div class="container-fluid">
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
@@ -21,11 +28,12 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-responsive-sm">
+                        <table id="example" class="table table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th>Batch ID</th>
                                     <th>Recipe Name</th>
+                                    <th>Fermenter Line</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th></th>
@@ -34,10 +42,14 @@
                             <tbody>
                                 <% batches.forEach(function(batch) { %>
                                 <tr>
-                                    <td><%= batch.batch_id %></td>
+                                    <td><%= batch.batch_id %></td> 
                                     <td>
                                         <%= batch.Recipe ?
                                         batch.Recipe.recipe_name : 'N/A' %>
+                                    </td>
+                                    <td>
+                                        <%= batch.Fermenter?
+                                        batch.Fermenter.fermenter_line : 'N/A' %>
                                     </td>
                                     <td>
                                         <%=
@@ -55,16 +67,19 @@
                                             value=""
                                         >
                                     </td>
-                                    <td><input type="checkbox" /></td>
                                 </tr>
                                 <% }); %>
                             </tbody>
                         </table>
                     </div>
                     <button type="button" class="btn btn-outline-success"
-                        style="padding: 0.5rem 1.875rem; font-size: 1.2rem; float: right;margin-right: 0.725rem">View</button>
+                        style="padding: 0.5rem 1.875rem; font-size: 1.2rem; float: right;margin-right: 0.725rem; margin-top: 1rem;">View</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Datatable -->
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/js/plugins-init/datatables.init.js"></script>
