@@ -7,896 +7,655 @@
 />
 
 <div class="container-fluid">
-    <!-- 최근 센서 데이터 표기 -->
-    <div class="row">
-        <div class="col-lg col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">온도</div>
-                        <div class="stat-digit">
-                            <strong id="temperature">Loading...</strong>
-                        </div>
-                    </div>
-                    <div>
-                        <i
-                            class="fa fa-caret-up"
-                            id="temperatureChangeIcon"
-                        ></i>
-                        <span class="change-value" id="temperatureChange">
-                            0.00
-                        </span>
-                        <br />
-                        <span
-                            class="percent-point"
-                            id="temperatureChangePercent"
-                        >
-                            0.00%
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">이산화탄소</div>
-                        <div class="stat-digit">
-                            <strong id="co2">Loading...</strong>
-                        </div>
-                    </div>
-                    <div>
-                        <i class="fa fa-caret-up" id="co2ChangeIcon"></i>
-                        <span class="change-value" id="co2Change">0.00</span>
-                        <br />
-                        <span class="percent-point" id="co2ChangePercent">
-                            0.00%
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">압력</div>
-                        <div class="stat-digit">
-                            <strong id="pressure">Loading...</strong>
-                        </div>
-                    </div>
-                    <div>
-                        <i class="fa fa-caret-up" id="pressureChangeIcon"></i>
-                        <span class="change-value" id="pressureChange">
-                            0.00
-                        </span>
-                        <br />
-                        <span class="percent-point" id="pressureChangePercent">
-                            0.00%
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg col-sm-6">
-            <div class="card">
-                <div class="stat-widget-two card-body">
-                    <div class="stat-content">
-                        <div class="stat-text">발효조 상태</div>
-                    </div>
-                    <div class="stat-digit">
-                        <button
-                            type="button"
-                            class="btn btn-rounded btn-outline-dark"
-                            style="width: 40%"
-                        >
-                            종료
-                        </button>
-                    </div>
-                    <div class="stat-digit">
-                        <button
-                            type="button"
-                            class="btn btn-rounded btn-outline-dark"
-                            style="width: 40%"
-                        >
-                            정지
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-rounded btn-outline-dark"
-                            style="width: 40%"
-                        >
-                            재생
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- /# card -->
-    </div>
-    <!-- /# column -->
-    <div class="row">
-        <div class="col-xl col-lg col-md">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Data Overview</h4>
-                </div>
-                <div class="card-body">
-                    <!-- 날짜 및 시간 선택을 위한 입력 필드 (한 줄로 배치) -->
-                    <div class="row mb-4">
-                        <div class="col-lg-3 col-md-4">
-                            <label for="startDate">Start Date & Time:</label>
-                            <input
-                                type="datetime-local"
-                                id="startDate"
-                                class="form-control form-control-sm"
-                            />
-                        </div>
-                        <div class="col-lg-3 col-md-4">
-                            <label for="endDate">End Date & Time:</label>
-                            <input
-                                type="datetime-local"
-                                id="endDate"
-                                class="form-control form-control-sm"
-                            />
-                        </div>
-                        <div class="col-lg-2 col-md-4 d-flex align-items-end">
-                            <button
-                                class="btn btn-primary btn-sm w-100"
-                                onclick="filterByDate()"
+	<!-- 최근 센서 데이터 표기 -->
+	<div class="row">
+		<div class="col-lg col-sm-6">
+			<div class="card">
+				<button
+					type="button"
+					id="temperature-btn"
+					class="btn btn-rounded btn-outline-dark"
+				>
+					<div class="stat-widget-two card-body">
+						<div class="stat-content">
+							<!-- 해당 태그의 id를 주고 서버에서 어떤 센서 데이터를 요구하는지 구별할 수 있게 한다. -->
+							<div class="stat-text">온도</div>
+							<div class="stat-digit">
+								<strong id="temperature">Loading...</strong>
+							</div>
+						</div>
+						<div>
+                            <i
+                                class="fa fa-caret-up"
+                                id="temperatureChangeIcon"
+                            ></i>
+                            <span class="change-value" id="temperatureChange">
+                                0.00
+                            </span>
+                            <br />
+                            <span
+                                class="percent-point"
+                                id="temperatureChangePercent"
                             >
-                                Apply
-                            </button>
+                                0.00%
+                            </span>
                         </div>
-                        <div class="row mb-4">
-                            <div
-                                class="col-lg-3 col-md-4 d-flex align-items-center"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="toggleTemperature"
-                                    checked
-                                    onchange="toggleSensor('temperature')"
-                                />
-                                <label
-                                    for="toggleTemperature"
-                                    class="ms-3 text-dark"
-                                >
-                                    Temperature
-                                </label>
-                                <!-- 간격을 넓히고 글자색을 검은색으로 설정 -->
-                            </div>
-                            <div
-                                class="col-lg-3 col-md-4 d-flex align-items-center"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="toggleCo2"
-                                    checked
-                                    onchange="toggleSensor('co2')"
-                                />
-                                <label for="toggleCo2" class="ms-3 text-dark">
-                                    CO2
-                                </label>
-                                <!-- 간격을 넓히고 글자색을 검은색으로 설정 -->
-                            </div>
-                            <div
-                                class="col-lg-3 col-md-4 d-flex align-items-center"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="togglePressure"
-                                    checked
-                                    onchange="toggleSensor('pressure')"
-                                />
-                                <label
-                                    for="togglePressure"
-                                    class="ms-3 text-dark"
-                                >
-                                    Pressure
-                                </label>
-                                <!-- 간격을 넓히고 글자색을 검은색으로 설정 -->
-                            </div>
+					</div>
+				</button>
+			</div>
+		</div>
+		<div class="col-lg col-sm-6">
+			<div class="card">
+				<button
+					type="button"
+					id="co2-btn"
+					class="btn btn-rounded btn-outline-dark"
+				>
+					<div class="stat-widget-two card-body">
+						<div class="stat-content">
+							<div class="stat-text">이산화탄소</div>
+							<div class="stat-digit">
+								<strong id="co2">Loading...</strong>
+							</div>
+						</div>
+						<div>
+                            <i class="fa fa-caret-up" id="co2ChangeIcon"></i>
+                            <span class="change-value" id="co2Change">0.00</span>
+                            <br />
+                            <span class="percent-point" id="co2ChangePercent">
+                                0.00%
+                            </span>
                         </div>
-                    </div>
+					</div>
+				</button>
+			</div>
+		</div>
+		<div class="col-lg col-sm-6">
+			<div class="card">
+				<button
+					type="button"
+					id="pressure-btn"
+					class="btn btn-rounded btn-outline-dark"
+				>
+					<div class="stat-widget-two card-body">
+						<div class="stat-content">
+							<div class="stat-text">압력</div>
+							<div class="stat-digit">
+								<strong id="pressure">Loading...</strong>
+							</div>
+						</div>
+						<div>
+                            <i class="fa fa-caret-up" id="pressureChangeIcon"></i>
+                            <span class="change-value" id="pressureChange">
+                                0.00
+                            </span>
+                            <br />
+                            <span class="percent-point" id="pressureChangePercent">
+                                0.00%
+                            </span>
+                        </div>
+					</div>
+				</button>
+			</div>
+		</div>
+		<div class="col-lg col-sm-6">
+			<div class="card">
+				<div class="stat-widget-two card-body">
+					<div class="stat-content">
+						<div class="stat-text">발효조 상태</div>
+					</div>
+					<div class="stat-digit">
+						<button
+							type="button"
+							class="btn btn-rounded btn-outline-dark"
+							style="width: 40%"
+						>
+							시작
+						</button>
+						<button
+							type="button"
+							class="btn btn-rounded btn-outline-dark"
+							style="width: 40%"
+						>
+							종료
+						</button>
+					</div>
+					<div class="stat-digit">
+						<button
+							type="button"
+							class="btn btn-rounded btn-outline-dark"
+							style="width: 40%"
+						>
+							정지
+						</button>
+						<button
+							type="button"
+							class="btn btn-rounded btn-outline-dark"
+							style="width: 40%"
+						>
+							재생
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                    <div class="row">
-                        <div class="col-xl col-lg" style="height: 600px">
-                            <canvas id="lineChart"></canvas>
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-                            <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1"></script>
-                            <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
+		<!-- /# card -->
+	</div>
+	<!-- /# column -->
+	<div class="row">
+		<div class="col-xl col-lg col-md">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Data Overview</h4>
+				</div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-xl col-lg" style="height: 400px">
+							<canvas id="lineChart"></canvas>
                             <script>
-                                const pageSize = 10000;
-                                let allData = [];
-                                let lineChart;
-                                let currentStartIndex = 0;
+								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
+								var batchIds = JSON.parse('<%- batchId %>');
+								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
+								var temperatureData = JSON.parse('<%- temperatureData %>');
+							</script>
+							<!-- <script>
+								const pageSize = 100000;
+								let allData = [];
+								let lineChart;
+								let currentStartIndex = 0;
 
-                                // 주석 배열
-                                let annotations = [];
-                                let sensorVisibility = {
-                                    temperature: true,
-                                    co2: true,
-                                    pressure: true,
-                                };
+								async function getData() {
+									try {
+										const response = await fetch(
+											"http://localhost:3000/dashboard/chart-data"
+										);
+										const data = await response.json();
+										console.log(data);
+										allData = data.rows;
+										loadChart();
+									} catch (error) {
+										console.error(
+											"Error fetching data:",
+											error
+										);
+									}
+								}
 
-                                async function getData() {
-                                    try {
-                                        const response = await fetch(
-                                            'http://localhost:3000/dashboard/chart-data',
-                                        );
-                                        const data = await response.json();
-                                        console.log(data);
-                                        allData = data.rows;
-                                        loadChart(allData);
-                                    } catch (error) {
-                                        console.error(
-                                            'Error fetching data:',
-                                            error,
-                                        );
-                                    }
-                                }
+								function loadChart() {
+									// 차트에 필요한 데이터 추출
+									const labels = allData.map(
+										(row) => row.measured_time
+									);
+									const temperatures = allData.map(
+										(row) => row.in_temperature
+									);
+									const co2 = allData.map(
+										(row) => row.co2_concentration
+									);
+									const pressure = allData.map(
+										(row) => row.pressure_upper
+									);
 
-                                function loadChart(filteredData) {
-                                    // 날짜 형식을 Date 객체로 변환
-                                    const labels = filteredData.map(
-                                        (row) => new Date(row.measured_time),
-                                    );
-                                    const temperatures = filteredData.map(
-                                        (row) => row.in_temperature,
-                                    );
-                                    const co2 = filteredData.map(
-                                        (row) => row.co2_concentration,
-                                    );
-                                    const pressure = filteredData.map(
-                                        (row) => row.pressure_upper,
-                                    );
+									// 현재 페이지에 해당하는 데이터 슬라이스
+									const paginatedLabels = labels.slice(
+										currentStartIndex,
+										currentStartIndex + pageSize
+									);
+									const paginatedTemperatures =
+										temperatures.slice(
+											currentStartIndex,
+											currentStartIndex + pageSize
+										);
+									const paginatedCo2 = co2.slice(
+										currentStartIndex,
+										currentStartIndex + pageSize
+									);
+									const paginatedPressure = pressure.slice(
+										currentStartIndex,
+										currentStartIndex + pageSize
+									);
 
-                                    // 현재 페이지에 해당하는 데이터 슬라이스
-                                    const paginatedLabels = labels.slice(
-                                        currentStartIndex,
-                                        currentStartIndex + pageSize,
-                                    );
-                                    const paginatedTemperatures =
-                                        temperatures.slice(
-                                            currentStartIndex,
-                                            currentStartIndex + pageSize,
-                                        );
-                                    const paginatedCo2 = co2.slice(
-                                        currentStartIndex,
-                                        currentStartIndex + pageSize,
-                                    );
-                                    const paginatedPressure = pressure.slice(
-                                        currentStartIndex,
-                                        currentStartIndex + pageSize,
-                                    );
+									// 차트 생성
+									const ctx = document
+										.getElementById("lineChart")
+										.getContext("2d");
+									lineChart = new Chart(ctx, {
+										type: "line",
+										data: {
+											labels: paginatedLabels, // X축 데이터
+											datasets: [
+												{
+													label: "Temperature",
+													data: paginatedTemperatures, // Y축 데이터
+													backgroundColor:
+														"rgba(75, 192, 192, 0.2)",
+													borderColor:
+														"rgba(75, 192, 192, 1)",
+													borderWidth: 1,
+												},
+												{
+													label: "CO2",
+													data: paginatedCo2, // Y축 데이터
+													backgroundColor:
+														"rgba(255, 99, 132, 0.2)",
+													borderColor:
+														"rgba(255, 99, 132, 1)",
+													borderWidth: 1,
+												},
+												{
+													label: "Pressure",
+													data: paginatedPressure, // Y축 데이터
+													backgroundColor:
+														"rgba(54, 162, 235, 0.2)",
+													borderColor:
+														"rgba(54, 162, 235, 1)",
+													borderWidth: 1,
+												},
+											],
+										},
+										options: {
+											responsive: true,
+											maintainAspectRatio: false,
+											scales: {
+												x: {
+													beginAtZero: false,
+													min: 0,
+													max: pageSize - 1, // 한 번에 보여지는 데이터 개수
+													ticks: {
+														autoSkip: true,
+														maxTicksLimit: 20,
+													},
+												},
+												y: {
+													beginAtZero: false,
+												},
+											},
+											plugins: {
+												zoom: {
+													pan: {
+														enabled: true, // 패닝(드래그로 이동) 활성화
+														mode: "x", // X축을 기준으로 패닝
+													},
+													zoom: {
+														enabled: false, // 확대/축소 비활성화
+													},
+												},
+											},
+										},
+									});
 
-                                    const ctx = document
-                                        .getElementById('lineChart')
-                                        .getContext('2d');
-                                    if (lineChart) {
-                                        lineChart.destroy(); // 기존 차트를 파괴하고 새로 그립니다
-                                    }
-                                    lineChart = new Chart(ctx, {
-                                        type: 'line',
-                                        data: {
-                                            labels: paginatedLabels,
-                                            datasets: [
-                                                {
-                                                    label: 'Temperature',
-                                                    data: paginatedTemperatures,
-                                                    backgroundColor:
-                                                        'rgba(75, 192, 192, 0.2)',
-                                                    borderColor:
-                                                        'rgba(75, 192, 192, 1)',
-                                                    borderWidth: 1,
-                                                    hidden: !sensorVisibility.temperature, // 센서 종류에 따라 숨김 처리
-                                                },
-                                                {
-                                                    label: 'CO2',
-                                                    data: paginatedCo2,
-                                                    backgroundColor:
-                                                        'rgba(255, 99, 132, 0.2)',
-                                                    borderColor:
-                                                        'rgba(255, 99, 132, 1)',
-                                                    borderWidth: 1,
-                                                    hidden: !sensorVisibility.co2, // 센서 종류에 따라 숨김 처리
-                                                },
-                                                {
-                                                    label: 'Pressure',
-                                                    data: paginatedPressure,
-                                                    backgroundColor:
-                                                        'rgba(54, 162, 235, 0.2)',
-                                                    borderColor:
-                                                        'rgba(54, 162, 235, 1)',
-                                                    borderWidth: 1,
-                                                    hidden: !sensorVisibility.pressure, // 센서 종류에 따라 숨김 처리
-                                                },
-                                            ],
-                                        },
-                                        options: {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            scales: {
-                                                x: {
-                                                    type: 'time', // x축을 time으로 설정
-                                                    time: {
-                                                        unit: 'day', // 원하는 단위로 설정 (예: 'day', 'month', 'year' 등)
-                                                    },
-                                                    beginAtZero: false,
-                                                    ticks: {
-                                                        autoSkip: true,
-                                                        maxTicksLimit: 20,
-                                                    },
-                                                },
-                                                y: {
-                                                    beginAtZero: false,
-                                                },
-                                            },
-                                            plugins: {
-                                                legend: {
-                                                    display: false, // 범례 숨기기
-                                                },
-                                                zoom: {
-                                                    pan: {
-                                                        enabled: true,
-                                                        mode: 'x',
-                                                    },
-                                                    zoom: {
-                                                        enabled: false,
-                                                    },
-                                                },
-                                                annotation: {
-                                                    annotations:
-                                                        annotations.filter(
-                                                            (annotation) => {
-                                                                // 현재 활성화된 센서에 따라 주석 필터링
-                                                                const isTemperatureSensorActive =
-                                                                    sensorVisibility.temperature &&
-                                                                    annotation.sensorType ===
-                                                                        'temperature';
-                                                                const isCo2SensorActive =
-                                                                    sensorVisibility.co2 &&
-                                                                    annotation.sensorType ===
-                                                                        'co2';
-                                                                const isPressureSensorActive =
-                                                                    sensorVisibility.pressure &&
-                                                                    annotation.sensorType ===
-                                                                        'pressure';
-                                                                return (
-                                                                    isTemperatureSensorActive ||
-                                                                    isCo2SensorActive ||
-                                                                    isPressureSensorActive
-                                                                );
-                                                            },
-                                                        ),
-                                                },
-                                            },
-                                        },
-                                    });
-                                }
+									// 차트 슬라이딩 이벤트
+									const chartContainer =
+										document.querySelector(".col-xl");
+									chartContainer.addEventListener(
+										"wheel",
+										(event) => {
+											if (event.deltaY > 0) {
+												// 스크롤 다운: 다음 페이지로 이동
+												if (
+													currentStartIndex +
+														pageSize <
+													allData.length
+												) {
+													currentStartIndex +=
+														pageSize;
+													loadChart();
+												}
+											} else {
+												// 스크롤 업: 이전 페이지로 이동
+												if (
+													currentStartIndex -
+														pageSize >=
+													0
+												) {
+													currentStartIndex -=
+														pageSize;
+													loadChart();
+												}
+											}
+											event.preventDefault();
+										}
+									);
+								}
 
-                                function filterByDate() {
-                                    const startDate = new Date(
-                                        document.getElementById(
-                                            'startDate',
-                                        ).value,
-                                    );
-                                    const endDate = new Date(
-                                        document.getElementById(
-                                            'endDate',
-                                        ).value,
-                                    );
+								// 페이지 로드 시 데이터 가져오기
+								getData();
+							</script> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                                    if (
-                                        !startDate ||
-                                        !endDate ||
-                                        startDate > endDate
-                                    ) {
-                                        alert(
-                                            'Please select a valid date range.',
-                                        );
-                                        return;
-                                    }
-
-                                    // 날짜 범위에 맞는 데이터 필터링
-                                    const filteredData = allData.filter(
-                                        (row) => {
-                                            const measuredTime = new Date(
-                                                row.measured_time,
-                                            );
-                                            return (
-                                                measuredTime >= startDate &&
-                                                measuredTime <= endDate
-                                            );
-                                        },
-                                    );
-
-                                    currentStartIndex = 0; // 새로운 범위에서는 페이지 인덱스를 초기화
-                                    loadChart(filteredData); // 필터링된 데이터로 차트를 다시 로드
-                                }
-
-                                function setAnnotation() {
-                                    annotations = [];
-                                    const upperLimit = parseFloat(
-                                        document.getElementById(
-                                            'val-upper-limit',
-                                        ).value,
-                                    );
-                                    const lowerLimit = parseFloat(
-                                        document.getElementById(
-                                            'val-lower-limit',
-                                        ).value,
-                                    );
-                                    const sensorType =
-                                        document.getElementById(
-                                            'val-sensor',
-                                        ).value;
-                                    const dateRange =
-                                        document.getElementById(
-                                            'val-daterange',
-                                        ).value;
-                                    const dates = dateRange.split(' - '); // 기간을 구분자로 나눔
-                                    if (dates.length < 2) {
-                                        alert('기간을 올바르게 선택해 주세요.');
-                                        return;
-                                    }
-                                    const startDate = dates[0].trim(); // 시작 날짜
-                                    const endDate = dates[1].trim(); // 종료 날짜 설정
-
-                                    // 유효성 검사
-                                    if (
-                                        isNaN(upperLimit) ||
-                                        isNaN(lowerLimit) ||
-                                        !sensorType
-                                    ) {
-                                        alert(
-                                            '상한값, 하한값, 센서 종류를 정확히 입력하세요.',
-                                        );
-                                        return;
-                                    }
-
-                                    // 경계선을 주석으로 추가
-                                    annotations.push({
-                                        type: 'line',
-                                        sensorType: sensorType, // 추가된 sensorType 필드
-                                        display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
-                                        xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
-                                        xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
-                                        yMin: upperLimit,
-                                        yMax: upperLimit,
-                                        label: {
-                                            content: '상한값',
-                                            enabled: true,
-                                            position: 'right',
-                                        },
-                                        borderColor: 'red',
-                                        borderWidth: 2,
-                                    });
-
-                                    annotations.push({
-                                        type: 'line',
-                                        sensorType: sensorType, // 추가된 sensorType 필드
-                                        display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
-                                        xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
-                                        xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
-                                        yMin: lowerLimit,
-                                        yMax: lowerLimit,
-                                        label: {
-                                            content: '하한값',
-                                            enabled: true,
-                                            position: 'right',
-                                        },
-                                        borderColor: 'blue',
-                                        borderWidth: 2,
-                                    });
-
-                                    loadChart(allData); // 주석을 포함하여 차트를 다시 로드
-                                }
-                                // 페이지 로드 시 데이터 가져오기
-                                getData();
-                            </script>
-                        </div>
-                    </div>
-
-                    <style>
-                        #lineChart {
-                            width: 100%;
-                            height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
-                        }
-                    </style>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">
-                                        알림 범위 설정하기
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-validation">
-                                        <form
+	<style>
+		#lineChart {
+			width: 100%;
+			height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
+		}
+	</style>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">알림 범위 설정하기</h4>
+				</div>
+				<div class="card-body">
+					<div class="form-validation">
+						<form
                                             class="form-valide"
                                             action="#"
                                             method="post"
                                             onsubmit="setAnnotation(); return false;"
                                         >
-                                            <div class="row">
-                                                <div class="col-xl-6">
-                                                    <div class="form-group row">
-                                                        <label
-                                                            class="col-lg-4 col-form-label"
-                                                            for="val-daterange"
-                                                        >
-                                                            기간
-                                                        </label>
-                                                        <div class="col-lg-6">
-                                                            <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="val-daterange"
-                                                                name="daterange"
-                                                                placeholder="기간을 선택해 주세요"
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group row">
-                                                        <label
-                                                            class="col-lg-4 col-form-label"
-                                                            for="val-note"
-                                                        >
-                                                            메모
-                                                        </label>
-                                                        <div class="col-lg-6">
-                                                            <textarea
-                                                                class="form-control"
-                                                                id="val-note"
-                                                                name="val-note"
-                                                                rows="5"
-                                                                placeholder="설명을 입력해 주세요."
-                                                            ></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xl-6">
-                                                    <div class="form-group row">
-                                                        <label
-                                                            class="col-lg-4 col-form-label"
-                                                            for="val-sensor"
-                                                        >
-                                                            센서 종류
-                                                            <span
-                                                                class="text-danger"
-                                                            >
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div class="col-lg-6">
-                                                            <select
-                                                                class="form-control"
-                                                                id="val-sensor"
-                                                                name="val-sensor"
-                                                            >
-                                                                <option
-                                                                    value=""
-                                                                >
-                                                                    데이터를
-                                                                    선택해
-                                                                    주세요
-                                                                </option>
-                                                                <option
-                                                                    value="temperature"
-                                                                >
-                                                                    온도
-                                                                </option>
-                                                                <option
-                                                                    value="co2"
-                                                                >
-                                                                    이산화탄소
-                                                                </option>
-                                                                <option
-                                                                    value="pressure"
-                                                                >
-                                                                    압력
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label
-                                                            class="col-lg-4 col-form-label"
-                                                            for="val-upper-limit"
-                                                        >
-                                                            상한값
-                                                            <span
-                                                                class="text-danger"
-                                                            >
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div class="col-lg-6">
-                                                            <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="val-upper-limit"
-                                                                name="val-upper-limit"
-                                                                placeholder="이 값을 넘어서면 알림"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <label
-                                                            class="col-lg-4 col-form-label"
-                                                            for="val-lower-limit"
-                                                        >
-                                                            하한값
-                                                            <span
-                                                                class="text-danger"
-                                                            >
-                                                                *
-                                                            </span>
-                                                        </label>
-                                                        <div class="col-lg-6">
-                                                            <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                id="val-lower-limit"
-                                                                name="val-lower-limit"
-                                                                placeholder="이 값을 내려가면 알림"
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group row">
-                                                        <div
-                                                            class="col-lg-8 ml-auto"
-                                                        >
-                                                            <button
-                                                                type="submit"
-                                                                class="btn btn-dark"
-                                                            >
-                                                                알림 설정
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
-                    <!-- 이 아래에서 통계 같은 것 시각화-->
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">데이터</h4>
-                                </div>
-                                <div class="card-body">
-                                    --- heatmap --- 만들기
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">데이터 2</h4>
-                                </div>
-                                <div class="card-body">
-                                    ---Density Plot--- 만들기
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">데이터 3</h4>
-                                </div>
-                                <div class="card-body">
-                                    아직 정하지 못했습니다.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+							<div class="row">
+								<div class="col-xl-6">
+									<div class="form-group row">
+										<label
+											class="col-lg-4 col-form-label"
+											for="val-daterange"
+										>
+											기간
+										</label>
+										<div class="col-lg-6">
+											<input
+												type="text"
+												class="form-control input-daterange-timepicker"
+												name="daterange"
+												placeholder="미입력시 자동으로 처음부터 지금까지 설정됩니다."
+											/>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label
+											class="col-lg-4 col-form-label"
+											for="val-note"
+										>
+											메모
+										</label>
+										<div class="col-lg-6">
+											<textarea
+												class="form-control"
+												id="val-note"
+												name="val-note"
+												rows="5"
+												placeholder="설명을 입력해 주세요."
+											></textarea>
+										</div>
+									</div>
+								</div>
+								<div class="col-xl-6">
+									<div class="form-group row">
+										<label
+											class="col-lg-4 col-form-label"
+											for="val-sensor"
+										>
+											센서 종류
+											<span class="text-danger">*</span>
+										</label>
+										<div class="col-lg-6">
+											<select
+												class="form-control"
+												id="val-sensor"
+												name="val-sensor"
+											>
+												<option value="">
+													데이터를 선택해 주세요
+												</option>
+												<option value="temperature">
+													온도
+												</option>
+												<option value="co2">
+													이산화탄소
+												</option>
+												<option value="pressure">
+													압력
+												</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label
+											class="col-lg-4 col-form-label"
+											for="val-upper-limit"
+										>
+											상한값
+											<span class="text-danger">*</span>
+										</label>
+										<div class="col-lg-6">
+											<input
+												type="text"
+												class="form-control"
+												id="val-upper-limit"
+												name="val-upper-limit"
+												placeholder="이 값을 넘어서면 알림"
+											/>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label
+											class="col-lg-4 col-form-label"
+											for="val-lower-limit"
+										>
+											하한값
+											<span class="text-danger">*</span>
+										</label>
+										<div class="col-lg-6">
+											<input
+												type="text"
+												class="form-control"
+												id="val-lower-limit"
+												name="val-lower-limit"
+												placeholder="이 값을 내려가면 알림"
+											/>
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-lg-8 ml-auto">
+											<button
+												type="submit"
+												class="btn btn-dark"
+											>
+												알림 설정
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
+	<!-- 이 아래에서 통계 같은 것 시각화-->
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터</h4>
+				</div>
+				<div class="card-body">--- heatmap --- 만들기</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터 2</h4>
+				</div>
+				<div class="card-body">---Density Plot--- 만들기</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">데이터 3</h4>
+				</div>
+				<div class="card-body">아직 정하지 못했습니다.</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 
                 <!--**********************************
             Content body end
         ***********************************-->
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                <!-- Date Range Picker CSS -->
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
-                />
+<script src="./vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
 
-                <!-- Date Range Picker JS -->
-                <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-                ...
-                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
 
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.1"></script>
-                <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
-                <script src="https://cdn.jsdelivr.net/npm/date-fns@latest"></script>
-                <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-                <script>
-                    function toggleSensor(sensorType) {
-                        // 센서 가시성 변경
-                        sensorVisibility[sensorType] =
-                            !sensorVisibility[sensorType];
+<!-- Load Chart.js library first -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
-                        // 체크박스 상태를 기반으로 데이터 세트의 숨김 처리
-                        lineChart.data.datasets.forEach((dataset) => {
-                            if (dataset.label.toLowerCase() === sensorType) {
-                                dataset.hidden = !sensorVisibility[sensorType];
-                            }
-                        });
+<!-- Load your custom chart script after Chart.js library -->
+<script src="/js/archive-linechart.js"></script>
+                
+<script>
+	function updateChangeValue(
+		selector,
+		diff,
+		percentage,
+		iconSelector,
+		percentSelector,
+	) {
+		const valueElement = $(selector);
+		const changeIcon = $(iconSelector);
 
-                        // 주석 가시성 변경
-                        annotations.forEach((annotation) => {
-                            if (annotation.sensorType === sensorType) {
-                                annotation.display =
-                                    sensorVisibility[sensorType]; // 센서 가시성에 따라 주석 숨김
-                            }
-                        });
+		if (diff !== null) {
+			valueElement.text(diff);
+			// 아이콘 및 색상 설정
+			if (diff > 0) {
+				changeIcon
+					.removeClass('fa-caret-down')
+					.addClass('fa-caret-up');
+				changeIcon.css('color', 'red'); // 상승 시 빨간색
+				valueElement.css('color', 'red'); // 변화량 상승 시 빨간색
+				$(percentSelector).css('color', 'red'); // 퍼센트 상승 시 빨간색
+			} else if (diff < 0) {
+				changeIcon
+					.removeClass('fa-caret-up')
+					.addClass('fa-caret-down');
+				changeIcon.css('color', 'blue'); // 하락 시 파란색
+				valueElement.css('color', 'blue'); // 변화량 하락 시 파란색
+				$(percentSelector).css('color', 'blue'); // 퍼센트 하락 시 파란색
+			} else {
+				changeIcon.removeClass(
+					'fa-caret-up fa-caret-down',
+				); // 변화 없음
+				changeIcon.css('color', 'black'); // 변화 없음
+				valueElement.css('color', 'black'); // 변화 없음
+				$(percentSelector).css('color', 'black'); // 변화 없음
+			}
 
-                        lineChart.update(); // 차트 업데이트
-                    }
+			console.log(percentage);
+			// 퍼센트 표시
+			$(percentSelector).text(percentage + '%');
+		} else {
+			valueElement.text('N/A'); // 이전 데이터가 없을 경우
+			changeIcon.removeClass(
+				'fa-caret-up fa-caret-down',
+			); // 변화 없음
+			$(percentSelector).text('N/A'); // 이전 데이터가 없을 경우
+		}
+	
 
-                    $(document).ready(function () {
-                        $.ajax({
-                            url: '/dashboard/recent',
-                            method: 'GET',
-                            success: function (data) {
-                                // 최신 데이터 업데이트
-                                $('#temperature').text(data.temperature);
-                                $('#co2').text(data.co2);
-                                $('#pressure').text(data.pressure);
+	$('#val-daterange').daterangepicker({
+		locale: {
+			format: 'YYYY-MM-DD', // 날짜 형식
+			applyLabel: '적용',
+			cancelLabel: '취소',
+			fromLabel: '시작일',
+			toLabel: '종료일',
+			customRangeLabel: '사용자 정의',
+			daysOfWeek: [
+				'일',
+				'월',
+				'화',
+				'수',
+				'목',
+				'금',
+				'토',
+			],
+			monthNames: [
+				'1월',
+				'2월',
+				'3월',
+				'4월',
+				'5월',
+				'6월',
+				'7월',
+				'8월',
+				'9월',
+				'10월',
+				'11월',
+				'12월',
+			],
+		},
+		autoApply: true,
+		startDate: moment().startOf('month'),
+		endDate: moment().endOf('month'),
+		opens: 'center',
+	});
+};
+</script>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			url: "api/sensor/latest?batchId=5", // 요청 URL을 /sensor/latest로 변경하고 batchId를 쿼리 파라미터로 전달
+			method: "GET",
+			success: function (data) {
+				if (data) {
+					$("#temperature").text(data.latestData.in_temperature || "N/A");
+					$("#co2").text(data.latestData.co2_concentration || "N/A");
+					$("#pressure").text(data.latestData.pressure_upper || "N/A");
 
-                                // 변화량 업데이트 및 색상 설정
-                                updateChangeValue(
-                                    '#temperatureChange',
-                                    data.temperatureDiff,
-                                    data.previousTemperature,
-                                    '#temperatureChangeIcon',
-                                    '#temperatureChangePercent',
-                                );
-                                updateChangeValue(
-                                    '#co2Change',
-                                    data.co2Diff,
-                                    data.previousCO2,
-                                    '#co2ChangeIcon',
-                                    '#co2ChangePercent',
-                                );
-                                updateChangeValue(
-                                    '#pressureChange',
-                                    data.pressureDiff,
-                                    data.previousPressure,
-                                    '#pressureChangeIcon',
-                                    '#pressureChangePercent',
-                                );
-                            },
-                            error: function () {
-                                $('#temperature').text('Error loading data');
-                                $('#co2').text('Error loading data');
-                                $('#pressure').text('Error loading data');
-                            },
-                        });
+					// 변화량 업데이트 및 색상 설정
+					updateChangeValue(
+						'#temperatureChange',
+						data.differences.in_temperature,
+						data.percentageDifferences.in_temperature,
+						'#temperatureChangeIcon',
+						'#temperatureChangePercent',
+					);
+					updateChangeValue(
+						'#co2Change',
+						data.differences.co2_concentration,
+						data.percentageDifferences.co2_concentration,
+						'#co2ChangeIcon',
+						'#co2ChangePercent',
+					);
+					updateChangeValue(
+						'#pressureChange',
+						data.differences.pressure_upper,
+						data.percentageDifferences.pressure_upper,
+						'#pressureChangeIcon',
+						'#pressureChangePercent',
+					);
 
-                        function updateChangeValue(
-                            selector,
-                            diff,
-                            previousValue,
-                            iconSelector,
-                            percentSelector,
-                        ) {
-                            const valueElement = $(selector);
-                            const changeIcon = $(iconSelector);
-                            let percentageChange = 0;
-
-                            if (diff !== null) {
-                                // 소수점 3째 자리까지 반올림
-                                const formattedDiff = diff.toFixed(3);
-                                valueElement.text(formattedDiff);
-
-                                // 변화량이 있는 경우 퍼센트 계산
-                                if (
-                                    previousValue !== null &&
-                                    previousValue !== 0
-                                ) {
-                                    percentageChange = (
-                                        (diff / previousValue) *
-                                        100
-                                    ).toFixed(2); // 퍼센트 계산
-                                }
-
-                                // 아이콘 및 색상 설정
-                                if (diff > 0) {
-                                    changeIcon
-                                        .removeClass('fa-caret-down')
-                                        .addClass('fa-caret-up');
-                                    changeIcon.css('color', 'red'); // 상승 시 빨간색
-                                    valueElement.css('color', 'red'); // 변화량 상승 시 빨간색
-                                    $(percentSelector).css('color', 'red'); // 퍼센트 상승 시 빨간색
-                                } else if (diff < 0) {
-                                    changeIcon
-                                        .removeClass('fa-caret-up')
-                                        .addClass('fa-caret-down');
-                                    changeIcon.css('color', 'blue'); // 하락 시 파란색
-                                    valueElement.css('color', 'blue'); // 변화량 하락 시 파란색
-                                    $(percentSelector).css('color', 'blue'); // 퍼센트 하락 시 파란색
-                                } else {
-                                    changeIcon.removeClass(
-                                        'fa-caret-up fa-caret-down',
-                                    ); // 변화 없음
-                                    changeIcon.css('color', 'black'); // 변화 없음
-                                    valueElement.css('color', 'black'); // 변화 없음
-                                    $(percentSelector).css('color', 'black'); // 변화 없음
-                                }
-
-                                // 퍼센트 표시
-                                $(percentSelector).text(percentageChange + '%');
-                            } else {
-                                valueElement.text('N/A'); // 이전 데이터가 없을 경우
-                                changeIcon.removeClass(
-                                    'fa-caret-up fa-caret-down',
-                                ); // 변화 없음
-                                $(percentSelector).text('N/A'); // 이전 데이터가 없을 경우
-                            }
-                        }
-                        $('#val-daterange').daterangepicker({
-                            locale: {
-                                format: 'YYYY-MM-DD', // 날짜 형식
-                                applyLabel: '적용',
-                                cancelLabel: '취소',
-                                fromLabel: '시작일',
-                                toLabel: '종료일',
-                                customRangeLabel: '사용자 정의',
-                                daysOfWeek: [
-                                    '일',
-                                    '월',
-                                    '화',
-                                    '수',
-                                    '목',
-                                    '금',
-                                    '토',
-                                ],
-                                monthNames: [
-                                    '1월',
-                                    '2월',
-                                    '3월',
-                                    '4월',
-                                    '5월',
-                                    '6월',
-                                    '7월',
-                                    '8월',
-                                    '9월',
-                                    '10월',
-                                    '11월',
-                                    '12월',
-                                ],
-                            },
-                            autoApply: true,
-                            startDate: moment().startOf('month'),
-                            endDate: moment().endOf('month'),
-                            opens: 'center',
-                        });
-                    });
-                </script>
+				} else {
+					$("#temperature").text("No data available");
+					$("#co2").text("No data available");
+					$("#pressure").text("No data available");
+				}
+			},
+			error: function () {
+				$("#temperature").text("Error loading data");
+				$("#co2").text("Error loading data");
+				$("#pressure").text("Error loading data");
+			},
+		});
+	});
+</script>
             </div>
         </div>
     </div>

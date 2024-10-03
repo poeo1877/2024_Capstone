@@ -4,6 +4,7 @@ const { Batch, Recipe, Fermenter, SensorMeasurement } = require('../models');
 const { getSensorDataByBatchIds } = require('../services/db_services');
 
 const db = require('../models'); // /models/index.js를 import
+const { json, DatabaseError } = require('sequelize');
 
 router.get('/list', async (req, res) => {
     try {
@@ -67,28 +68,18 @@ router.post('/create', async (req, res) => {
 router.get('/archive', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
-        var batchIds = req.query.batchIds;
-        1;
-        const data = await getSensorDataByBatchIds(batchIds);
+        var batchIds = req.query.batchIds.split(',');
 
+        const data = await getSensorDataByBatchIds(batchIds, 'in_temperature');
         // data가 배열인지 확인 (에러 방지)
         if (!Array.isArray(data)) {
             throw new Error('Expected data to be an array');
         }
 
-        const timestamps = data.map((row) => row.measured_time);
-        const batchId = data.map((row) => row.batch_id);
-        const temperatureData = data.map((row) => row.in_temperature);
-        const co2Data = data.map((row) => row.co2_concentration);
-        const pressureData = data.map((row) => row.pressure_upper);
-
         res.render('batch-archive.ejs', {
             title: 'archive',
-            timestamps: JSON.stringify(timestamps),
-            batchId: JSON.stringify(batchId),
-            temperatureData: JSON.stringify(temperatureData),
-            co2Data: JSON.stringify(co2Data),
-            pressureData: JSON.stringify(pressureData),
+            batchIds: JSON.stringify(batchIds),
+            temperatureData: JSON.stringify(data),
         });
     } catch (err) {
         console.error(err);
