@@ -9,10 +9,16 @@ router.get('/list', async (req, res) => {
     try {
         // Batch와 Recipe를 조인하여 데이터 가져오기
         const batches = await Batch.findAll({
-            include: {
-                model: Recipe,
-                attributes: ['recipe_name'], // 필요한 recipe_name만 가져오기
-            },
+            include: [
+                {
+                    model: Recipe,
+                    attributes: ['recipe_name'], // 필요한 recipe_name만 가져오기
+                },
+                {
+                    model: Fermenter,
+                    attributes: ['status','fermenter_line'], // 필요한 status, fermenter_line만 가져오기
+                },
+            ],
         });
 
         // EJS 템플릿에 데이터를 전달하여 렌더링
