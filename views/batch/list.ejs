@@ -1,121 +1,121 @@
 <!-- Datatable -->
 <link
-    href="/vendor/datatables/css/jquery.dataTables.min.css"
-    rel="stylesheet"
+	href="/vendor/datatables/css/jquery.dataTables.min.css"
+	rel="stylesheet"
 />
 
 <div class="container-fluid">
-    <div class="row page-titles mx-0">
-        <div class="col-sm-6 p-md-0">
-            <div class="welcome-text">
-                <h4>Batch List</h4>
-                <p class="mb-0">배치 리스트 생성 조회</p>
-            </div>
-        </div>
-        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-            <a type="button" class="btn btn-primary" href="./create">
-                Create Batch
-            </a>
-        </div>
-    </div>
+	<div class="row page-titles mx-0">
+		<div class="col-sm-6 p-md-0">
+			<div class="welcome-text">
+				<h4>Batch List</h4>
+				<p class="mb-0">배치 리스트 생성 조회</p>
+			</div>
+		</div>
+		<div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+			<a type="button" class="btn btn-primary" href="./create">
+				Create Batch
+			</a>
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Batch</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="example" class="table table-responsive-sm">
-                            <thead>
-                                <tr>
-                                    <th>배치 ID</th>
-                                    <th>레시피 이름</th>
-                                    <th>발효조 이름</th>
-                                    <th>시작 날짜</th>
-                                    <th>종료 날짜</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% batches.forEach(function(batch) { %>
-                                <tr>
-                                    <td><%= batch.batch_id %></td>
-                                    <td>
-                                        <%= batch.Recipe ?
-                                        batch.Recipe.recipe_name : 'N/A' %>
-                                    </td>
-                                    <td>
-                                        <%= batch.Fermenter?
-                                        batch.Fermenter.fermenter_line : 'N/A'
-                                        %>
-                                    </td>
-                                    <td>
-                                        <%=
-                                        batch.start_time.toLocaleDateString() %>
-                                    </td>
-                                    <td>
-                                        <%= batch.end_time ?
-                                        batch.end_time.toLocaleDateString() :
-                                        'In Progress' %>
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            id="<%= batch.batch_id %>"
-                                            value=""
-                                        />
-                                    </td>
-                                </tr>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="card-title">Batch</h4>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table id="example" class="table table-responsive-sm">
+							<thead>
+								<tr>
+									<th>배치 ID</th>
+									<th>레시피 이름</th>
+									<th>발효조 이름</th>
+									<th>시작 날짜</th>
+									<th>종료 날짜</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<% batches.forEach(function(batch) { %>
+								<tr>
+									<td><%= batch.batch_id %></td>
+									<td>
+										<%= batch.Recipe ?
+										batch.Recipe.recipe_name : 'N/A' %>
+									</td>
+									<td>
+										<%= batch.Fermenter?
+										batch.Fermenter.fermenter_line : 'N/A'
+										%>
+									</td>
+									<td>
+										<%=
+										batch.start_time.toLocaleDateString() %>
+									</td>
+									<td>
+										<%= batch.end_time ?
+										batch.end_time.toLocaleDateString() :
+										'In Progress' %>
+									</td>
+									<td>
+										<input
+											type="checkbox"
+											id="<%= batch.batch_id %>"
+											value=""
+										/>
+									</td>
+								</tr>
 
-                                <% }); %>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button
-                        id="viewButton"
-                        type="button"
-                        class="btn btn-outline-success"
-                        style="
-                            padding: 0.5rem 1.875rem;
-                            font-size: 1.2rem;
-                            float: right;
-                            margin-right: 0.725rem;
-                            margin-top: 1rem;
-                        "
-                    >
-                        View
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+								<% }); %>
+							</tbody>
+						</table>
+					</div>
+					<button
+						id="viewButton"
+						type="button"
+						class="btn btn-outline-success"
+						style="
+							padding: 0.5rem 1.875rem;
+							font-size: 1.2rem;
+							float: right;
+							margin-right: 0.725rem;
+							margin-top: 1rem;
+						"
+					>
+						View
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
-    // View 버튼 클릭 시 선택된 batch_id들을 모아서 /archive로 이동하는 함수
-    document
-        .getElementById('viewButton')
-        .addEventListener('click', function () {
-            // 선택된 체크박스들의 batch_id를 수집
-            const selectedBatchIds = Array.from(
-                document.querySelectorAll('input[type="checkbox"]:checked'),
-            ).map((checkbox) => checkbox.id);
+	// View 버튼 클릭 시 선택된 batch_id들을 모아서 /archive로 이동하는 함수
+	document
+		.getElementById("viewButton")
+		.addEventListener("click", function () {
+			// 선택된 체크박스들의 batch_id를 수집
+			const selectedBatchIds = Array.from(
+				document.querySelectorAll('input[type="checkbox"]:checked')
+			).map((checkbox) => checkbox.id);
 
-            // 선택된 batch_id가 없는 경우 경고창을 띄우고 중단
-            if (selectedBatchIds.length === 0) {
-                alert('Please select at least one batch.');
-                return;
-            }
+			// 선택된 batch_id가 없는 경우 경고창을 띄우고 중단
+			if (selectedBatchIds.length === 0) {
+				alert("Please select at least one batch.");
+				return;
+			}
 
-            // 선택된 batch_id를 쿼리스트링으로 변환
-            const queryString = selectedBatchIds
-                .map((id) => `batchIds=${id}`)
-                .join('&');
+			// 선택된 batch_id를 쿼리스트링으로 변환
+			const queryString = selectedBatchIds
+				.map((id) => `${id}`)
+				.join(",");
 
-            // /archive 경로로 이동 (쿼리스트링 전달)
-            window.location.href = `./archive?${queryString}`;
-        });
+			// /archive 경로로 이동 (쿼리스트링 전달)
+			window.location.href = `./archive?batchIds=${queryString}`;
+		});
 </script>
 
 <!-- Datatable -->
