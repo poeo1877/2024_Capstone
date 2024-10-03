@@ -163,7 +163,7 @@
 <!-- Load your custom chart script after Chart.js library -->
 <script src="/js/archive-linechart.js"></script>
 
-<script>
+<!-- <script>
 	const colors = [
 		'rgba(255, 99, 132, 1)', // 배치 1 색상
 		'rgba(54, 162, 235, 1)', // 배치 2 색상
@@ -174,11 +174,12 @@
 	];
 
 	// JSON.parse to convert the received data
-	const timestamps = JSON.parse('<%- timestamps %>');
-	const batchIds = JSON.parse('<%- batchId %>');
-	const temperatureData = JSON.parse('<%- temperatureData %>');
-	const co2Data = JSON.parse('<%- co2Data %>');
-	const pressureData = JSON.parse('<%- pressureData %>');
+	//ejs에서 받은 데이터를 자바스크립트 변수로 설정
+	const timestamps = JSON.parse('%- timestamps %>'); 
+	const batchIds = JSON.parse('<- batchId %>');
+	const temperatureData = JSON.parse('%- temperatureData %>');
+	const co2Data = JSON.parse('<- co2Data %>');
+	const pressureData = JSON.parse('%- pressureData %>');
 
 	// Create initial datasets for the chart
 	let datasets = [];
@@ -265,4 +266,4 @@
 	document
 		.getElementById('pressure-btn')
 		.addEventListener('click', () => updateChart('압력'));
-</script>
+</script> -->
