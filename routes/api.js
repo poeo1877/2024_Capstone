@@ -55,6 +55,7 @@ router.post("/sensor/measurement", async (req, res) => {
 		res.status(201).json(newSensorMeasurement);
 	} catch (error) {
 		// 에러 발생 시 클라이언트에게 에러 메시지 반환
+		
 		res.status(500).json({ error: error.message });
 	}
 });

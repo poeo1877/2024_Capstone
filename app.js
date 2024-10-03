@@ -43,20 +43,26 @@ app.use('/batch', BatchRouter);
 app.use('/recipe', RecipeRouter);
 app.use('/api', APIRouter);
 
-// catch 404 and forward to error handler
+// 404 에러 처리 미들웨어
 app.use(function (req, res, next) {
-    next(createError(404));
+    next(createError(404)); // 404 에러 발생
 });
 
-// error handler
+// 에러 핸들러
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
+    // 에러 상태 및 메시지를 설정
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
+    // 404 에러 처리 및 렌더링
     res.status(err.status || 500);
-    res.render('error');
+    res.render('error', {
+        errorNumber: err.status || 500, // 에러 상태 코드
+        errorTitle: err.status === 404 ? 'Page Not Found' : 'Error', // 에러 제목
+        errorMessage: err.status === 404 ? 'The page you are looking for does not exist.' : 'An unexpected error occurred.', // 에러 메시지
+        showMenu: false, // 사이드바 숨기기
+        showHeaderFooter: false // 헤더와 푸터 숨기기
+    });
 });
 
 module.exports = app;
