@@ -77,6 +77,31 @@ document.addEventListener("DOMContentLoaded", function () {
 						mode: "xy",
 					},
 				},
+				annotation: {
+					annotations:
+						annotations.filter(
+							(annotation) => {
+								// 현재 활성화된 센서에 따라 주석 필터링
+								const isTemperatureSensorActive =
+									sensorVisibility.temperature &&
+									annotation.sensorType ===
+										'temperature';
+								const isCo2SensorActive =
+									sensorVisibility.co2 &&
+									annotation.sensorType ===
+										'co2';
+								const isPressureSensorActive =
+									sensorVisibility.pressure &&
+									annotation.sensorType ===
+										'pressure';
+								return (
+									isTemperatureSensorActive ||
+									isCo2SensorActive ||
+									isPressureSensorActive
+								);
+							},
+						),
+				},
 			},
 		},
 	});
@@ -199,6 +224,85 @@ document.addEventListener("DOMContentLoaded", function () {
 		lineChart.resetZoom();
 		lineChart.update();
 	}
+
+	function setAnnotation() {
+		annotations = [];
+		const upperLimit = parseFloat(
+			document.getElementById(
+				'val-upper-limit',
+			).value,
+		);
+		const lowerLimit = parseFloat(
+			document.getElementById(
+				'val-lower-limit',
+			).value,
+		);
+		const sensorType =
+			document.getElementById(
+				'val-sensor',
+			).value;
+		const dateRange =
+			document.getElementById(
+				'val-daterange',
+			).value;
+		const dates = dateRange.split(' - '); // 기간을 구분자로 나눔
+		if (dates.length < 2) {
+			alert('기간을 올바르게 선택해 주세요.');
+			return;
+		}
+		const startDate = dates[0].trim(); // 시작 날짜
+		const endDate = dates[1].trim(); // 종료 날짜 설정
+
+		// 유효성 검사
+		if (
+			isNaN(upperLimit) ||
+			isNaN(lowerLimit) ||
+			!sensorType
+		) {
+			alert(
+				'상한값, 하한값, 센서 종류를 정확히 입력하세요.',
+			);
+			return;
+		}
+
+		// 경계선을 주석으로 추가
+		annotations.push({
+			type: 'line',
+			sensorType: sensorType, // 추가된 sensorType 필드
+			display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
+			xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
+			xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
+			yMin: upperLimit,
+			yMax: upperLimit,
+			label: {
+				content: '상한값',
+				enabled: true,
+				position: 'right',
+			},
+			borderColor: 'red',
+			borderWidth: 2,
+		});
+
+		annotations.push({
+			type: 'line',
+			sensorType: sensorType, // 추가된 sensorType 필드
+			display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
+			xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
+			xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
+			yMin: lowerLimit,
+			yMax: lowerLimit,
+			label: {
+				content: '하한값',
+				enabled: true,
+				position: 'right',
+			},
+			borderColor: 'blue',
+			borderWidth: 2,
+		});
+
+		lineChart.update();
+	}
+
 
 	// 더블클릭 시 차트 축소 기능 추가
 	document
