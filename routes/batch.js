@@ -16,7 +16,7 @@ router.get('/list', async (req, res) => {
                 },
                 {
                     model: Fermenter,
-                    attributes: ['status','fermenter_line'], // 필요한 status, fermenter_line만 가져오기
+                    attributes: ['status', 'fermenter_line'], // 필요한 status, fermenter_line만 가져오기
                 },
             ],
         });
@@ -68,7 +68,7 @@ router.get('/archive', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
         var batchIds = req.query.batchIds;
-
+        1;
         const data = await getSensorDataByBatchIds(batchIds);
 
         // data가 배열인지 확인 (에러 방지)
