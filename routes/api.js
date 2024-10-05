@@ -118,7 +118,6 @@ router.get("/sensor/latest", async (req, res) => {
 
 		// getLatestSensorDataByBatchId 함수 호출
         const latestTwoSensorData = await getLatestSensorDataByBatchId(batchId);
-        console.log("두 개", latestTwoSensorData);
 
 		if (latestTwoSensorData.length < 2) {
 			return res
