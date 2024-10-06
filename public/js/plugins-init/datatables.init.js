@@ -1,29 +1,29 @@
-// $(document).ready(function() {
-//     // DataTables 초기화
-//     var table = $('#example').DataTable();
+$(document).ready(function() {
+    // DataTables 초기화
+    var table = $('#example').DataTable();
 
-//     // 기본 검색 기능을 커스터마이즈
-//     $.fn.dataTable.ext.search.push(
-//         function(settings, data, dataIndex) {
-//             // 검색창의 입력 값을 가져옴
-//             var searchTerm = $('#example_filter input').val().trim();
+    // 기본 검색 기능을 커스터마이즈
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            // 검색창의 입력 값을 가져옴
+            var searchTerm = $('#example_filter input').val().trim();
 
-//             // 띄어쓰기를 포함한 검색어로 검색 (그대로 하나의 문자열로 처리)
-//             var combinedData = data.join(' ').toLowerCase(); // 데이터 행을 문자열로 변환
+            // 띄어쓰기를 포함한 검색어로 검색 (그대로 하나의 문자열로 처리)
+            var combinedData = data.join(' ').toLowerCase(); // 데이터 행을 문자열로 변환
 
-//             // 검색어가 데이터에 포함되어 있는지 확인
-//             if (combinedData.indexOf(searchTerm.toLowerCase()) !== -1) {
-//                 return true;
-//             }
-//             return false;
-//         }
-//     );
+            // 검색어가 데이터에 포함되어 있는지 확인
+            if (combinedData.indexOf(searchTerm.toLowerCase()) !== -1) {
+                return true;
+            }
+            return false;
+        }
+    );
 
-//     // 검색창 입력에 대한 실시간 반응
-//     $('#example_filter input').on('keyup', function() {
-//         table.draw();
-//     });
-// });
+    // 검색창 입력에 대한 실시간 반응
+    $('#example_filter input').on('keyup', function() {
+        table.draw();
+    });
+});
 
 
 

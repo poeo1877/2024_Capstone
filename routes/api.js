@@ -185,4 +185,23 @@ router.get("/sensor/latest", async (req, res) => {
 	}
 });
 
+// /api/sensor/measurement API
+router.get("/sensor/measurement", async (req, res) => {
+    try {
+        const batchId = req.query.batchId; // Batch ID 가져오기
+        console.log("Batch ID:", batchId); // Batch ID가 제대로 전달되는지 확인
+        
+        // 데이터베이스에서 Batch ID에 해당하는 모든 측정 데이터를 가져오기
+        const sensorData = await SensorMeasurement.findAll({
+            where: { batch_id: batchId },  // Batch ID를 조건으로 설정
+            attributes: ['measured_time', 'in_temperature'] // 필요한 데이터만 선택
+        });
+
+        res.json(sensorData); // JSON 형식으로 클라이언트에 반환
+    } catch (error) {
+        console.error('Error fetching sensor data:', error);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;
