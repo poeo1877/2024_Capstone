@@ -1,13 +1,12 @@
 const path = require('path');
 const Sequelize = require('sequelize');
+const { SELECT } = require('sequelize/lib/query-types');
 
 // 개발 모드 환경 설정
 const env = process.env.NODE_ENV || 'development';
 
 // DB 연결 환경 설정 정보
-const config = require(path.join(__dirname, '..', 'config', 'config.js'))[
-    env
-];
+const config = require(path.join(__dirname, '..', 'config', 'config.js'))[env];
 
 // 데이터베이스 객체
 const db = {};
@@ -47,7 +46,10 @@ db.RawMaterialReceipt = require('./raw_material_receipt')(
     Sequelize.DataTypes,
 );
 db.RawMaterial = require('./raw_material')(sequelize, Sequelize.DataTypes);
-
+db.DashboardLimit = require('./dashboard_limit')(
+    sequelize,
+    Sequelize.DataTypes,
+);
 // 모델 간 관계 설정 (associate 메서드를 각 모델에서 정의한 경우 실행)
 Object.keys(db).forEach((modelName) => {
     if (db[modelName].associate) {
