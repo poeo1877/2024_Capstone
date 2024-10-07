@@ -6,6 +6,7 @@ const { getSensorDataByBatchIds } = require('../services/db_services');
 const db = require("../models"); // /models/index.js를 import
 const { json, DatabaseError } = require("sequelize");
 
+
 router.get('/list', async (req, res) => {
     try {
         // Batch와 Recipe를 조인하여 데이터 가져오기
@@ -75,7 +76,6 @@ router.get("/archive", async (req, res) => {
 		if (!Array.isArray(data)) {
 			throw new Error("Expected data to be an array");
 		}
-		
 		res.render("batch-archive.ejs", {
 			title: "archive",
 			batchIds: JSON.stringify(batchIds),

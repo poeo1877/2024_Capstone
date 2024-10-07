@@ -39,15 +39,14 @@
 						<div class="col-xl col-lg">
 							<script>
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
-								console.log(<%- batchIds %>);
 								var batchIds = JSON.parse('<%- batchIds %>');
-								console.log(batchIds);
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
 								var temperatureData = JSON.parse('<%- temperatureData %>');
+								console.log(temperatureData);
 							</script>
-							<canvas id="temperatureChart" style="display: block"></canvas>
-							<canvas id="co2Chart" style="display: none"></canvas>
-							<canvas id="pressureChart" style="display: none"></canvas>
+							<canvas id="temperatureChart" style="display: block;"></canvas>
+							<canvas id="co2Chart" style="display: none;"></canvas>
+							<canvas id="pressureChart" style="display: none;"></canvas>
 						</div>
 					</div>
 				</div>
@@ -94,10 +93,44 @@
     ***********************************-->
 
 <!-- Load Chart.js library first -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<!-- Include Chart.js v4.4.4 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<!-- Include chartjs-plugin-zoom v2.0.1 -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
+<!-- Include the duration plugin -->
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/plugin/duration.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
+<script>
+  // Try registering with window.ChartZoom
+	if (window.ChartZoom) {
+	Chart.register(window.ChartZoom);
+	}
+
+	// If not available, try window.Zoom
+	else if (window.Zoom) {
+	Chart.register(window.Zoom);
+	}
+
+	// If not available, try window.chartjsPluginZoom
+	else if (window.chartjsPluginZoom) {
+	Chart.register(window.chartjsPluginZoom);
+	}
+
+	// If none are available, log an error
+	else {
+	console.error('Zoom plugin not found in global scope.');
+	}
+
+	dayjs.extend(window.dayjs_plugin_duration);
+
+</script>
+
 <!-- Load your custom chart script after Chart.js library -->
 <script src="/js/archive-linechart.js"></script>
+
+<script src="/js/downloadExcel.js"></script>

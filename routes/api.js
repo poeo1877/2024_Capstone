@@ -1,11 +1,12 @@
 var express = require("express");
 var router = express.Router();
 const db = require("../models"); // /models/index.js를 import
+const dayjs = require('dayjs');
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
+
 const { SensorMeasurement } = require("../models");
-const {
-	getSensorDataByBatchIds,
-	getLatestSensorDataByBatchId,
-} = require("../services/db_services");
+const { getSensorDataByBatchIds, getLatestSensorDataByBatchId, createExcelFileForBatchIds, getFermentingBatchId } = require("../services/db_services");
 
 /**
  * @swagger
@@ -27,22 +28,34 @@ router.post("/sensor/measurement", async (req, res) => {
                 "measured_time": "2024-06-22T02:58:00"
             }
         */
-		const {
-			co2_concentration,
-			brix,
-			measured_time,
-			out_temperature,
-			in_temperature,
-			ph,
-			pressure_upper,
-			pressure_lower,
-		} = req.body;
+		const { co2_concentration, brix, measured_time, out_temperature, in_temperature, ph, pressure_upper, pressure_lower } = req.body;
 
+		// measured_time이 null인 경우 예외 처리
+		if (!measured_time) {
+			measured_time = new Date();
+		}
+
+		// batch_id 값을 가져옵니다.
+        const batch_id = await getFermentingBatchId();
+
+		// 가장 처음 측정된 시간을 가져옵니다.
+        const firstMeasurement = await SensorMeasurement.findOne({
+            where: { batch_id },
+            order: [['measured_time', 'ASC']],
+            attributes: ['measured_time']
+        });
+
+		// relative_time을 계산합니다.
+        const relative_time = firstMeasurement
+            ? (measuredTime - new Date(firstMeasurement.measured_time)) / 1000
+            : 0;
+		
 		const newSensorMeasurement = await SensorMeasurement.create({
-			measured_time: measured_time || new Date(), // null이면 현재 시간으로 대체
+			measured_time: measured_time,
 			co2_concentration: co2_concentration || null,
 			in_temperature: in_temperature || null,
 			pressure_upper: pressure_upper || null,
+			relative_time,
 
 			// 매번 null로 전달될 것으로 예상되는 값들
 			brix: brix || null,
@@ -55,7 +68,7 @@ router.post("/sensor/measurement", async (req, res) => {
 		res.status(201).json(newSensorMeasurement);
 	} catch (error) {
 		// 에러 발생 시 클라이언트에게 에러 메시지 반환
-		
+
 		res.status(500).json({ error: error.message });
 	}
 });
@@ -63,11 +76,7 @@ router.post("/sensor/measurement", async (req, res) => {
 router.get("/sensor/temperature", async (req, res) => {
 	try {
 		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const temperatureData = await getSensorDataByBatchIds(
-			batchIds,
-			"in_temperature"
-		);
-
+		const temperatureData = await getSensorDataByBatchIds(batchIds, "in_temperature");
 		res.json(temperatureData);
 	} catch (error) {
 		console.error(error);
@@ -78,10 +87,7 @@ router.get("/sensor/temperature", async (req, res) => {
 router.get("/sensor/co2", async (req, res) => {
 	try {
 		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const co2Data = await getSensorDataByBatchIds(
-			batchIds,
-			"co2_concentration"
-		);
+		const co2Data = await getSensorDataByBatchIds(batchIds, "co2_concentration");
 
 		res.json(co2Data);
 	} catch (error) {
@@ -93,10 +99,7 @@ router.get("/sensor/co2", async (req, res) => {
 router.get("/sensor/pressure", async (req, res) => {
 	try {
 		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const pressureData = await getSensorDataByBatchIds(
-			batchIds,
-			"pressure_upper"
-		);
+		const pressureData = await getSensorDataByBatchIds(batchIds, "pressure_upper");
 
 		res.json(pressureData);
 	} catch (error) {
@@ -111,18 +114,14 @@ router.get("/sensor/latest", async (req, res) => {
 		const batchId = req.query.batchId;
 
 		if (!batchId) {
-			return res
-				.status(400)
-				.json({ error: "batchId query parameter is required" });
+			return res.status(400).json({ error: "batchId query parameter is required" });
 		}
 
 		// getLatestSensorDataByBatchId 함수 호출
-        const latestTwoSensorData = await getLatestSensorDataByBatchId(batchId);
+		const latestTwoSensorData = await getLatestSensorDataByBatchId(batchId);
 
 		if (latestTwoSensorData.length < 2) {
-			return res
-				.status(400)
-				.json({ error: "Not enough data to calculate difference" });
+			return res.status(400).json({ error: "Not enough data to calculate difference" });
 		}
 
 		// Extract the latest and previous sensor data
@@ -130,26 +129,14 @@ router.get("/sensor/latest", async (req, res) => {
 		const previousData = latestTwoSensorData[1];
 
 		// Calculate the differences and percentage differences
-		const co2Difference = parseFloat(
-			(latestData.co2_concentration - previousData.co2_concentration).toFixed(3)
-		);
-		const co2PercentageDifference = parseFloat(
-			((co2Difference / previousData.co2_concentration) * 100).toFixed(3)
-		);
+		const co2Difference = parseFloat((latestData.co2_concentration - previousData.co2_concentration).toFixed(3));
+		const co2PercentageDifference = parseFloat(((co2Difference / previousData.co2_concentration) * 100).toFixed(3));
 
-		const tempDifference = parseFloat(
-			(parseFloat(latestData.in_temperature) - parseFloat(previousData.in_temperature)).toFixed(3)
-		);
-		const tempPercentageDifference = parseFloat(
-			((tempDifference / parseFloat(previousData.in_temperature)) * 100).toFixed(3)
-		);
+		const tempDifference = parseFloat((parseFloat(latestData.in_temperature) - parseFloat(previousData.in_temperature)).toFixed(3));
+		const tempPercentageDifference = parseFloat(((tempDifference / parseFloat(previousData.in_temperature)) * 100).toFixed(3));
 
-		const pressureDifference = parseFloat(
-			(parseFloat(latestData.pressure_upper) - parseFloat(previousData.pressure_upper)).toFixed(3)
-		);
-		const pressurePercentageDifference = parseFloat(
-			((pressureDifference / parseFloat(previousData.pressure_upper)) * 100).toFixed(3)
-		);
+		const pressureDifference = parseFloat((parseFloat(latestData.pressure_upper) - parseFloat(previousData.pressure_upper)).toFixed(3));
+		const pressurePercentageDifference = parseFloat(((pressureDifference / parseFloat(previousData.pressure_upper)) * 100).toFixed(3));
 
 		console.log("데이터", {
 			latestData: latestData,
@@ -181,6 +168,37 @@ router.get("/sensor/latest", async (req, res) => {
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Internal Server Error" });
+	}
+});
+
+router.post("/download-excel", async (req, res) => {
+	try {
+		const { batchIds } = req.body;
+		const excelBuffer = await createExcelFileForBatchIds(batchIds);
+
+		res.setHeader("Content-Disposition", 'attachment; filename="sensor_data.xlsx"');
+		res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		res.send(excelBuffer);
+	} catch (err) {
+		res.status(500).send("Error generating Excel file");
+	}
+});
+
+
+
+// 테스트용 라우터
+router.get("/test", async (req, res) => {
+	try {
+		const batchId = await getFermentingBatchId();
+
+		if (batchId !== null) {
+			res.json({ batchId });
+		} else {
+			res.status(404).send("No fermenting batch found");
+		}
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Internal Server Error");
 	}
 });
 
