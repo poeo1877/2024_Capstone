@@ -28,11 +28,13 @@ router.post("/sensor/measurement", async (req, res) => {
                 "measured_time": "2024-06-22T02:58:00"
             }
         */
-		const { co2_concentration, brix, measured_time, out_temperature, in_temperature, ph, pressure_upper, pressure_lower } = req.body;
+		let { co2_concentration, brix, measured_time, out_temperature, in_temperature, ph, pressure_upper, pressure_lower } = req.body;
 
 		// measured_time이 null인 경우 예외 처리
 		if (!measured_time) {
 			measured_time = new Date();
+		} else {
+			measured_time = new Date(measured_time);
 		}
 
 		// batch_id 값을 가져옵니다.
@@ -46,8 +48,8 @@ router.post("/sensor/measurement", async (req, res) => {
         });
 
 		// relative_time을 계산합니다.
-        const relative_time = firstMeasurement
-            ? (measuredTime - new Date(firstMeasurement.measured_time)) / 1000
+        let relative_time = firstMeasurement
+            ? (measured_time - new Date(firstMeasurement.measured_time)) / 1000
             : 0;
 		
 		const newSensorMeasurement = await SensorMeasurement.create({

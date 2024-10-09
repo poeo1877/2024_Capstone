@@ -87,6 +87,14 @@ router.get("/archive", async (req, res) => {
 	}
 });
 
+router.get('/pan', async (req, res) => {
+
+
+    res.render('test.ejs', {
+        title: "test",
+    });
+});
+
 router.get('/:id', (req, res) => {
     const batchId = req.params.id;
     // 데이터베이스에서 배치 정보 조회

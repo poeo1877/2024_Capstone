@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
 				onUpdate: "CASCADE",
 			},
 			relative_time: {
-				type: DataTypes.STRING,
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 		},

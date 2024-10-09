@@ -1,102 +1,3 @@
-// 	function setAnnotation() {
-// 		annotations = [];
-// 		const upperLimit = parseFloat(document.getElementById("val-upper-limit").value);
-// 		const lowerLimit = parseFloat(document.getElementById("val-lower-limit").value);
-// 		const sensorType = document.getElementById("val-sensor").value;
-// 		const dateRange = document.getElementById("val-daterange").value;
-// 		const dates = dateRange.split(" - "); // 기간을 구분자로 나눔
-// 		if (dates.length < 2) {
-// 			alert("기간을 올바르게 선택해 주세요.");
-// 			return;
-// 		}
-// 		const startDate = dates[0].trim(); // 시작 날짜
-// 		const endDate = dates[1].trim(); // 종료 날짜 설정
-
-// 		// 유효성 검사
-// 		if (isNaN(upperLimit) || isNaN(lowerLimit) || !sensorType) {
-// 			alert("상한값, 하한값, 센서 종류를 정확히 입력하세요.");
-// 			return;
-// 		}
-
-// 		// 경계선을 주석으로 추가
-// 		annotations.push({
-// 			type: "line",
-// 			sensorType: sensorType, // 추가된 sensorType 필드
-// 			display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
-// 			xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
-// 			xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
-// 			yMin: upperLimit,
-// 			yMax: upperLimit,
-// 			label: {
-// 				content: "상한값",
-// 				enabled: true,
-// 				position: "right",
-// 			},
-// 			borderColor: "red",
-// 			borderWidth: 2,
-// 		});
-
-// 		annotations.push({
-// 			type: "line",
-// 			sensorType: sensorType, // 추가된 sensorType 필드
-// 			display: sensorVisibility[sensorType], // 센서 가시성에 따라 display 속성 설정
-// 			xMin: new Date(startDate), // 시작 날짜를 Date 객체로 설정
-// 			xMax: new Date(endDate), // 종료 날짜를 Date 객체로 설정
-// 			yMin: lowerLimit,
-// 			yMax: lowerLimit,
-// 			label: {
-// 				content: "하한값",
-// 				enabled: true,
-// 				position: "right",
-// 			},
-// 			borderColor: "blue",
-// 			borderWidth: 2,
-// 		});
-
-// 		lineChart.update();
-// 	}
-
-// 	// // Pan 기능 구현
-// 	// let isPanning = false;
-// 	// let startX = 0;
-// 	// let startY = 0;
-
-// 	// document.getElementById("lineChart").addEventListener("mousedown", function (event) {
-// 	// 	if (event.ctrlKey) {
-// 	// 		isPanning = true;
-// 	// 		startX = event.clientX;
-// 	// 		startY = event.clientY;
-// 	// 	}
-// 	// });
-
-// 	// document.getElementById("lineChart").addEventListener("mousemove", function (event) {
-// 	// 	if (isPanning) {
-// 	// 		const sensitivity = 0.5; // 민감도 조절을 위한 비율 (0.5로 설정하여 민감도를 낮춤)
-// 	// 		const deltaX = (event.clientX - startX) * sensitivity;
-// 	// 		const deltaY = (event.clientY - startY) * sensitivity;
-// 	// 		const xScale = lineChart.scales["x"];
-// 	// 		const yScale = lineChart.scales["y"];
-
-// 	// 		const xMin = xScale.min - (deltaX * (xScale.max - xScale.min)) / xScale.width;
-// 	// 		const xMax = xScale.max - (deltaX * (xScale.max - xScale.min)) / xScale.width;
-// 	// 		const yMin = yScale.min + (deltaY * (yScale.max - yScale.min)) / yScale.height;
-// 	// 		const yMax = yScale.max + (deltaY * (yScale.max - yScale.min)) / yScale.height;
-
-// 	// 		lineChart.options.scales.x.min = xMin;
-// 	// 		lineChart.options.scales.x.max = xMax;
-// 	// 		lineChart.options.scales.y.min = yMin;
-// 	// 		lineChart.options.scales.y.max = yMax;
-
-// 	// 		startX = event.clientX;
-// 	// 		startY = event.clientY;
-// 	// 	}
-// 	// });
-
-// 	// document.addEventListener("mouseup", function () {
-// 	// 	isPanning = false;
-// 	// });
-// });
-
 document.addEventListener("DOMContentLoaded", function () {
 	var ctxTemperatureChart = document.getElementById("temperatureChart").getContext("2d");
 	var ctxCo2Chart = document.getElementById("co2Chart").getContext("2d");
@@ -151,70 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		return times;
 	}
 
-	// // 차트 생성 함수
-	// function createChart(ctx, datasets) {
-	// 	return new Chart(ctx, {
-	// 		type: "line",
-	// 		data: {
-	// 			datasets: datasets,
-	// 		},
-	// 		options: {
-	// 			responsive: true,
-	// 			maintainAspectRatio: true,
-	// 			aspectRatio: 2, // 가로:세로 비율을 2:1로 설정 (가로가 세로의 2배)
-	// 			scales: {
-	// 				x: {
-	// 					type: "time", // Automatically parses time if your data is in correct format
-	// 					time: {
-	// 						tooltipFormat: "YYYY-MM-DD HH:mm", // 툴팁에 표시될 형식
-	// 						displayFormats: {
-	// 							day: "MM-DD", // x축의 범례값 형식 지정
-	// 							hour: "HH:mm", // x축의 범례값 형식 지정
-	// 						},
-	// 					},
-	// 					ticks: {
-	// 						autoSkip: true, // Automatically skips labels to prevent overlap
-	// 						maxTicksLimit: 28, // Limit the number of ticks to a reasonable number
-	// 						maxRotation: 0, // Keep labels horizontal
-	// 						minRotation: 0, // No rotation for labels
-	// 					},
-	// 					grid: {
-	// 						display: true, // Display grid lines for clarity
-	// 					},
-	// 				},
-	// 			},
-	// 			plugins: {
-	// 				zoom: {
-	// 					pan: {
-	// 						enabled: true, // Enable panning
-	// 						mode: "xy", // Allow panning in both directions
-	// 						modifierKey: "ctrl", // No modifier key required for panning
-	// 						threshold: 10, // Minimal pan distance required before actually panning
-	// 					},
-	// 					zoom: {
-	// 						wheel: {
-	// 							enabled: true, // Disable zooming with the mouse wheel
-	// 						},
-	// 						drag: {
-	// 							enabled: false, // 드래그로 줌 가능
-	// 							threshold: 100, // 드래그 줌을 시작하기 위한 최소 드래그 거리
-	// 							borderWidth: 1, // 드래그 줌 영역의 테두리 두께
-	// 							backgroundColor: "rgba(0, 0, 0, 0.1)", // 드래그 줌 영역의 배경색
-	// 						},
-	// 						pinch: {
-	// 							enabled: true, // Enable zooming by pinching on touch devices
-	// 						},
-	// 						mode: "xy",
-	// 					},
-	// 				},
-	// 				annotation: {
-	// 					annotations: temperatureAnnotations,
-	// 				},
-	// 			},
-	// 		},
-	// 	});
-	// }
-
 	// 차트 생성 함수
 	function createChart(ctx, datasets) {
 		return new Chart(ctx, {
@@ -228,35 +65,34 @@ document.addEventListener("DOMContentLoaded", function () {
 				// aspectRatio: 2,
 				scales: {
 					x: {
-						type: "time", // x축을 time으로 설정
+						type: "timeseries", // x축을 time으로 설정
 						time: {
 							unit: "day", // Default unit
 							displayFormats: {
-								day: "D [days]",
-								hour: "H [hrs]",
-								minute: "m [min]",
-								second: "s [sec]",
+								day: "D [일]",
+								hour: "HH:mm", // 시간:분 형식
+								minute: "HH:mm", // 시간:분 형식
 							},
-							tooltipFormat: "D [days], H [hrs], m [min], s [sec]", // Tooltip format
+							tooltipFormat: "D [일] HH:mm", // 툴팁 형식: 일 시간:분:초
 						},
 						title: {
 							callback: function (value, index, ticks) {
 								const scale = this.chart.scales.x;
-								const range = scale.max - scale.min; // Range in milliseconds
+								const range = scale.max - scale.min; // 범위(밀리초 단위)
 
-								const duration = dayjs.duration(value); // Value is in milliseconds
+								const duration = dayjs.duration(value); // 값은 밀리초 단위
 
 								if (range >= 2 * 24 * 60 * 60 * 1000) {
-									// More than 2 days
-									return duration.format("D [days]");
+									// 2일 이상
+									return duration.format("D [일]");
 								} else if (range >= 2 * 60 * 60 * 1000) {
-									// More than 2 hours
-									return duration.format("H [hrs]");
+									// 2시간 이상
+									return duration.format("H [시간]");
 								} else if (range >= 2 * 60 * 1000) {
-									// More than 2 minutes
-									return duration.format("m [min]");
+									// 2분 이상
+									return duration.format("m [분]");
 								} else {
-									return duration.format("s [sec]");
+									return duration.format("s [초]");
 								}
 							},
 							display: true,
@@ -277,11 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
 					tooltip: {
 						callbacks: {
 							label: function (context) {
-								const duration = dayjs.duration(context.parsed.x);
 								const sensorData = context.parsed.y;
 								const absoluteTime = context.raw.absoluteTime;
-								const formattedAbsoluteTime = new Date(absoluteTime).toLocaleString();
-								return `Value: ${sensorData}, Measured At: ${formattedAbsoluteTime}`;
+								return `값: ${sensorData}, 측정 시점: ${absoluteTime}`;
 							},
 						},
 					},

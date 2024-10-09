@@ -44,9 +44,9 @@
 								var temperatureData = JSON.parse('<%- temperatureData %>');
 								console.log(temperatureData);
 							</script>
-							<canvas id="temperatureChart" style="display: block;"></canvas>
-							<canvas id="co2Chart" style="display: none;"></canvas>
-							<canvas id="pressureChart" style="display: none;"></canvas>
+							<canvas id="temperatureChart" style="display: block; pointer-events: auto;"></canvas>
+							<canvas id="co2Chart" style="display: none; pointer-events: auto;"></canvas>
+							<canvas id="pressureChart" style="display: none; pointer-events: auto;"></canvas>
 						</div>
 					</div>
 				</div>
@@ -106,28 +106,21 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
 <script>
-  // Try registering with window.ChartZoom
-	if (window.ChartZoom) {
-	Chart.register(window.ChartZoom);
-	}
+	Chart.register(ChartZoom);
+	console.log('Chart:', Chart);
+	console.log('ChartZoom:', ChartZoom);
+	console.log('Zoom:', Zoom);
+	Chart.register(Zoom);
+	console.log('Available plugins:', Chart.registry.plugins);
 
-	// If not available, try window.Zoom
-	else if (window.Zoom) {
-	Chart.register(window.Zoom);
-	}
-
-	// If not available, try window.chartjsPluginZoom
-	else if (window.chartjsPluginZoom) {
-	Chart.register(window.chartjsPluginZoom);
-	}
-
-	// If none are available, log an error
-	else {
-	console.error('Zoom plugin not found in global scope.');
-	}
 
 	dayjs.extend(window.dayjs_plugin_duration);
 
+	const canvas = document.getElementById('temperatureChart');
+
+	canvas.addEventListener('mousedown', function(event) {
+	console.log('Mouse down on canvas');
+	});
 </script>
 
 <!-- Load your custom chart script after Chart.js library -->
