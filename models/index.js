@@ -24,6 +24,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // 모델 파일 참조 및 DB 속성 정의하기
+db.Alert = require('./alert')(sequelize, Sequelize.DataTypes);
 db.Batch = require('./batch')(sequelize, Sequelize.DataTypes);
 db.Recipe = require('./recipe')(sequelize, Sequelize.DataTypes);
 db.Fermenter = require('./fermenter')(sequelize, Sequelize.DataTypes);

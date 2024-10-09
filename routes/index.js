@@ -36,8 +36,12 @@ router.get('/report', async (req, res) => {
     res.render('report.ejs');
 });
 
-router.get('/create-batch', async (req, res) => {
-    res.render('createBatch.ejs');
+router.get('/alert', async (req, res) => {
+    res.render('alert');
+});
+
+router.get('/raw', async (req, res) => {
+    res.render('raw_report');
 });
 
 router.get('/error', async (req, res) => {

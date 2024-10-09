@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    type: 'time', // Automatically parses time if your data is in correct format
+                    type: 'timeseries', // Automatically parses time if your data is in correct format
                     time: {
                         tooltipFormat: 'yyyy-MM-dd HH:mm', // 툴팁에 표시될 형식
                         displayFormats: {

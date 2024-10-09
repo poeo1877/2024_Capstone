@@ -1,11 +1,11 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const db = require("../models"); // /models/index.js를 import
-const { SensorMeasurement } = require("../models");
+const db = require('../models'); // /models/index.js를 import
+const { SensorMeasurement, Alert } = require('../models');
 const {
-	getSensorDataByBatchIds,
-	getLatestSensorDataByBatchId,
-} = require("../services/db_services");
+    getSensorDataByBatchIds,
+    getLatestSensorDataByBatchId,
+} = require('../services/db_services');
 
 /**
  * @swagger
@@ -13,9 +13,9 @@ const {
  *  post: # HTTP 메서드
  *  summary: 라즈베리파이로 측정한 센서 데이터를 DB에 저장  # 요약
  */
-router.post("/sensor/measurement", async (req, res) => {
-	try {
-		/* 
+router.post('/sensor/measurement', async (req, res) => {
+    try {
+        /* 
             라즈베리파이에서 데이터 전송시 다음과 같은 형태로 보내줘야 한다.
             {
                 "out_temperature": 14.79,
@@ -27,162 +27,192 @@ router.post("/sensor/measurement", async (req, res) => {
                 "measured_time": "2024-06-22T02:58:00"
             }
         */
-		const {
-			co2_concentration,
-			brix,
-			measured_time,
-			out_temperature,
-			in_temperature,
-			ph,
-			pressure_upper,
-			pressure_lower,
-		} = req.body;
+        const {
+            co2_concentration,
+            brix,
+            measured_time,
+            out_temperature,
+            in_temperature,
+            ph,
+            pressure_upper,
+            pressure_lower,
+        } = req.body;
 
-		const newSensorMeasurement = await SensorMeasurement.create({
-			measured_time: measured_time || new Date(), // null이면 현재 시간으로 대체
-			co2_concentration: co2_concentration || null,
-			in_temperature: in_temperature || null,
-			pressure_upper: pressure_upper || null,
+        const newSensorMeasurement = await SensorMeasurement.create({
+            measured_time: measured_time || new Date(), // null이면 현재 시간으로 대체
+            co2_concentration: co2_concentration || null,
+            in_temperature: in_temperature || null,
+            pressure_upper: pressure_upper || null,
 
-			// 매번 null로 전달될 것으로 예상되는 값들
-			brix: brix || null,
-			out_temperature: out_temperature || null,
-			ph: ph || null,
-			pressure_lower: pressure_lower || null,
-		});
+            // 매번 null로 전달될 것으로 예상되는 값들
+            brix: brix || null,
+            out_temperature: out_temperature || null,
+            ph: ph || null,
+            pressure_lower: pressure_lower || null,
+        });
 
-		// 데이터베이스에 새 데이터가 추가된 후 클라이언트에게 응답
-		res.status(201).json(newSensorMeasurement);
-	} catch (error) {
-		// 에러 발생 시 클라이언트에게 에러 메시지 반환
-		
-		res.status(500).json({ error: error.message });
-	}
+        // 데이터베이스에 새 데이터가 추가된 후 클라이언트에게 응답
+        res.status(201).json(newSensorMeasurement);
+    } catch (error) {
+        // 에러 발생 시 클라이언트에게 에러 메시지 반환
+
+        res.status(500).json({ error: error.message });
+    }
 });
 
-router.get("/sensor/temperature", async (req, res) => {
-	try {
-		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const temperatureData = await getSensorDataByBatchIds(
-			batchIds,
-			"in_temperature"
-		);
+router.get('/sensor/temperature', async (req, res) => {
+    try {
+        const batchIds = req.query.batchId.split(','); // 쿼리에서 batchId를 가져와서 배열로 변환
+        const temperatureData = await getSensorDataByBatchIds(
+            batchIds,
+            'in_temperature',
+        );
 
-		res.json(temperatureData);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+        res.json(temperatureData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
-router.get("/sensor/co2", async (req, res) => {
-	try {
-		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const co2Data = await getSensorDataByBatchIds(
-			batchIds,
-			"co2_concentration"
-		);
+router.get('/sensor/co2', async (req, res) => {
+    try {
+        const batchIds = req.query.batchId.split(','); // 쿼리에서 batchId를 가져와서 배열로 변환
+        const co2Data = await getSensorDataByBatchIds(
+            batchIds,
+            'co2_concentration',
+        );
 
-		res.json(co2Data);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+        res.json(co2Data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
-router.get("/sensor/pressure", async (req, res) => {
-	try {
-		const batchIds = req.query.batchId.split(","); // 쿼리에서 batchId를 가져와서 배열로 변환
-		const pressureData = await getSensorDataByBatchIds(
-			batchIds,
-			"pressure_upper"
-		);
+router.get('/sensor/pressure', async (req, res) => {
+    try {
+        const batchIds = req.query.batchId.split(','); // 쿼리에서 batchId를 가져와서 배열로 변환
+        const pressureData = await getSensorDataByBatchIds(
+            batchIds,
+            'pressure_upper',
+        );
 
-		res.json(pressureData);
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+        res.json(pressureData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
-router.get("/sensor/latest", async (req, res) => {
-	try {
-		// 요청에서 batchIds를 추출 (예: ?batchIds=1)
-		const batchId = req.query.batchId;
+router.get('/sensor/latest', async (req, res) => {
+    try {
+        // 요청에서 batchIds를 추출 (예: ?batchIds=1)
+        const batchId = req.query.batchId;
 
-		if (!batchId) {
-			return res
-				.status(400)
-				.json({ error: "batchId query parameter is required" });
-		}
+        if (!batchId) {
+            return res
+                .status(400)
+                .json({ error: 'batchId query parameter is required' });
+        }
 
-		// getLatestSensorDataByBatchId 함수 호출
+        // getLatestSensorDataByBatchId 함수 호출
         const latestTwoSensorData = await getLatestSensorDataByBatchId(batchId);
-        console.log("두 개", latestTwoSensorData);
+        console.log('두 개', latestTwoSensorData);
 
-		if (latestTwoSensorData.length < 2) {
-			return res
-				.status(400)
-				.json({ error: "Not enough data to calculate difference" });
-		}
+        if (latestTwoSensorData.length < 2) {
+            return res
+                .status(400)
+                .json({ error: 'Not enough data to calculate difference' });
+        }
 
-		// Extract the latest and previous sensor data
-		const latestData = latestTwoSensorData[0];
-		const previousData = latestTwoSensorData[1];
+        // Extract the latest and previous sensor data
+        const latestData = latestTwoSensorData[0];
+        const previousData = latestTwoSensorData[1];
 
-		// Calculate the differences and percentage differences
-		const co2Difference = parseFloat(
-			(latestData.co2_concentration - previousData.co2_concentration).toFixed(3)
-		);
-		const co2PercentageDifference = parseFloat(
-			((co2Difference / previousData.co2_concentration) * 100).toFixed(3)
-		);
+        // Calculate the differences and percentage differences
+        const co2Difference = parseFloat(
+            (
+                latestData.co2_concentration - previousData.co2_concentration
+            ).toFixed(3),
+        );
+        const co2PercentageDifference = parseFloat(
+            ((co2Difference / previousData.co2_concentration) * 100).toFixed(3),
+        );
 
-		const tempDifference = parseFloat(
-			(parseFloat(latestData.in_temperature) - parseFloat(previousData.in_temperature)).toFixed(3)
-		);
-		const tempPercentageDifference = parseFloat(
-			((tempDifference / parseFloat(previousData.in_temperature)) * 100).toFixed(3)
-		);
+        const tempDifference = parseFloat(
+            (
+                parseFloat(latestData.in_temperature) -
+                parseFloat(previousData.in_temperature)
+            ).toFixed(3),
+        );
+        const tempPercentageDifference = parseFloat(
+            (
+                (tempDifference / parseFloat(previousData.in_temperature)) *
+                100
+            ).toFixed(3),
+        );
 
-		const pressureDifference = parseFloat(
-			(parseFloat(latestData.pressure_upper) - parseFloat(previousData.pressure_upper)).toFixed(3)
-		);
-		const pressurePercentageDifference = parseFloat(
-			((pressureDifference / parseFloat(previousData.pressure_upper)) * 100).toFixed(3)
-		);
+        const pressureDifference = parseFloat(
+            (
+                parseFloat(latestData.pressure_upper) -
+                parseFloat(previousData.pressure_upper)
+            ).toFixed(3),
+        );
+        const pressurePercentageDifference = parseFloat(
+            (
+                (pressureDifference / parseFloat(previousData.pressure_upper)) *
+                100
+            ).toFixed(3),
+        );
 
-		console.log("데이터", {
-			latestData: latestData,
-			differences: {
-				co2_concentration: co2Difference,
-				in_temperature: tempDifference,
-				pressure_upper: pressureDifference,
-			},
-			percentageDifferences: {
-				co2_concentration: co2PercentageDifference,
-				in_temperature: tempPercentageDifference,
-				pressure_upper: pressurePercentageDifference,
-			},
-		});
-		// 결과 반환
-		res.json({
-			latestData: latestData,
-			differences: {
-				co2_concentration: co2Difference,
-				in_temperature: tempDifference,
-				pressure_upper: pressureDifference,
-			},
-			percentageDifferences: {
-				co2_concentration: co2PercentageDifference,
-				in_temperature: tempPercentageDifference,
-				pressure_upper: pressurePercentageDifference,
-			},
-		});
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+        console.log('데이터', {
+            latestData: latestData,
+            differences: {
+                co2_concentration: co2Difference,
+                in_temperature: tempDifference,
+                pressure_upper: pressureDifference,
+            },
+            percentageDifferences: {
+                co2_concentration: co2PercentageDifference,
+                in_temperature: tempPercentageDifference,
+                pressure_upper: pressurePercentageDifference,
+            },
+        });
+        // 결과 반환
+        res.json({
+            latestData: latestData,
+            differences: {
+                co2_concentration: co2Difference,
+                in_temperature: tempDifference,
+                pressure_upper: pressureDifference,
+            },
+            percentageDifferences: {
+                co2_concentration: co2PercentageDifference,
+                in_temperature: tempPercentageDifference,
+                pressure_upper: pressurePercentageDifference,
+            },
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+// 알림 조회 API
+router.get('/alerts', async (req, res) => {
+    try {
+        const alerts = await Alert.findAll({
+            order: [['alert_id', 'DESC']],
+
+            logging: console.log, // 쿼리 로그 추가
+        });
+        res.json(alerts);
+    } catch (error) {
+        console.error('알림 조회 중 오류 발생:', error);
+        res.status(500).json({
+            error: '알림을 가져오는 데 오류가 발생했습니다.',
+        });
+    }
 });
 
 module.exports = router;

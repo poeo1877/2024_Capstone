@@ -1,0 +1,125 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">알림 메시지 목록</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example" class="table table-responsive-sm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>메시지 내용</th>
+                                    <th>메시지 날짜</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alertTableBody">
+                                <!-- 알림 데이터가 여기에 추가됩니다. -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="pagination" class="d-flex justify-content-between">
+                        <button
+                            id="prevPage"
+                            class="btn btn-secondary"
+                            disabled
+                        >
+                            이전
+                        </button>
+                        <div id="pageNumbers"></div>
+                        <button id="nextPage" class="btn btn-secondary">
+                            다음
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const alertsPerPage = 10; // 한 페이지당 표시할 알림 수
+        let currentPage = 1; // 현재 페이지
+        let alerts = []; // 전체 알림 데이터를 저장할 배열
+
+        // 알림 데이터 가져오기
+        fetch('/api/alerts')
+            .then((response) => response.json())
+            .then((data) => {
+                alerts = data; // 전체 알림 데이터 저장
+                renderPage(); // 첫 페이지 렌더링
+                updatePagination(); // 페이지 번호 업데이트
+            })
+            .catch((error) =>
+                console.error('알림을 가져오는 중 오류 발생:', error),
+            );
+
+        function renderPage() {
+            const alertTableBody = document.getElementById('alertTableBody');
+            alertTableBody.innerHTML = ''; // 테이블 초기화
+
+            // 현재 페이지에 해당하는 알림 항목을 계산
+            const start = (currentPage - 1) * alertsPerPage;
+            const end = start + alertsPerPage;
+            const currentAlerts = alerts.slice(start, end);
+
+            currentAlerts.forEach((alert) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${alert.alert_id}</td>
+                    <td>${alert.alert_message}</td>
+                    <td>${new Date(
+                        alert.alert_time,
+                    ).toLocaleString()}</td> <!-- 날짜 형식 변환 -->
+                `;
+                alertTableBody.appendChild(row); // 테이블에 행 추가
+            });
+
+            updateButtons(); // 이전/다음 버튼 상태 업데이트
+        }
+
+        function updatePagination() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = ''; // 기존 페이지 번호 초기화
+
+            const totalPages = Math.ceil(alerts.length / alertsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.className = 'btn btn-link';
+                pageButton.innerText = i;
+                pageButton.onclick = () => {
+                    currentPage = i; // 클릭한 페이지로 이동
+                    renderPage(); // 해당 페이지 렌더링
+                };
+                pageNumbers.appendChild(pageButton);
+            }
+        }
+
+        function updateButtons() {
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled =
+                currentPage === Math.ceil(alerts.length / alertsPerPage);
+        }
+
+        // 이전 페이지 버튼 클릭 이벤트
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+
+        // 다음 페이지 버튼 클릭 이벤트
+        document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(alerts.length / alertsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
+    });
+</script>
