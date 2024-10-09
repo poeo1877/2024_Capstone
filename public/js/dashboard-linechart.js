@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
         pressureAnnotations = [];
 
         limits.forEach((limit) => {
-            console.log(limit);
             // 하한값 주석
             const lowerLine = {
                 type: 'line',
