@@ -1,82 +1,30 @@
-<!-- <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css" /> -->
-<!-- <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.theme.default.min.css" /> -->
-<!-- <link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet" /> -->
-<link href="/css/style.css" rel="stylesheet" />
-<!-- Daterange picker -->
-<!-- <link
-	href="/vendor/bootstrap-daterangepicker/daterangepicker.css"
-	rel="stylesheet"
-/> -->
-
 <!--**********************************
             Content body start
         ***********************************-->
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div
-                            class="card-body"
-                            style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                            "
-                        >
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                id="temperature-btn"
-                                style="width: 50%"
-                            >
-                                온도
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div
-                            class="card-body"
-                            style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                            "
-                        >
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                id="co2-btn"
-                                style="width: 50%"
-                            >
-                                이산화탄소
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div
-                            class="card-body"
-                            style="
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                            "
-                        >
-                            <button
-                                type="button"
-                                class="btn btn-rounded btn-outline-dark"
-                                id="pressure-btn"
-                                style="width: 50%"
-                            >
-                                압력
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
+					<button type="button" class="btn btn-rounded btn-outline-dark" id="temperature-btn" style="width: 50%">온도</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
+					<button type="button" class="btn btn-rounded btn-outline-dark" id="co2-btn" style="width: 50%">이산화탄소</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="card">
+				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
+					<button type="button" class="btn btn-rounded btn-outline-dark" id="pressure-btn" style="width: 50%">압력</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- /# column -->
 	<div class="row">
@@ -84,37 +32,27 @@
 			<div class="card">
 				<div class="card-header">
 					<h4 class="card-title">Data Overview</h4>
-					<button
-						type="submit"
-						class="btn btn-dark"
-						id="downloadExcel"
-					>
-						Excel로 다운로드
-					</button>
+					<button type="submit" class="btn btn-dark" id="downloadExcel">Excel로 다운로드</button>
 				</div>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-xl col-lg">
-							<canvas id="lineChart"></canvas>
-							<!-- 차트에 사용될 데이터. ejs 렌더링 할 때 전달 받는다. -->
 							<script>
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
 								var batchIds = JSON.parse('<%- batchIds %>');
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
 								var temperatureData = JSON.parse('<%- temperatureData %>');
+								console.log(temperatureData);
 							</script>
+							<canvas id="temperatureChart" style="display: block; pointer-events: auto;"></canvas>
+							<canvas id="co2Chart" style="display: none; pointer-events: auto;"></canvas>
+							<canvas id="pressureChart" style="display: none; pointer-events: auto;"></canvas>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<style>
-		#lineChart {
-			width: 100%;
-			height: 100%; /* 부모 요소의 크기에 맞게 차트를 조절 */
-		}
-	</style>
 	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
 	<!-- 이 아래에서 통계 같은 것 시각화-->
 	<div class="row">
@@ -155,115 +93,37 @@
     ***********************************-->
 
 <!-- Load Chart.js library first -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<!-- Include Chart.js v4.4.4 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<!-- Include chartjs-plugin-zoom v2.0.1 -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
+<!-- Include the duration plugin -->
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/plugin/duration.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
+
+<script>
+	Chart.register(ChartZoom);
+	console.log('Chart:', Chart);
+	console.log('ChartZoom:', ChartZoom);
+	console.log('Zoom:', Zoom);
+	Chart.register(Zoom);
+	console.log('Available plugins:', Chart.registry.plugins);
+
+
+	dayjs.extend(window.dayjs_plugin_duration);
+
+	const canvas = document.getElementById('temperatureChart');
+
+	canvas.addEventListener('mousedown', function(event) {
+	console.log('Mouse down on canvas');
+	});
+</script>
 
 <!-- Load your custom chart script after Chart.js library -->
 <script src="/js/archive-linechart.js"></script>
 
-<!-- <script>
-	const colors = [
-		'rgba(255, 99, 132, 1)', // 배치 1 색상
-		'rgba(54, 162, 235, 1)', // 배치 2 색상
-		'rgba(255, 206, 86, 1)', // 배치 3 색상
-		'rgba(75, 192, 192, 1)', // 배치 4 색상
-		'rgba(153, 102, 255, 1)', // 배치 5 색상
-		'rgba(255, 159, 64, 1)', // 배치 6 색상
-	];
-
-	// JSON.parse to convert the received data
-	//ejs에서 받은 데이터를 자바스크립트 변수로 설정
-	const timestamps = JSON.parse('%- timestamps %>'); 
-	const batchIds = JSON.parse('<- batchId %>');
-	const temperatureData = JSON.parse('%- temperatureData %>');
-	const co2Data = JSON.parse('<- co2Data %>');
-	const pressureData = JSON.parse('%- pressureData %>');
-
-	// Create initial datasets for the chart
-	let datasets = [];
-
-	const uniqueBatchIds = [...new Set(batchIds)]; // Create a unique batchId list
-
-	uniqueBatchIds.forEach((batchId, index) => {
-		// Push datasets for temperature, CO2, and pressure
-		datasets.push({
-			label: `Batch ${batchId} - 온도`,
-			data: temperatureData.filter(
-				(_, i) => batchIds[i] === batchId,
-			),
-			borderColor: colors[index % colors.length],
-			backgroundColor: colors[index % colors.length].replace(
-				'1)',
-				'0.2)',
-			),
-			fill: false,
-			hidden: true, // Initially hidden
-		});
-		datasets.push({
-			label: `Batch ${batchId} - 이산화탄소`,
-			data: co2Data.filter((_, i) => batchIds[i] === batchId),
-			borderColor:
-				colors[(index + uniqueBatchIds.length) % colors.length],
-			backgroundColor: colors[
-				(index + uniqueBatchIds.length) % colors.length
-			].replace('1)', '0.2)'),
-			fill: false,
-			hidden: true, // Initially hidden
-		});
-		datasets.push({
-			label: `Batch ${batchId} - 압력`,
-			data: pressureData.filter(
-				(_, i) => batchIds[i] === batchId,
-			),
-			borderColor:
-				colors[
-					(index + 2 * uniqueBatchIds.length) % colors.length
-				],
-			backgroundColor: colors[
-				(index + 2 * uniqueBatchIds.length) % colors.length
-			].replace('1)', '0.2)'),
-			fill: false,
-			hidden: true, // Initially hidden
-		});
-	});
-
-	// Create the initial chart
-	const ctx = document.getElementById('lineChart').getContext('2d');
-	const myChart = new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: timestamps,
-			datasets: datasets,
-		},
-		options: {
-			legend: false,
-			responsive: true,
-			scales: {
-				y: {
-					beginAtZero: true,
-				},
-			},
-		},
-	});
-
-	// Function to filter datasets based on selected button
-	function updateChart(dataType) {
-		myChart.data.datasets.forEach((dataset) => {
-			dataset.hidden = !dataset.label.includes(dataType); // Show or hide datasets based on button
-		});
-		myChart.update();
-	}
-
-	// Event listeners for buttons
-	document
-		.getElementById('temperature-btn')
-		.addEventListener('click', () => updateChart('온도'));
-	document
-		.getElementById('co2-btn')
-		.addEventListener('click', () => updateChart('이산화탄소'));
-	document
-		.getElementById('pressure-btn')
-		.addEventListener('click', () => updateChart('압력'));
-</script> -->
+<script src="/js/downloadExcel.js"></script>
