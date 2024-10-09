@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             raw_material_id: {
                 type: DataTypes.INTEGER,
-                references: { model: 'RawMaterial', key: 'raw_material_id' },
+                references: { model: 'RawMaterials', key: 'raw_material_id' },
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             },
@@ -40,9 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     RawMaterialUsage.associate = (models) => {
-        RawMaterialUsage.belongsTo(models.RawMaterial, {
-            foreignKey: 'raw_material_id',
-        });
+        RawMaterialUsage.belongsTo(models.RawMaterial, { foreignKey: 'raw_material_id', targetKey: 'raw_material_id' });
         RawMaterialUsage.belongsTo(models.Batch, { foreignKey: 'batch_id' });
     };
 

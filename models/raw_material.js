@@ -51,13 +51,9 @@ module.exports = (sequelize, DataTypes) => {
         },
     );
 
-    RawMaterial.associate = (models) => {
-        RawMaterial.hasMany(models.RawMaterialReceipt, {
-            foreignKey: 'raw_material_id',
-        });
-        RawMaterial.hasMany(models.RawMaterialUsage, {
-            foreignKey: 'raw_material_id',
-        });
+    RawMaterial.associate = function(models) {
+        RawMaterial.hasMany(models.RawMaterialReceipt, { foreignKey: 'raw_material_id', sourceKey: 'raw_material_id' });
+        RawMaterial.hasMany(models.RawMaterialUsage, { foreignKey: 'raw_material_id', sourceKey: 'raw_material_id' });
     };
 
     return RawMaterial;

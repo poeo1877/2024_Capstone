@@ -204,4 +204,134 @@ router.get("/sensor/measurement", async (req, res) => {
     }
 });
 
+// 입고, 출고, 재고 정보를 가져오는 API
+router.post('/material/receipt', async (req, res) => {
+	const { materialName, quantity, unitPrice, description, category, unit } = req.body;
+  
+	try {
+	  // 새로운 원료명 추가 처리
+	  let rawMaterial = await db.RawMaterial.findOne({ where: { raw_material_name: materialName } });
+	  
+	  if (!rawMaterial) {
+		rawMaterial = await db.RawMaterial.create({
+		  raw_material_name: materialName,
+		  category: category || '기본 카테고리',
+		  unit: unit || 'kg'
+		});
+	  }
+  
+	  // 원료 입고 정보 저장
+	  await db.RawMaterialReceipt.create({
+		raw_material_id: rawMaterial.raw_material_id,
+		quantity,
+		unit_price: unitPrice,
+		description
+	  });
+  
+	  res.json({ success: true });
+	} catch (error) {
+	  console.error('Error saving material receipt:', error);
+	  res.status(500).json({ success: false });
+	}
+  }); 
+
+  router.get('/material/unit', async (req, res) => {
+	const { name } = req.query;
+  
+	try {
+	  const material = await db.RawMaterial.findOne({ where: { raw_material_name: name } });
+	  if (material) {
+		res.json({ unit: material.unit });
+	  } else {
+		res.status(404).json({ unit: null });
+	  }
+	} catch (error) {
+	  console.error('Error fetching material unit:', error);
+	  res.status(500).json({ error: 'Internal Server Error' });
+	}
+  });
+
+  router.post('/material/usage', async (req, res) => {
+	const { materialName, quantity, batchId, note } = req.body;
+  
+	try {
+	  // 원료 찾기
+	  const rawMaterial = await db.RawMaterial.findOne({ where: { raw_material_name: materialName } });
+	  
+	  if (!rawMaterial) {
+		return res.status(404).json({ success: false, message: "원료를 찾을 수 없습니다." });
+	  }
+  
+	  // 출고 정보 저장
+	  await db.RawMaterialUsage.create({
+		raw_material_id: rawMaterial.raw_material_id,
+		quantity_used: quantity,
+		batch_id: batchId,
+		note: note
+	  });
+  
+	  res.json({ success: true });
+	} catch (error) {
+	  console.error('Error saving material usage:', error);
+	  res.status(500).json({ success: false });
+	}
+  });
+  
+// 재고 정보 조회
+router.get('/material/inventory', async (req, res) => {
+	const { name } = req.query;
+  
+	try {
+	  const material = await db.RawMaterial.findOne({ where: { raw_material_name: name } });
+	  if (material) {
+		// 현재 재고량 계산 (입고량 - 출고량)
+		const totalReceived = await db.RawMaterialReceipt.sum('quantity', { where: { raw_material_id: material.raw_material_id } });
+		const totalUsed = await db.RawMaterialUsage.sum('quantity_used', { where: { raw_material_id: material.raw_material_id } });
+		const currentInventory = totalReceived - totalUsed;
+  
+		res.json({ success: true, currentInventory: currentInventory || 0, unit: material.unit });
+	  } else {
+		res.status(404).json({ success: false, message: "원료를 찾을 수 없습니다." });
+	  }
+	} catch (error) {
+	  console.error('Error fetching inventory:', error);
+	  res.status(500).json({ success: false });
+	}
+  });
+  
+  // 재고 정보 수정
+  router.put('/material/inventory', async (req, res) => {
+	const { materialName, newInventory } = req.body;
+  
+	try {
+	  const material = await db.RawMaterial.findOne({ where: { raw_material_name: materialName } });
+	  if (!material) {
+		return res.status(404).json({ success: false, message: "원료를 찾을 수 없습니다." });
+	  }
+  
+	  // 재고 수정 로직 (입고 또는 출고 처리로 변경할 수도 있음)
+	  const totalUsed = await db.RawMaterialUsage.sum('quantity_used', { where: { raw_material_id: material.raw_material_id } });
+	  const newReceivedQuantity = newInventory - totalUsed;
+  
+	  if (newReceivedQuantity < 0) {
+		return res.status(400).json({ success: false, message: "재고량이 유효하지 않습니다." });
+	  }
+  
+	  // 입고 테이블에 새로운 재고를 반영
+	  await db.RawMaterialReceipt.create({
+		raw_material_id: material.raw_material_id,
+		quantity: newReceivedQuantity,
+		unit_price: 0, // 단가 기본값 설정
+		description: "재고 변경"
+	  });
+  
+	  res.json({ success: true });
+	} catch (error) {
+	  console.error('Error updating inventory:', error);
+	  res.status(500).json({ success: false });
+	}
+  });
+  
+
+
 module.exports = router;

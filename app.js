@@ -14,6 +14,7 @@ var DashboardRouter = require('./routes/dashboard');
 var BatchRouter = require('./routes/batch');
 var RecipeRouter = require('./routes/recipe');
 var APIRouter = require('./routes/api');
+var reportRouter = require('./routes/report');
 
 var sequelize = require('./models/index.js').sequelize;
 
@@ -42,6 +43,7 @@ app.use('/dashboard', DashboardRouter);
 app.use('/batch', BatchRouter);
 app.use('/recipe', RecipeRouter);
 app.use('/api', APIRouter);
+app.use('/report', reportRouter);
 
 // 404 에러 처리 미들웨어
 app.use(function (req, res, next) {
