@@ -113,3 +113,49 @@ $(document).ready(function() {
 	});
 
 })(jQuery);
+
+
+$(document).ready(function() {
+    $('#receiptTable').DataTable({
+        "ordering": false, // 정렬 버튼 비활성화
+        "autoWidth": false, // 테이블의 너비를 자동으로 조정하지 않음
+        "columnDefs": [
+            { "width": "75px", "targets": 0 },  // 첫 번째 열의 너비 설정
+            { "width": "150px", "targets": 1 },   // 두 번째 열의 너비 설정
+            { "width": "150px", "targets": 2 },
+            { "width": "150px", "targets": 3 },
+            { "width": "150px", "targets": 4 },
+            { "width": "300px", "targets": 5 },
+        ],
+    });
+});
+
+$(document).ready(function() {
+    $('#usageTable').DataTable({
+        "ordering": false, // 정렬 버튼 비활성화
+        "autoWidth": false, // 자동 너비 설정
+        "columnDefs": [
+            { "width": "75px", "targets": 0 },  // 첫 번째 열의 너비 설정
+            { "width": "150px", "targets": 1 },   // 두 번째 열의 너비 설정
+            { "width": "150px", "targets": 2 },
+            { "width": "150px", "targets": 3 },
+            { "width": "150px", "targets": 4 },
+            { "width": "300px", "targets": 5 },
+        ]
+    });
+});
+
+$(document).ready(function() {
+    $('#inventoryTable').DataTable({
+        "ordering": false, // 정렬 버튼 비활성화
+        "autoWidth": false, // 자동 너비 설정
+        "columnDefs": [
+            { "width": "75px", "targets": 0 },  // 첫 번째 열의 너비 설정
+            { "width": "150px", "targets": 1 },   // 두 번째 열의 너비 설정
+            { "width": "150px", "targets": 2 },
+            { "width": "150px", "targets": 3 },
+            { "width": "150px", "targets": 4 },
+            { "width": "300px", "targets": 5 },
+        ]
+    });
+});

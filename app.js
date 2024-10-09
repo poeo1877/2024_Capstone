@@ -26,7 +26,7 @@ var sequelize = require('./models/index.js').sequelize;
 const { Op } = require('sequelize');
 var app = express();
 const server = http.createServer(app);
-const port = 3001;
+const port = 3000;
 
 sequelize.sync();
 // view engine setup

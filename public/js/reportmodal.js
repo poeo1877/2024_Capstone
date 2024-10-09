@@ -48,10 +48,19 @@ document.getElementById("saveMaterialButton").addEventListener("click", function
 
   var materialName = selectedMaterial === "new" ? newMaterialName : selectedMaterial;
 
-  // 필수 필드 유효성 검사
-  if (!materialName || !quantity || !unitPrice || !description || !category || !unit) {
-    alert("모든 필드를 입력해주세요.");
-    return; // 필드가 비어있으면 저장을 중단
+  //필드 유효성 검사
+  if (selectedMaterial === "new") {
+    // 새 원료를 추가하는 경우 모든 필드가 필요
+    if (!materialName || !category || !unit || !quantity || !unitPrice || !description) {
+      alert("모든 필드를 입력해주세요.");
+      return; // 필드가 비어있으면 저장을 중단
+    }
+  } else {
+    // 기존 원료를 선택한 경우 카테고리와 단위는 검사하지 않음
+    if (!materialName || !quantity || !unitPrice || !description) {
+      alert("모든 필드를 입력해주세요.");
+      return; // 필드가 비어있으면 저장을 중단
+    }
   }
 
   // 서버로 데이터 전송 (AJAX 또는 Fetch API 사용)
