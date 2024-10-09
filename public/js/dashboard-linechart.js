@@ -176,7 +176,9 @@ document.addEventListener('DOMContentLoaded', function () {
             // batchIds 배열을 콤마로 구분된 문자열로 변환
             var batchIdsQuery = batchIds.join(',');
 
-            fetch(`${baseURL}/api/sensor/co2?batchId=${batchIdsQuery}`)
+            fetch(
+                `${baseURL}/api/sensor/dashboard/co2?batchId=${batchIdsQuery}`,
+            )
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -229,7 +231,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // batchIds 배열을 콤마로 구분된 문자열로 변환
                 var batchIdsQuery = batchIds.join(',');
 
-                fetch(`${baseURL}/api/sensor/pressure?batchId=${batchIdsQuery}`)
+                fetch(
+                    `${baseURL}/api/sensor/dashboard/pressure?batchId=${batchIdsQuery}`,
+                )
                     .then((response) => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');

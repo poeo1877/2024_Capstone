@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 const {
     getSensorDataByBatchIds,
-    getFermentingBatchIds,
+    getFermentingBatchId,
+    getSensorDataByBatchIdDashboard,
 } = require('../services/db_services');
 
 /* GET home page. */
@@ -13,9 +14,12 @@ router.get('/', function (req, res, next) {
 router.get('/dashboard', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
-        var batchId = await getFermentingBatchIds();
+        var batchId = await getFermentingBatchId();
 
-        const data = await getSensorDataByBatchIds(batchId, 'in_temperature');
+        const data = await getSensorDataByBatchIdDashboard(
+            batchId,
+            'in_temperature',
+        );
         // data가 배열인지 확인 (에러 방지)
         if (!Array.isArray(data)) {
             throw new Error('Expected data to be an array');
