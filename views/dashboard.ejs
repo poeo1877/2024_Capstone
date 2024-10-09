@@ -6,6 +6,15 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
 />
 
+<link
+            href="./vendor/bootstrap-daterangepicker/daterangepicker.css"
+            rel="stylesheet"/>
+
+
+			<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
 <div class="container-fluid">
 	<!-- 최근 센서 데이터 표기 -->
 	<div class="row">
@@ -99,46 +108,37 @@
 			</div>
 		</div>
 		<div class="col-lg col-sm-6">
-			<div class="card">
-				<div class="stat-widget-two card-body">
-					<div class="stat-content">
-						<div class="stat-text">발효조 상태</div>
-					</div>
-					<div class="stat-digit">
-						<button
-							type="button"
-							class="btn btn-rounded btn-outline-dark"
-							style="width: 40%"
-						>
-							시작
-						</button>
-						<button
-							type="button"
-							class="btn btn-rounded btn-outline-dark"
-							style="width: 40%"
-						>
-							종료
-						</button>
-					</div>
-					<div class="stat-digit">
-						<button
-							type="button"
-							class="btn btn-rounded btn-outline-dark"
-							style="width: 40%"
-						>
-							정지
-						</button>
-						<button
-							type="button"
-							class="btn btn-rounded btn-outline-dark"
-							style="width: 40%"
-						>
-							재생
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+    <div class="card">
+        <div class="stat-widget-two card-body">
+            <div class="stat-content" style="  margin-bottom: 10px;">
+                <div class="stat-text">발효조 상태</div>
+            </div>
+            
+                <!-- 일시정지 버튼 (처음 상태) -->
+                <button
+                    id="pauseButton"
+                    type="button"
+                    class="btn btn-rounded btn-outline-dark"
+                    style="width: 100%;  margin-bottom: 25px;"
+                    onclick="togglePlayPause()"
+                >
+                    <i id="pauseIcon" class="fas fa-pause"></i> <!-- 일시정지 아이콘 -->
+                </button>
+				
+                <!-- 정지 버튼 -->	
+                <button
+                    id="stopButton"
+                    type="button"
+                    class="btn btn-rounded btn-outline-dark"
+                    style="width: 100%;"
+                    onclick="stop()"
+                >
+                    <i class="fas fa-stop"></i> <!-- 정지 아이콘 -->
+                </button>
+            
+        </div>
+    </div>
+</div>
 
 		<!-- /# card -->
 	</div>
@@ -156,6 +156,7 @@
                             <script>
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
 								var batchIds = JSON.parse('<%- batchId %>');
+								console.log(batchIds);
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
 								var temperatureData = JSON.parse('<%- temperatureData %>');
 							</script>
@@ -336,139 +337,148 @@
 		}
 	</style>
 	<div class="row">
-		<div class="col-lg-12">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">알림 범위 설정하기</h4>
-				</div>
-				<div class="card-body">
-					<div class="form-validation">
-						<form
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">
+                                        알림 범위 설정하기
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-validation">
+                                        <form
                                             class="form-valide"
-                                            action="#"
+                                            action="/dashboard/limit"
                                             method="post"
-                                            onsubmit="setAnnotation(); return false;"
                                         >
-							<div class="row">
-								<div class="col-xl-6">
-									<div class="form-group row">
-										<label
-											class="col-lg-4 col-form-label"
-											for="val-daterange"
-										>
-											기간
-										</label>
-										<div class="col-lg-6">
-											<input
-												type="text"
-												class="form-control input-daterange-timepicker"
-												name="daterange"
-												placeholder="미입력시 자동으로 처음부터 지금까지 설정됩니다."
-											/>
-										</div>
-									</div>
-									<div class="form-group row">
-										<label
-											class="col-lg-4 col-form-label"
-											for="val-note"
-										>
-											메모
-										</label>
-										<div class="col-lg-6">
-											<textarea
-												class="form-control"
-												id="val-note"
-												name="val-note"
-												rows="5"
-												placeholder="설명을 입력해 주세요."
-											></textarea>
-										</div>
-									</div>
-								</div>
-								<div class="col-xl-6">
-									<div class="form-group row">
-										<label
-											class="col-lg-4 col-form-label"
-											for="val-sensor"
-										>
-											센서 종류
-											<span class="text-danger">*</span>
-										</label>
-										<div class="col-lg-6">
-											<select
-												class="form-control"
-												id="val-sensor"
-												name="val-sensor"
-											>
-												<option value="">
-													데이터를 선택해 주세요
-												</option>
-												<option value="temperature">
-													온도
-												</option>
-												<option value="co2">
-													이산화탄소
-												</option>
-												<option value="pressure">
-													압력
-												</option>
-											</select>
-										</div>
-									</div>
-									<div class="form-group row">
-										<label
-											class="col-lg-4 col-form-label"
-											for="val-upper-limit"
-										>
-											상한값
-											<span class="text-danger">*</span>
-										</label>
-										<div class="col-lg-6">
-											<input
-												type="text"
-												class="form-control"
-												id="val-upper-limit"
-												name="val-upper-limit"
-												placeholder="이 값을 넘어서면 알림"
-											/>
-										</div>
-									</div>
-									<div class="form-group row">
-										<label
-											class="col-lg-4 col-form-label"
-											for="val-lower-limit"
-										>
-											하한값
-											<span class="text-danger">*</span>
-										</label>
-										<div class="col-lg-6">
-											<input
-												type="text"
-												class="form-control"
-												id="val-lower-limit"
-												name="val-lower-limit"
-												placeholder="이 값을 내려가면 알림"
-											/>
-										</div>
-									</div>
-									<div class="form-group row">
-										<div class="col-lg-8 ml-auto">
-											<button
-												type="submit"
-												class="btn btn-dark"
-											>
-												알림 설정
-											</button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="col-lg-4 col-form-label"
+                                                            for="val-daterange"
+                                                        >
+                                                            기간
+                                                        </label>
+                                                        <div class="col-lg-6">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control input-daterange-timepicker"
+                                                                name="daterange"
+                                                                placeholder="미입력시 자동으로 처음부터 지금까지 설정됩니다."
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="col-xl-6">
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="col-lg-4 col-form-label"
+                                                            for="val-sensor"
+                                                        >
+                                                            센서 종류
+                                                            <span
+                                                                class="text-danger"
+                                                            >
+                                                                *
+                                                            </span>
+                                                        </label>
+                                                        <div class="col-lg-6">
+                                                            <select
+                                                                class="form-control"
+                                                                name="val-sensor"
+                                                            >
+                                                                <option
+                                                                    value=""
+                                                                >
+                                                                    데이터를
+                                                                    선택해
+                                                                    주세요
+                                                                </option>
+                                                                <option
+                                                                    value="temperature"
+                                                                >
+                                                                    온도
+                                                                </option>
+                                                                <option
+                                                                    value="co2"
+                                                                >
+                                                                    이산화탄소
+                                                                </option>
+                                                                <option
+                                                                    value="pressure"
+                                                                >
+                                                                    압력
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="col-lg-4 col-form-label"
+                                                            for="val-upper-limit"
+                                                        >
+                                                            상한값
+                                                            <span
+                                                                class="text-danger"
+                                                            >
+                                                                *
+                                                            </span>
+                                                        </label>
+                                                        <div class="col-lg-6">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                name="val-upper-limit"
+                                                                placeholder="이 값을 넘어서면 알림"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label
+                                                            class="col-lg-4 col-form-label"
+                                                            name="val-lower-limit"
+                                                        >
+                                                            하한값
+                                                            <span
+                                                                class="text-danger"
+                                                            >
+                                                                *
+                                                            </span>
+                                                        </label>
+                                                        <div class="col-lg-6">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control"
+                                                                name="val-lower-limit"
+                                                                placeholder="이 값을 내려가면 알림"
+                                                            />
+                                                        </div>
+                                                    </div>
+													<input type="hidden" name="batchId" value="<%= batchId %>" />
+                                                    <div class="form-group row">
+                                                        <div
+                                                            class="col-lg-8 ml-auto"
+                                                        >
+                                                            <button
+                                                                type="submit"
+                                                                class="btn btn-dark"
+                                                            >
+                                                                알림 설정
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
 	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
 	<!-- 이 아래에서 통계 같은 것 시각화-->
 	<div class="row">
@@ -505,113 +515,82 @@
         ***********************************-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="./vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
-
 
 
 <!-- Load Chart.js library first -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
+<!-- Daterangepicker -->
+<!-- momment js is must -->
+<script src="./vendor/moment/moment.min.js"></script>
+<script src="./vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- Daterangepicker -->
+<script src="./js/plugins-init/bs-daterange-picker-init.js"></script>
+
 <!-- Load your custom chart script after Chart.js library -->
-<script src="/js/archive-linechart.js"></script>
+<script src="/js/dashboard-linechart.js"></script>
+<script src="/js/dashboard-updatechange.js"></script>
                 
+
 <script>
-	function updateChangeValue(
-		selector,
-		diff,
-		percentage,
-		iconSelector,
-		percentSelector,
-	) {
-		const valueElement = $(selector);
-		const changeIcon = $(iconSelector);
+	// 버튼의 상태를 저장하는 변수 (true: 재생 중, false: 일시정지 상태)
+    let isPlaying = false;
 
-		if (diff !== null) {
-			valueElement.text(diff);
-			// 아이콘 및 색상 설정
-			if (diff > 0) {
-				changeIcon
-					.removeClass('fa-caret-down')
-					.addClass('fa-caret-up');
-				changeIcon.css('color', 'red'); // 상승 시 빨간색
-				valueElement.css('color', 'red'); // 변화량 상승 시 빨간색
-				$(percentSelector).css('color', 'red'); // 퍼센트 상승 시 빨간색
-			} else if (diff < 0) {
-				changeIcon
-					.removeClass('fa-caret-up')
-					.addClass('fa-caret-down');
-				changeIcon.css('color', 'blue'); // 하락 시 파란색
-				valueElement.css('color', 'blue'); // 변화량 하락 시 파란색
-				$(percentSelector).css('color', 'blue'); // 퍼센트 하락 시 파란색
-			} else {
-				changeIcon.removeClass(
-					'fa-caret-up fa-caret-down',
-				); // 변화 없음
-				changeIcon.css('color', 'black'); // 변화 없음
-				valueElement.css('color', 'black'); // 변화 없음
-				$(percentSelector).css('color', 'black'); // 변화 없음
-			}
+    // 재생 및 일시정지 버튼 토글 함수
+    function togglePlayPause() {
+        const pauseButton = document.getElementById("pauseButton");
+        const pauseIcon = document.getElementById("pauseIcon");
 
-			console.log(percentage);
-			// 퍼센트 표시
-			$(percentSelector).text(percentage + '%');
-		} else {
-			valueElement.text('N/A'); // 이전 데이터가 없을 경우
-			changeIcon.removeClass(
-				'fa-caret-up fa-caret-down',
-			); // 변화 없음
-			$(percentSelector).text('N/A'); // 이전 데이터가 없을 경우
-		}
+        if (isPlaying) {
+            // 재생 중이면 일시정지로 전환 (아이콘 변경)
+            pauseIcon.classList.remove("fa-play");
+            pauseIcon.classList.add("fa-pause");
+            isPlaying = false;
+        } else {
+            // 일시정지 중이면 재생으로 전환 (아이콘 변경)
+            pauseIcon.classList.remove("fa-pause");
+            pauseIcon.classList.add("fa-play");
+            isPlaying = true;
+        }
+    }
+
+    // 정지 버튼 동작
+    function stop() {
+        const pauseIcon = document.getElementById("pauseIcon");
+
+        // 재생 또는 일시정지 상태에 상관없이 정지 시 일시정지 상태로 초기화 (아이콘 초기화)
+        pauseIcon.classList.remove("fa-play");
+        pauseIcon.classList.add("fa-pause");
+        isPlaying = false;
+        alert('정지되었습니다.');
+    }
 	
-
-	$('#val-daterange').daterangepicker({
-		locale: {
-			format: 'YYYY-MM-DD', // 날짜 형식
-			applyLabel: '적용',
-			cancelLabel: '취소',
-			fromLabel: '시작일',
-			toLabel: '종료일',
-			customRangeLabel: '사용자 정의',
-			daysOfWeek: [
-				'일',
-				'월',
-				'화',
-				'수',
-				'목',
-				'금',
-				'토',
-			],
-			monthNames: [
-				'1월',
-				'2월',
-				'3월',
-				'4월',
-				'5월',
-				'6월',
-				'7월',
-				'8월',
-				'9월',
-				'10월',
-				'11월',
-				'12월',
-			],
-		},
-		autoApply: true,
-		startDate: moment().startOf('month'),
-		endDate: moment().endOf('month'),
-		opens: 'center',
-	});
-};
 </script>
 <script>
+
+	$(function() {
+    var now = new Date(); // 현재 시간 가져오기
+
+    // daterangepicker 초기화
+    $('input[name="daterange"]').daterangepicker({
+        timePicker: true,
+        timePicker24Hour: true,
+        timePickerSeconds: true,
+        startDate: now, // 시작 시간 제한
+        minDate: now, // 현재 시간 이후만 선택 가능
+        locale: {
+            format: 'YYYY-MM-DD HH:mm:ss' // 원하는 포맷 설정
+        }
+    });
+});
 	$(document).ready(function () {
 		$.ajax({
-			url: "api/sensor/latest?batchId=5", // 요청 URL을 /sensor/latest로 변경하고 batchId를 쿼리 파라미터로 전달
+			url: "api/sensor/latest?batchId=" + batchIds, // 요청 URL을 /sensor/latest로 변경하고 batchId를 쿼리 파라미터로 전달
 			method: "GET",
 			success: function (data) {
 				if (data) {
@@ -655,6 +634,7 @@
 			},
 		});
 	});
+	
 </script>
             </div>
         </div>

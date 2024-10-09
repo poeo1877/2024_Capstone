@@ -1,0 +1,197 @@
+
+
+<div class="container-fluid">
+    <div class="row page-titles mx-0">
+        <div class="col-sm-6 p-md-0">
+            <div class="welcome-text">
+                <h4>원료수불부</h4>
+                <span class="mt-1">원료수불부 작성</span>
+            </div>
+        </div>
+        <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="javascript:void(0)">Table</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <a href="javascript:void(0)">Datatable</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <!-- row -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">원료 입고 내역</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table
+                            id="receiptTable"
+                            class="production"
+                            style="min-width: 960px"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>입고 날짜</th>
+                                    <th>원료명</th>
+                                    <th>입고 수량</th>
+                                    <th>단가</th>
+                                    <th>총 금액</th>
+                                    <th>비고</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">원료 출고 내역</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table
+                            id="usageTable"
+                            class="production"
+                            style="min-width: 845px"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>출고 날짜</th>
+                                    <th>원료명</th>
+                                    <th>사용 수량</th>
+                                    <th>사용처</th>
+                                    <th>비고</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">원료 재고 내역</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table
+                            id="usageTable"
+                            class="production"
+                            style="min-width: 845px"
+                        >
+                            <thead>
+                                <tr>
+                                    <th>원료명</th>
+                                    <th>현재 재고량</th>
+                                    <th>최소 재고량</th>
+                                    <th>재고 상태</th>
+                                    <th>비고</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body" style="padding-top: 12px; padding-bottom: 12px;">
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex"></div>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            style="
+                                float: right;
+                                margin-right: 0.725rem;"
+                            >원료 재고 변경
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            style="
+                            float: right;
+                            margin-right: 0.725rem;"
+                            >원료 출고 작성
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-toggle="modal"
+                            data-target="#addMaterialModal"
+                            style="
+                                float: right;
+                                margin-right: 0.725rem;"
+                            >원료 입고 작성
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<!-- 원료 추가 모달 -->
+<div class="modal fade" id="addMaterialModal" tabindex="-1" role="dialog" aria-labelledby="addMaterialLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addMaterialLabel">원료 추가</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="materialForm">
+          <div class="form-group">
+            <label for="materialName">원료명</label>
+            <input type="text" class="form-control" id="materialName" placeholder="원료명을 입력하세요">
+          </div>
+          <div class="form-group">
+            <label for="quantity">수량</label>
+            <input type="number" class="form-control" id="quantity" placeholder="수량을 입력하세요">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary" id="saveMaterialBtn">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- JavaScript (report.ejs 하단에 추가) -->
+<script>
+  document.getElementById('saveMaterialBtn').addEventListener('click', function() {
+    var materialName = document.getElementById('materialName').value;
+    var quantity = document.getElementById('quantity').value;
+
+    // 입력값 처리 로직 추가 (예: 서버로 전송 등)
+  });
+</script>
