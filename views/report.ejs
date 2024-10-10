@@ -1,4 +1,8 @@
-
+<link
+    href="/vendor/datatables/css/jquery.dataTables.min.css"
+    rel="stylesheet"
+/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 
 <div class="container-fluid">
     <div class="row page-titles mx-0">
@@ -34,9 +38,9 @@
                             class="production"
                             style="min-width: 960px"
                         >
-                            <thead>
+                            <thead style="text-align: right;">
                                 <tr>
-                                    <th>입고 날짜</th>
+                                    <th style="text-align: left;">입고 날짜</th>
                                     <th>원료명</th>
                                     <th>입고 수량</th>
                                     <th>단가</th>
@@ -44,10 +48,10 @@
                                     <th>비고</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="text-align: right;">
                                 <% receipts.forEach(function(receipt) { %>
                                     <tr>
-                                        <td><%= new Date(receipt.created_at).toLocaleDateString() %></td>  <!-- 입고날짜 -->
+                                        <td style="text-align: left;"><%= new Date(receipt.created_at).toLocaleDateString() %></td>  <!-- 입고날짜 -->
                                         <td><%= receipt.RawMaterial.raw_material_name %></td>  <!-- 원료명 -->
                                         <td><%= Math.floor(receipt.quantity)%><%= receipt.RawMaterial.unit %></td>  <!-- 입고 수량 (소수점 제거) -->
                                         <td><%= Math.floor(receipt.unit_price) %></td>  <!-- 단가 -->
@@ -75,23 +79,25 @@
                             class="production"
                             style="min-width: 845px"
                         >
-                            <thead>
+                            <thead style="text-align: right;">
                                 <tr>
-                                    <th>출고 날짜</th>
+                                    <th style="text-align: left;">출고 날짜</th>
                                     <th>원료명</th>
                                     <th>출고 수량</th>
                                     <th>출고처</th>
+                                    <th></th>
                                     <th>비고</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="text-align: right;">
                                 <% usages.forEach(function(usage) { %>
                                     <tr>
-                                        <td><%= new Date(usage.created_at).toLocaleDateString() %></td>  <!-- 출고날짜 -->
+                                        <td style="text-align: left;"><%= new Date(usage.created_at).toLocaleDateString() %></td>  <!-- 출고날짜 -->
                                         <td><%= usage.RawMaterial.raw_material_name %></td>  <!-- 원료명 -->
                                         <td><%= Math.floor(usage.quantity_used)%><%= usage.RawMaterial.unit %></td>  <!-- 출고 수량 (소수점 제거) -->
                                         <td>Batch <%= usage.batch_id %></td>  <!-- batch_id -->
-                                        <td><%= usage.note %></td>  <!-- 비고 -->
+                                        <td></td>
+                                        <td><%= usage.note %>예시예시예시예시</td>  <!-- 비고 -->
                                     </tr>
                                 <% }); %>
                             </tbody>                            
@@ -110,20 +116,21 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table
-                            id="usageTable"
+                            id="inventoryTable"
                             class="production"
                             style="min-width: 845px"
                         >
-                            <thead>
+                            <thead style="text-align: right;">
                                 <tr>
                                     <th>원료명</th>
                                     <th>현재 재고량</th>
                                     <th>최소 재고량</th>
                                     <th>재고 상태</th>
+                                    <th></th>
                                     <th>비고</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody style="text-align: right;">
                                 <% rawMaterials.forEach(function(material) { %>
                                     <tr>
                                         <td><%= material.raw_material_name %></td>  <!-- 원료명 -->
@@ -151,6 +158,7 @@
                                         <td>
                                             <%= currentInventory > 0 ? "정상" : "재고 부족" %>
                                         </td>
+                                        <td></td>
                                         <td><%= material.description %></td>  <!-- 비고 -->
                                     </tr>
                                 <% }); %>
@@ -372,4 +380,6 @@
     </div>
   </div>
 
-    <script src="/js/reportmodal.js"></script>
+<script src="/js/reportmodal.js"></script>
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/js/plugins-init/datatables.init.js"></script>
