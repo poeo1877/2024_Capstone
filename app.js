@@ -26,7 +26,7 @@ var sequelize = require('./models/index.js').sequelize;
 const { Op } = require('sequelize');
 var app = express();
 const server = http.createServer(app);
-const port = 3001;
+const socket_port = 3001;
 
 sequelize.sync();
 // view engine setup
@@ -52,26 +52,34 @@ app.use(
         resave: false,
         saveUninitialized: true,
         cookie: { secure: false }, // HTTPS 환경에서는 true로 설정
-    })
+    }),
 );
 
 // 로그인 관련 라우터 추가 (인증이 필요 없는 라우터)
 app.use('/', authRouter);
 
+app.get('/', (req, res) => {
+    res.redirect('/dashboard');
+});
+
 // 사용자 인증 미들웨어
 function isAuthenticated(req, res, next) {
     // 에러 페이지와 로그인, 회원가입 페이지 접근 시 인증 제외
-    if (req.path.startsWith('/error') || req.path === '/login' || req.path === '/register') {
+    if (
+        req.path.startsWith('/error') ||
+        req.path === '/login' ||
+        req.path === '/register'
+    ) {
         return next();
     }
-    
+
     // 로그인 상태를 템플릿에 전달
     res.locals.isAuthenticated = !!req.session.user;
 
     if (req.session.user) {
         return next(); // 로그인된 경우 다음으로 진행
     }
-    
+
     res.redirect('/login'); // 로그인되지 않은 경우 로그인 페이지로 이동
 }
 
@@ -232,14 +240,17 @@ app.use(function (err, req, res, next) {
     res.render('error', {
         errorNumber: err.status || 500,
         errorTitle: err.status === 404 ? 'Page Not Found' : 'Error',
-        errorMessage: err.status === 404 ? 'The page you are looking for does not exist.' : 'An unexpected error occurred.',
+        errorMessage:
+            err.status === 404
+                ? 'The page you are looking for does not exist.'
+                : 'An unexpected error occurred.',
         showMenu: false,
         showHeaderFooter: false,
     });
 });
 
-server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+server.listen(socket_port, () => {
+    console.log(`Server running on port ${socket_port}`);
 });
 
 module.exports = app;

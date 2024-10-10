@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             maintainAspectRatio: false,
             scales: {
                 x: {
-                    type: 'timeseries', // Automatically parses time if your data is in correct format
+                    type: 'time', // Automatically parses time if your data is in correct format
                     time: {
                         tooltipFormat: 'yyyy-MM-dd HH:mm', // 툴팁에 표시될 형식
                         displayFormats: {
@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         pressureAnnotations = [];
 
         limits.forEach((limit) => {
+            console.log(limit);
             // 하한값 주석
             const lowerLine = {
                 type: 'line',
@@ -281,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function fetchLimitData() {
         var batchIdsQuery = batchIds.join(',');
         // 배치 ID와 날짜 범위는 적절히 수정해야 합니다.
-        fetch(`/dashboard/all-limit?batchId=${batchIdsQuery}`)
+        fetch(`${baseURL}/dashboard/all-limit?batchId=${batchIdsQuery}`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

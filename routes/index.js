@@ -6,11 +6,6 @@ const {
     getSensorDataByBatchIdDashboard,
 } = require('../services/db_services');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
-});
-
 router.get('/dashboard', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
@@ -35,7 +30,6 @@ router.get('/dashboard', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-
 
 router.get('/alert', async (req, res) => {
     res.render('alert');
