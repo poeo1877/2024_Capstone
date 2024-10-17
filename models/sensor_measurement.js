@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const SensorMeasurement = sequelize.define(
-		"SensorMeasurement",
+		'SensorMeasurement',
 		{
 			data_id: {
 				type: DataTypes.BIGINT,
@@ -36,15 +36,15 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.DECIMAL(10, 4),
 				allowNull: true,
 			},
-			pressure_lower: {
-				type: DataTypes.DECIMAL(10, 4),
+			humidity: {
+				type: DataTypes.INTEGER,
 				allowNull: true,
 			},
 			batch_id: {
 				type: DataTypes.INTEGER,
-				references: { model: "Batch", key: "batch_id" },
-				onDelete: "SET NULL",
-				onUpdate: "CASCADE",
+				references: { model: 'Batch', key: 'batch_id' },
+				onDelete: 'SET NULL',
+				onUpdate: 'CASCADE',
 			},
 			relative_time: {
 				type: DataTypes.INTEGER,
@@ -52,13 +52,13 @@ module.exports = (sequelize, DataTypes) => {
 			},
 		},
 		{
-			tableName: "sensor_measurement",
+			tableName: 'sensor_measurement',
 			timestamps: false,
 		}
 	);
 
 	SensorMeasurement.associate = (models) => {
-		SensorMeasurement.belongsTo(models.Batch, { foreignKey: "batch_id" });
+		SensorMeasurement.belongsTo(models.Batch, { foreignKey: 'batch_id' });
 	};
 
 	return SensorMeasurement;

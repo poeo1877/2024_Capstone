@@ -28,7 +28,7 @@ router.post('/sensor/measurement', async (req, res) => {
                 "out_temperature": 14.79,
                 "in_temperature": 23.49,
                 "pressure_upper": 999999.59,
-                "pressure_lower": 101325.00,
+                "humidity": 90,
                 "co2_concentration": 3988,
                 "ph": 4.01,
                 "measured_time": "2024-06-22T02:58:00"
@@ -42,7 +42,7 @@ router.post('/sensor/measurement', async (req, res) => {
             in_temperature,
             ph,
             pressure_upper,
-            pressure_lower,
+            humidity,
         } = req.body;
 
         // measured_time이 null인 경우 예외 처리
@@ -78,7 +78,7 @@ router.post('/sensor/measurement', async (req, res) => {
             brix: brix || null,
             out_temperature: out_temperature || null,
             ph: ph || null,
-            pressure_lower: pressure_lower || null,
+            humidity: humidity || null,
         });
 
         // 데이터베이스에 새 데이터가 추가된 후 클라이언트에게 응답
