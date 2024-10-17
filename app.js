@@ -57,6 +57,7 @@ app.use(
 
 // 로그인 관련 라우터 추가 (인증이 필요 없는 라우터)
 app.use('/', authRouter);
+app.use('/api', APIRouter);
 
 app.get('/', (req, res) => {
     res.redirect('/dashboard');
@@ -89,7 +90,6 @@ app.use('/', indexRouter);
 app.use('/dashboard', DashboardRouter);
 app.use('/batch', BatchRouter);
 app.use('/recipe', RecipeRouter);
-app.use('/api', APIRouter);
 app.use('/report', reportRouter);
 app.use('/users', usersRouter);
 app.use('/fermenter', FermenterRouter);
