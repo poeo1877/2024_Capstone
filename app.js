@@ -41,7 +41,7 @@ app.set('layout extractMetas', true);
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -84,7 +84,7 @@ function isAuthenticated(req, res, next) {
 }
 
 // 모든 라우트에 대해 인증 미들웨어 적용
-app.use(isAuthenticated);
+// app.use(isAuthenticated);
 app.use('/', indexRouter);
 app.use('/dashboard', DashboardRouter);
 app.use('/batch', BatchRouter);

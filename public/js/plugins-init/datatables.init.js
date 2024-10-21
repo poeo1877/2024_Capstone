@@ -6,7 +6,12 @@ $(document).ready(function() {
     $.fn.dataTable.ext.search.push(
         function(settings, data, dataIndex) {
             // 검색창의 입력 값을 가져옴
-            var searchTerm = $('#example_filter input').val().trim();
+            var searchTerm = $('#example_filter input').val();
+            if (typeof searchTerm === 'string') {
+                searchTerm = searchTerm.trim();
+            } else {
+                searchTerm = '';
+            }
 
             // 띄어쓰기를 포함한 검색어로 검색 (그대로 하나의 문자열로 처리)
             var combinedData = data.join(' ').toLowerCase(); // 데이터 행을 문자열로 변환

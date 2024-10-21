@@ -56,8 +56,8 @@ document.getElementById("saveMaterialButton").addEventListener("click", function
       return; // 필드가 비어있으면 저장을 중단
     }
   } else {
-    // 기존 원료를 선택한 경우 카테고리와 단위는 검사하지 않음
-    if (!materialName || !quantity || !unitPrice || !description) {
+    // 기존 원료를 선택한 경우 카테고리와 단위, 비고는 검사하지 않음
+    if (!materialName || !quantity || !unitPrice) {
       alert("모든 필드를 입력해주세요.");
       return; // 필드가 비어있으면 저장을 중단
     }
@@ -111,10 +111,10 @@ document.getElementById("saveUsageButton").addEventListener("click", function ()
   var selectedMaterial = document.getElementById("materialNameSelectUsage").value;
   var quantityUsage = document.getElementById("quantityUsage").value;
   var batchId = document.getElementById("batchId").value;
-  var noteUsage = document.getElementById("noteUsage").value;
+  var description = document.getElementById("usagedescription").value;
 
   // 필수 필드 유효성 검사
-  if (!materialName || !quantityUsage || !batchId) {
+  if (!selectedMaterial || !quantityUsage) {
     alert("모든 필드를 입력해주세요.");
     return; // 필드가 비어있으면 저장을 중단
   }
@@ -128,7 +128,8 @@ document.getElementById("saveUsageButton").addEventListener("click", function ()
     body: JSON.stringify({
       materialName: selectedMaterial,
       quantity: quantityUsage,
-      batchId: batchId
+      batchId: batchId || null,
+      description,
     })
   })
   .then(response => response.json())
@@ -145,7 +146,7 @@ document.getElementById("saveUsageButton").addEventListener("click", function ()
 // 재고변경모달
 document.getElementById("materialNameSelectInventory").addEventListener("change", function () {
   var materialSelect = document.getElementById("materialNameSelectInventory");
-  var currentInventory = document.getElementById("currentInventory");
+  var todayStock = document.getElementById("todayStock");
   var unitInventory = document.getElementById("unitInventory");
 
   // 선택된 원료의 재고 및 단위 정보를 가져와서 표시
@@ -153,10 +154,10 @@ document.getElementById("materialNameSelectInventory").addEventListener("change"
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        currentInventory.value = data.currentInventory;
+        todayStock.value = data.today_stock;
         unitInventory.value = data.unit;
       } else {
-        currentInventory.value = "재고 정보 없음";
+        todayStock.value = "재고 정보 없음";
         unitInventory.value = "단위 없음";
       }
     });
@@ -165,10 +166,8 @@ document.getElementById("materialNameSelectInventory").addEventListener("change"
 document.getElementById("saveInventoryButton").addEventListener("click", function () {
   var selectedMaterial = document.getElementById("materialNameSelectInventory").value;
   var newInventory = document.getElementById("newInventory").value;
-  var description = document.getElementById("description").value;
-
   // 필수 필드 유효성 검사
-  if (!materialName || !newInventory) {
+  if (!selectedMaterial || !newInventory) {
     alert("모든 필드를 입력해주세요.");
     return; // 필드가 비어있으면 저장을 중단
   }
@@ -183,7 +182,6 @@ document.getElementById("saveInventoryButton").addEventListener("click", functio
     body: JSON.stringify({
       materialName: selectedMaterial,
       newInventory: newInventory,
-      description : description
     })
   })
   .then(response => response.json())

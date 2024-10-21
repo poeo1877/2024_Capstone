@@ -56,7 +56,7 @@
                                         <td><%= Math.floor(receipt.quantity)%><%= receipt.RawMaterial.unit %></td>  <!-- 입고 수량 (소수점 제거) -->
                                         <td><%= Math.floor(receipt.unit_price) %></td>  <!-- 단가 -->
                                         <td>￦<%= (receipt.quantity * receipt.unit_price).toLocaleString() %></td>  <!-- 총 금액 (세 자리마다 쉼표, 원) -->
-                                        <td><%= receipt.RawMaterial.description %></td>  <!-- 비고 -->
+                                        <td><%= receipt.description %></td>  <!-- 비고 -->
                                     </tr>
                                     <% }); %>
                             </tbody>                            
@@ -97,7 +97,7 @@
                                         <td><%= Math.floor(usage.quantity_used)%><%= usage.RawMaterial.unit %></td>  <!-- 출고 수량 (소수점 제거) -->
                                         <td>Batch <%= usage.batch_id %></td>  <!-- batch_id -->
                                         <td></td>
-                                        <td><%= usage.note %>예시예시예시예시</td>  <!-- 비고 -->
+                                        <td><%= usage.description %></td>  <!-- 비고 -->
                                     </tr>
                                 <% }); %>
                             </tbody>                            
@@ -135,28 +135,11 @@
                                     <tr>
                                         <td><%= material.raw_material_name %></td>  <!-- 원료명 -->
                                         <td>
-                                            <% 
-                                              const totalReceived = material.RawMaterialReceipts && material.RawMaterialReceipts.length > 0
-                                                ? material.RawMaterialReceipts.reduce((sum, receipt) => {
-                                                    const quantity = parseFloat(receipt.quantity) || 0;  // 숫자 변환 추가
-                                                    return sum + quantity;
-                                                  }, 0)
-                                                : 0;
-                                    
-                                              const totalUsed = material.RawMaterialUsages && material.RawMaterialUsages.length > 0
-                                                ? material.RawMaterialUsages.reduce((sum, usage) => {
-                                                    const quantityUsed = parseFloat(usage.quantity_used) || 0;  // 숫자 변환 추가
-                                                    return sum + quantityUsed;
-                                                  }, 0)
-                                                : 0;
-                                    
-                                              const currentInventory = totalReceived - totalUsed;
-                                            %>
-                                            <%= isNaN(currentInventory) ? '0' : Math.floor(currentInventory) %><%= material.unit %>  <!-- 현재 재고량 (소수점 제거) -->
+                                            <%= Math.floor(material.today_stock) %><%= material.unit %>  <!-- 현재 재고량 (소수점 제거) -->
                                           </td>
                                         <td>0</td>  <!-- 최소 재고량 -->
                                         <td>
-                                            <%= currentInventory > 0 ? "정상" : "재고 부족" %>
+                                            <%= material.today_stock > 0 ? "정상" : "재고 부족" %>
                                         </td>
                                         <td></td>
                                         <td><%= material.description %></td>  <!-- 비고 -->
@@ -320,8 +303,8 @@
   
           <!-- 비고 입력 -->
           <div class="form-group">
-            <label for="noteUsage">비고</label>
-            <textarea id="noteUsage" class="form-control" placeholder="비고 입력"></textarea>
+            <label for="usagedescription">비고</label>
+            <textarea id="usagedescription" class="form-control" placeholder="비고 입력"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -356,8 +339,8 @@
   
           <!-- 현재 재고량 표시 -->
           <div class="form-group">
-            <label for="currentInventory">현재 재고량</label>
-            <input type="text" id="currentInventory" class="form-control" disabled>
+            <label for="todayStock">현재 재고량</label>
+            <input type="text" id="todayStock" class="form-control" disabled>
           </div>
   
           <!-- 변경할 재고량 입력 -->

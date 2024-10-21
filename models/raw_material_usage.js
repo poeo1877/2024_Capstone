@@ -32,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'SET NULL',
                 onUpdate: 'CASCADE',
             },
+            description: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
         },
         {
             tableName: 'raw_material_usage',

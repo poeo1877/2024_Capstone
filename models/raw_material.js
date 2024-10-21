@@ -44,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            today_stock: {
+                type: DataTypes.DECIMAL(10, 4),
+                allowNull: true,
+            },
         },
         {
             tableName: 'raw_material',

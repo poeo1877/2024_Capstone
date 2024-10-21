@@ -337,6 +337,8 @@ router.post('/material/receipt', async (req, res) => {
                 raw_material_name: materialName,
                 category: category || '기본 카테고리',
                 unit: unit || 'kg',
+                today_stock: 0,
+                description: description,
             });
         }
 
@@ -347,6 +349,13 @@ router.post('/material/receipt', async (req, res) => {
             unit_price: unitPrice,
             description,
         });
+
+        // today_stock 업데이트 (입고량 더하기)
+        rawMaterial.today_stock += parseFloat(quantity);
+        await db.RawMaterial.update(
+            { today_stock: db.sequelize.literal(`today_stock + ${parseFloat(quantity)}`) }, // db덧셈이 안돼서 literal를 사용
+            { where: { raw_material_id: rawMaterial.raw_material_id } }
+        );
 
         res.json({ success: true });
     } catch (error) {
@@ -374,7 +383,7 @@ router.get('/material/unit', async (req, res) => {
 });
 
 router.post('/material/usage', async (req, res) => {
-    const { materialName, quantity, batchId, note } = req.body;
+    const { materialName, quantity, batchId, description } = req.body;
 
     try {
         // 원료 찾기
@@ -393,8 +402,12 @@ router.post('/material/usage', async (req, res) => {
             raw_material_id: rawMaterial.raw_material_id,
             quantity_used: quantity,
             batch_id: batchId,
-            note: note,
+            description,
         });
+
+        // today_stock 업데이트 (출고량 빼기)
+        rawMaterial.today_stock -= parseFloat(quantity);
+        await rawMaterial.save();
 
         res.json({ success: true });
     } catch (error) {
@@ -412,18 +425,9 @@ router.get('/material/inventory', async (req, res) => {
             where: { raw_material_name: name },
         });
         if (material) {
-            // 현재 재고량 계산 (입고량 - 출고량)
-            const totalReceived = await db.RawMaterialReceipt.sum('quantity', {
-                where: { raw_material_id: material.raw_material_id },
-            });
-            const totalUsed = await db.RawMaterialUsage.sum('quantity_used', {
-                where: { raw_material_id: material.raw_material_id },
-            });
-            const currentInventory = totalReceived - totalUsed;
-
             res.json({
                 success: true,
-                currentInventory: currentInventory || 0,
+                today_stock: material.today_stock || 0,
                 unit: material.unit,
             });
         } else {
@@ -446,34 +450,15 @@ router.put('/material/inventory', async (req, res) => {
         const material = await db.RawMaterial.findOne({
             where: { raw_material_name: materialName },
         });
+
         if (!material) {
-            return res
-                .status(404)
-                .json({ success: false, message: '원료를 찾을 수 없습니다.' });
+            return res.status(404).json({ success: false, message: '원료를 찾을 수 없습니다.' });
         }
 
-        // 재고 수정 로직 (입고 또는 출고 처리로 변경할 수도 있음)
-        const totalUsed = await db.RawMaterialUsage.sum('quantity_used', {
-            where: { raw_material_id: material.raw_material_id },
-        });
-        const newReceivedQuantity = newInventory - totalUsed;
+        // 기존 로직 수정: today_stock 필드를 직접 업데이트
+        material.today_stock = newInventory;
 
-        if (newReceivedQuantity < 0) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: '재고량이 유효하지 않습니다.',
-                });
-        }
-
-        // 입고 테이블에 새로운 재고를 반영
-        await db.RawMaterialReceipt.create({
-            raw_material_id: material.raw_material_id,
-            quantity: newReceivedQuantity,
-            unit_price: 0, // 단가 기본값 설정
-            description: '재고 변경',
-        });
+        await material.save();
 
         res.json({ success: true });
     } catch (error) {
@@ -498,5 +483,41 @@ router.get('/sensor/excel', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
+
+const multer = require('multer');
+const upload = multer();  // multer 설정 (파일 업로드 없이 사용)
+
+router.post('/recipe/add', upload.none(), async (req, res) => {  // `upload.none()`으로 파일 없이 multipart 처리
+    try {
+        const { recipe_name, product_name, materials } = req.body;
+
+        // 재료 정보 확인
+        console.log('Received Data:', req.body);
+        console.log('Materials:', materials);
+
+        // 재료 정보를 처리하기 위해 원재료 데이터 가져오기
+        const materialsWithNames = await Promise.all(materials.map(async (material) => {
+            const rawMaterial = await db.RawMaterial.findByPk(material.raw_material_id);
+            return {
+                raw_material_id: material.raw_material_id,
+                quantity: material.quantity,
+                raw_material_name: rawMaterial ? rawMaterial.raw_material_name : 'Unknown'
+            };
+        }));
+
+        // 레시피 및 재료 저장
+        await db.Recipe.create({
+            recipe_name,
+            product_name,
+            recipe_detail: materialsWithNames
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving recipe:', error);
+        res.status(500).json({ success: false, error: 'Failed to save recipe' });
+    }
+});
+
 
 module.exports = router;

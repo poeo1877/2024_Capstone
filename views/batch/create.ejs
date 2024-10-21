@@ -1,3 +1,7 @@
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
 <div class="container-fluid">
     <div class="row page-titles mx-0">
         <div class="col-sm-6 p-md-0">
@@ -42,132 +46,7 @@
                                 추가
                             </button>
 
-                            <!-- 레시피 추가 모달 -->
-                            <div
-                                class="modal fade"
-                                id="recipeModal"
-                                tabindex="-1"
-                                role="dialog"
-                                aria-labelledby="recipeModalLabel"
-                                aria-hidden="true"
-                            >
-                                <div
-                                    class="modal-dialog modal-dialog-centered"
-                                    role="document"
-                                >
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5
-                                                class="modal-title"
-                                                id="recipeModalLabel"
-                                            >
-                                                레시피 추가
-                                            </h5>
-                                            <button
-                                                type="button"
-                                                class="close"
-                                                data-dismiss="modal"
-                                                aria-label="Close"
-                                            >
-                                                <span aria-hidden="true">
-                                                    &times;
-                                                </span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="recipeForm">
-                                                <div class="form-group">
-                                                    <label
-                                                        for="recipeNameInput"
-                                                    >
-                                                        레시피 이름
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="recipeNameInput"
-                                                        placeholder="레시피 이름을 입력하세요"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div class="form-group">
-                                                    <label
-                                                        for="recipeDetailInput"
-                                                    >
-                                                        레시피 정보
-                                                    </label>
-                                                    <!-- 레시피 정보 필드 (원재료 입력) -->
-                                                    <button
-                                                        type="button"
-                                                        class="btn btn-success"
-                                                        onclick="addIngredientField()"
-                                                    >
-                                                        +
-                                                    </button>
-                                                </div>
-                                                <!-- 원재료 입력 필드 -->
-                                                <div id="ingredientFields">
-                                                    <div class="form-group row">
-                                                        <div class="col-5">
-                                                            <label
-                                                                for="ingredientNameInput"
-                                                            ></label>
-                                                            <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                placeholder="원재료 이름"
-                                                            />
-                                                        </div>
-                                                        <div class="col-5">
-                                                            <label
-                                                                for="ingredientAmountInput"
-                                                            ></label>
-                                                            <input
-                                                                type="text"
-                                                                class="form-control"
-                                                                placeholder="사용량"
-                                                            />
-                                                        </div>
-                                                        <div
-                                                            class="col-2 d-flex align-items-end"
-                                                        ></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label
-                                                        for="productNameInput"
-                                                    >
-                                                        제품 이름
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        class="form-control"
-                                                        id="productNameInput"
-                                                        placeholder="제품 이름을 입력하세요"
-                                                        required
-                                                    />
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button
-                                                type="button"
-                                                class="btn btn-secondary"
-                                                data-dismiss="modal"
-                                            >
-                                                닫기
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary"
-                                                onclick="submitRecipe()"
-                                            >
-                                                저장
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             <section>
                                 <div class="card-body">
@@ -185,18 +64,29 @@
                                                     <option value="" required>
                                                         레시피를 선택하세요
                                                     </option>
-                                                    <%
-                                                    recipes.forEach(function(recipe)
-                                                    { %>
-                                                    <option
-                                                        value="<%= recipe.id %>"
-                                                        data-name="<%= recipe.recipe_name %>"
-                                                        data-info="<%= recipe.recipe_detail %>"
-                                                        data-product="<%= recipe.product_name %>"
-                                                    >
-                                                        <%= recipe.recipe_name
-                                                        %>
-                                                    </option>
+                                                    <% recipes.forEach(function(recipe){ %>
+                                                        <% 
+                                                        let recipeInfo = '정보 없음';  // 기본 값 설정
+                                                        try {
+                                                            // recipe_detail을 JSON으로 파싱
+                                                            const recipeDetail = JSON.parse(recipe.recipe_detail);
+                                                
+                                                            // 재료명과 수량을 "재료명 수량" 형식으로 변환
+                                                            if (Array.isArray(recipeDetail)) {
+                                                                recipeInfo = recipeDetail.map(material => `${material.raw_material_name} ${material.quantity}`).join(', ');
+                                                            }
+                                                        } catch (error) {
+                                                            console.error('Error parsing recipe_detail:', error);  // 오류 로깅
+                                                        }
+                                                    %>
+                                                        <option
+                                                            value="<%= recipe.id %>"
+                                                            data-name="<%= recipe.recipe_name %>"
+                                                            data-info="<%= recipeInfo %>"
+                                                            data-product="<%= recipe.product_name %>"
+                                                        >
+                                                            <%= recipe.recipe_name%>
+                                                        </option>
                                                     <% }); %>
                                                 </select>
                                             </div>
@@ -433,186 +323,102 @@
         </div>
     </div>
 </div>
-
-<script>
-    function populateRecipeDetails() {
-        const select = document.getElementById('recipeSelect');
-        const selectedOption = select.options[select.selectedIndex];
-
-        document.getElementById('recipeName').value =
-            selectedOption.getAttribute('data-name') || '';
-        document.getElementById('recipeInfo').value =
-            selectedOption.getAttribute('data-info') || '';
-        document.getElementById('productName').value =
-            selectedOption.getAttribute('data-product') || '';
-    }
-
-    function populateFermenterDetails() {
-        const select = document.getElementById('fermenterSelect');
-        const selectedOption = select.options[select.selectedIndex];
-
-        document.getElementById('fermentationSize').value =
-            selectedOption.getAttribute('data-volume') || '';
-        document.getElementById('fermentationName').value =
-            selectedOption.getAttribute('data-line') || '';
-    }
-
-    document
-        .getElementById('createBatchButton')
-        .addEventListener('click', function () {
-            const recipeSelect = document.getElementById('recipeSelect');
-            const fermenterSelect = document.getElementById('fermenterSelect');
-
-            const recipeId = recipeSelect.selectedIndex;
-            const fermenterId = fermenterSelect.selectedIndex;
-            console.log('Selected Recipe ID:', recipeId);
-            console.log('Selected Fermenter ID:', fermenterId);
-
-            let isValid = true;
-
-            // 발효조 선택 상태 확인
-            if (!fermenterId) {
-                $('#fermenterSelect').css({
-                    background: 'rgb(251, 227, 228)',
-                    border: '1px solid #fbc2c4',
-                    color: '#8a1f11',
-                });
-                isValid = false;
-            }
-
-            // 레시피 선택 상태 확인
-            if (!recipeId) {
-                $('#recipeSelect').css({
-                    background: 'rgb(251, 227, 228)',
-                    border: '1px solid #fbc2c4',
-                    color: '#8a1f11',
-                });
-                isValid = false;
-            }
-
-            // Select 창 클릭시 색깔 초기화
-            $('#fermenterSelect, #recipeSelect').on('focus', function () {
-                $(this).css({
-                    background: '',
-                    border: '',
-                    color: '',
-                });
-            });
-            if (!recipeId || !fermenterId) {
-                alert('레시피와 발효조를 선택하세요.');
-                return;
-            }
-
-            // Send data to the server
-            fetch('./create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    recipe_id: recipeId,
-                    fermenter_id: fermenterId,
-                }),
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        alert('Batch created successfully');
-                        window.location.href = '/dashboard';
-                        // Optionally redirect or clear form
-                    } else {
-                        alert(
-                            'Error creating batch: ' +
-                                (data.error || 'Unknown error'),
-                        );
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('An error occurred while creating the batch');
-                });
-        });
-
-    // 발효조 추가 함수
-    function submitFermenter() {
-        const fermenterLine =
-            document.getElementById('fermenterLineInput').value;
-        const fermenterVolume = document.getElementById(
-            'fermenterVolumeInput',
-        ).value;
-
-        if (!fermenterLine || !fermenterVolume) {
-            alert('발효조 라인과 크기를 입력하세요.');
-            return;
-        }
-
-        fetch('/fermenter/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                fermenter_line: fermenterLine,
-                fermenter_volume: fermenterVolume,
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert('발효조가 추가되었습니다.');
-
-                    // 발효조 선택 창에 새 발효조 추가
-                    const fermenterSelect =
-                        document.getElementById('fermenterSelect');
-                    const newOption = document.createElement('option');
-                    newOption.value = data.fermenter.id; // 서버에서 반환된 새 발효조 ID
-                    newOption.setAttribute(
-                        'data-volume',
-                        data.fermenter.fermenter_volume,
-                    );
-                    newOption.setAttribute(
-                        'data-line',
-                        data.fermenter.fermenter_line,
-                    );
-                    newOption.textContent = data.fermenter.fermenter_line;
-
-                    fermenterSelect.appendChild(newOption);
-
-                    // 모달 닫기 및 입력 필드 초기화
-                    $('#fermenterModal').modal('hide');
-                    document.getElementById('fermenterForm').reset();
-                } else {
-                    alert('발효조 추가 중 오류 발생: ' + data.error);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('발효조 추가 중 오류가 발생했습니다.');
-            });
-    }
-
-    function addIngredientField() {
-        const ingredientFields = document.getElementById('ingredientFields');
-
-        const newField = document.createElement('div');
-        newField.classList.add('form-group', 'row', 'mt-2'); // 'mt-2'로 각 필드 간에 간격 추가
-        newField.innerHTML = `
-        <div class="col-5">
-            <input type="text" class="form-control" placeholder="원재료 이름" />
+<div
+    class="modal fade"
+    id="recipeModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="recipeModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recipeModalLabel">레시피 추가</h5>
+                <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="recipeForm">
+                    <!-- 레시피 이름 입력 -->
+                    <div class="form-group">
+                        <label for="recipeNameInput">레시피 이름</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="recipeNameInput"
+                            name="recipe_name"
+                            placeholder="레시피 이름을 입력하세요"
+                            required
+                        />
+                    </div>
+                    <!-- 제품 이름 입력 -->
+                    <div class="form-group">
+                        <label for="productNameInput">제품 이름</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="productNameInput"
+                            name="product_name"
+                            placeholder="제품 이름을 입력하세요"
+                            required
+                        />
+                    </div>
+                    <!-- 재료 필드 (사용자가 입력한 재료 목록) -->
+                    <div id="materials">
+                        <div class="form-group form-row" id="material-0">
+                            <div class="col">
+                                <label>재료</label>
+                                <select  class="form-control" name="materials[0][raw_material_id]" required>
+                                    <option value="">원료 선택...</option>
+                                    <% rawMaterials.forEach(function(material) { %>
+                                        <option value="<%= material.raw_material_id %>">
+                                            <%= material.raw_material_name %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label>사용량</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    name="materials[0][quantity]"
+                                    placeholder="사용량"
+                                    min="1"
+                                    required
+                                    />
+                            </div>
+                            <button type="button" class="btn btn-danger" style=" margin-top: 30px;" onclick="removeMaterial(0)">X</button>
+                        </div>
+                    </div>
+                    <!-- 재료 추가 버튼 -->
+                    <button type="button" class="btn btn-secondary" id="addMaterialButton">재료 추가</button>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            닫기
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            저장
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="col-5">
-            <input type="text" class="form-control" placeholder="사용량" />
-        </div>
-        <div class="col-2 d-flex align-items-end">
-            <button type="button" class="btn btn-danger" onclick="removeIngredientField(this)">-</button>
-        </div>
-    `;
-
-        // 새로운 원재료 필드를 기존 필드 아래에 추가
-        ingredientFields.appendChild(newField);
-    }
-    function removeIngredientField(button) {
-        const fieldGroup = button.closest('.form-group');
-        fieldGroup.remove();
-    }
+    </div>
+</div>
+<!-- rawMaterials 데이터를 JSON 형태로 저장 -->
+<script type="application/json" id="rawMaterialsData">
+    <%= JSON.stringify(rawMaterials) %>
 </script>
+
+
+
+<script src="/js/createmodal.js" defer></script>
