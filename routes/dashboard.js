@@ -124,4 +124,29 @@ router.get('/all-limit', async (req, res) => {
     }
 });
 
+// 삭제 라우터: 특정 limitId에 해당하는 limit을 삭제
+router.delete('/delete-limit/:limitId', async (req, res) => {
+    const { limitId } = req.params;
+
+    try {
+        // limitId로 해당 항목을 찾고 삭제
+        const result = await DashboardLimit.destroy({
+            where: {
+                limit_id: limitId, // limit_id가 일치하는 항목 삭제
+            },
+        });
+
+        // 삭제된 항목이 없을 경우
+        if (result === 0) {
+            return res.status(404).json({ message: 'Limit not found.' });
+        }
+
+        // 성공적으로 삭제된 경우
+        return res.status(200).json({ message: 'Limit deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting limit:', error);
+        return res.status(500).json({ error: 'Failed to delete limit.' });
+    }
+});
+
 module.exports = router;

@@ -15,6 +15,7 @@ function formatTimestamps(data) {
  * fermenter 테이블의 status 값이 FERMENTING 인 것의 fermenter_id 값을 batch 테이블에서 join해서 가져온 행의 batch_id 값을 반환하는 함수
  * @returns {Promise<Array<number>>} - batch_id 값 배열 반환
  */
+// getFermentingBatchId 함수 수정
 async function getFermentingBatchId() {
     try {
         const results = await db.sequelize.query(
@@ -28,13 +29,18 @@ async function getFermentingBatchId() {
                 type: db.Sequelize.QueryTypes.SELECT,
             },
         );
+
+        // 결과가 없으면 null 반환
+        if (results.length === 0) {
+            return null; // batch가 없으면 null 반환
+        }
+
         return results.map((row) => row.batch_id);
     } catch (error) {
         console.error('Error fetching batch IDs by fermenter status:', error);
         throw error;
     }
 }
-
 /**
  * batchIds와 선택적 column을 받아 데이터를 반환하는 함수
  * @param {Array<number>} batchIds - 배치 ID 배열
@@ -148,6 +154,31 @@ async function getLatestSensorDataByBatchId(batchId) {
         throw new Error('Error fetching latest sensor data');
     }
 }
+// 데이터베이스에서 batchId에 해당하는 최신 센서 데이터를 가져오는 함수
+async function getLatestSensorDashboardByBatchId(batchId) {
+    try {
+        const query = `
+            SELECT 
+                co2_concentration,
+                in_temperature,
+                pressure_upper,
+                measured_time
+            FROM sensor_measurement
+            WHERE batch_id = :batchId
+            ORDER BY measured_time DESC
+            LIMIT 2
+        `;
+        const data = await db.sequelize.query(query, {
+            replacements: { batchId },
+            type: db.Sequelize.QueryTypes.SELECT,
+        });
+
+        return data || []; // 최신 데이터가 없을 경우 빈 배열 반환
+    } catch (err) {
+        console.error(err);
+        throw new Error('Error fetching latest sensor data');
+    }
+}
 
 async function createExcelFileForBatchIds(batchIds) {
     try {
@@ -214,4 +245,5 @@ module.exports = {
     createExcelFileForBatchIds,
     getFermentingBatchId,
     getSensorDataByBatchIdDashboard,
+    getLatestSensorDashboardByBatchId,
 };

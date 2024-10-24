@@ -126,17 +126,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     zoom: {
                         pan: {
                             enabled: true,
-                            mode: 'x', // x축으로만 팬 가능
+                            mode: 'xy',
                             threshold: 10, // 팬이 발생하기 위한 최소 움직임
-                            rangeMin: {
-                                x: null, // x축의 최소값은 데이터 범위에 따라 자동으로 설정됨
-                            },
-                            rangeMax: {
-                                x: null, // x축의 최대값은 데이터 범위에 따라 자동으로 설정됨
-                            },
-                            onPanComplete: function ({ chart }) {
-                                // 팬 동작이 끝난 후 필요한 추가 작업을 처리할 수 있습니다.
-                            },
+                            modifierKey: 'ctrl', // Ctrl 키를 누른 상태에서만 팬 가능  
                         },
                         zoom: {
                             wheel: {
@@ -145,9 +137,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             pinch: {
                                 enabled: false, // 터치 줌 비활성화
                             },
-                            mode: 'x', // x축으로만 줌 가능
+                            mode: 'xy',
                             drag: {
-                                enabled: false, // 드래그 줌 비활성화
+                                enabled: true, // 드래그 줌 비활성화
                             },
                         },
                     },

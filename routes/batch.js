@@ -3,11 +3,7 @@ var router = express.Router();
 const { Batch, Recipe, Fermenter, SensorMeasurement, rawMaterials } = require('../models');
 const { getSensorDataByBatchIds } = require('../services/db_services');
 
-const db = require("../models"); // /models/index.js를 import
-const { json, DatabaseError } = require("sequelize");
-const { DESCRIBE } = require('sequelize/lib/query-types');
-const product = require('../models/product');
-
+const db = require('../models'); // /models/index.js를 import
 
 router.get('/list', async (req, res) => {
     try {
@@ -106,27 +102,25 @@ router.get('/archive', async (req, res) => {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
         var batchIds = req.query.batchIds.split(',');
 
-		const data = await getSensorDataByBatchIds(batchIds, "in_temperature");
-		// data가 배열인지 확인 (에러 방지)
-		if (!Array.isArray(data)) {
-			throw new Error("Expected data to be an array");
-		}
-		res.render("batch-archive.ejs", {
-			title: "archive",
-			batchIds: JSON.stringify(batchIds),
-			temperatureData: JSON.stringify(data),
-		});
-	} catch (err) {
-		console.error(err);
-		res.status(500).send("Server Error");
-	}   
+        const data = await getSensorDataByBatchIds(batchIds, 'in_temperature');
+        // data가 배열인지 확인 (에러 방지)
+        if (!Array.isArray(data)) {
+            throw new Error('Expected data to be an array');
+        }
+        res.render('batch-archive.ejs', {
+            title: 'archive',
+            batchIds: JSON.stringify(batchIds),
+            temperatureData: JSON.stringify(data),
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
 
 router.get('/pan', async (req, res) => {
-
-
     res.render('test.ejs', {
-        title: "test",
+        title: 'test',
     });
 });
 

@@ -6,20 +6,34 @@ const {
     getSensorDataByBatchIdDashboard,
 } = require('../services/db_services');
 
+// /dashboard 라우터 수정
 router.get('/dashboard', async (req, res) => {
     try {
-        //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
+        // Batch ID를 가져옴
         var batchId = await getFermentingBatchId();
+
+        // batchId가 없을 경우 error.ejs로 리다이렉트
+        if (!batchId) {
+            return res.render('error.ejs', {
+                errorLink: '/batch/create',
+                errorButtonText: 'Create Batch',
+                errorNumber: '',
+                errorTitle: 'Create Batch',
+                errorMessage: 'Batch를 만드세요',
+            });
+        }
 
         const data = await getSensorDataByBatchIdDashboard(
             batchId,
             'in_temperature',
         );
+
         // data가 배열인지 확인 (에러 방지)
         if (!Array.isArray(data)) {
             throw new Error('Expected data to be an array');
         }
 
+        // dashboard 페이지로 렌더링
         res.render('dashboard.ejs', {
             title: 'dashboard',
             batchId: JSON.stringify(batchId),
@@ -74,6 +88,8 @@ router.get('/error', async (req, res) => {
 
     // 헤더와 푸터를 숨기고, 에러 페이지에 필요한 정보만 전달
     res.render('error.ejs', {
+        errorLink: '/',
+        errorButtonText: 'Back to Home',
         errorNumber: errorNumber,
         errorTitle: errorTitle,
         errorMessage: errorMessage,
