@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var pressureAnnotations = []; // CO2 주석 배열
 
     var timestamps = temperatureData.map((entry) => entry.measured_time);
-
     var temperatureValues = temperatureData.map(
         (entry) => entry.in_temperature,
     );
@@ -30,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         ],
     };
+
     var lineChart = new Chart(ctxLineChart, {
         type: 'line',
         data: chartData,
@@ -87,16 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         },
     });
+
     // 주석 추가 함수
     function addAnnotations(limits) {
-        // 주석 배열을 초기화
         temperatureAnnotations = [];
         co2Annotations = [];
         pressureAnnotations = [];
 
         limits.forEach((limit) => {
-            console.log(limit);
-            // 하한값 주석
             const lowerLine = {
                 type: 'line',
                 xMin: limit.startdate,
@@ -112,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
             };
 
-            // 상한값 주석
             const upperLine = {
                 type: 'line',
                 xMin: limit.startdate,
@@ -148,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 pressureAnnotations;
         }
 
-        // 차트 업데이트
         lineChart.update();
     }
 
@@ -171,10 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
             lineChart.update();
         });
 
-    // CO2 데이터 로드 버튼 클릭 이벤트 핸들러
     document.getElementById('co2-btn').addEventListener('click', function () {
         if (!co2DataLoaded) {
-            // batchIds 배열을 콤마로 구분된 문자열로 변환
             var batchIdsQuery = batchIds.join(',');
 
             fetch(
@@ -187,13 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then((data) => {
-                    // CO2 데이터 저장
                     co2Data = data.map((entry) => ({
                         measured_time: entry.measured_time,
                         co2_concentration: entry.co2_concentration,
                     }));
 
-                    co2DataLoaded = true; // CO2 데이터가 로드되었음을 표시
+                    co2DataLoaded = true;
                     updateChartWithCO2Data();
                 })
                 .catch((error) =>
@@ -224,12 +217,10 @@ document.addEventListener('DOMContentLoaded', function () {
         lineChart.update();
     }
 
-    // 압력 데이터 로드 버튼 클릭 이벤트 핸들러
     document
         .getElementById('pressure-btn')
         .addEventListener('click', function () {
             if (!pressureDataLoaded) {
-                // batchIds 배열을 콤마로 구분된 문자열로 변환
                 var batchIdsQuery = batchIds.join(',');
 
                 fetch(
@@ -242,13 +233,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         return response.json();
                     })
                     .then((data) => {
-                        // 압력 데이터 저장
                         pressureData = data.map((entry) => ({
                             measured_time: entry.measured_time,
                             pressure_upper: entry.pressure_upper,
                         }));
 
-                        pressureDataLoaded = true; // 압력 데이터가 로드되었음을 표시
+                        pressureDataLoaded = true;
                         updateChartWithPressureData();
                     })
                     .catch((error) =>
@@ -278,10 +268,9 @@ document.addEventListener('DOMContentLoaded', function () {
         lineChart.resetZoom();
         lineChart.update();
     }
-    // 주석 데이터를 가져오는 함수
+
     function fetchLimitData() {
         var batchIdsQuery = batchIds.join(',');
-        // 배치 ID와 날짜 범위는 적절히 수정해야 합니다.
         fetch(`${baseURL}/dashboard/all-limit?batchId=${batchIdsQuery}`)
             .then((response) => {
                 if (!response.ok) {
@@ -296,7 +285,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error fetching limit data:', error),
             );
     }
+
     fetchLimitData();
+
+    function fetchLatestData() {
+        var batchIdsQuery = batchIds.join(',');
+        fetch(`${baseURL}/api/sensor/dashboard/latest?batchId=${batchIdsQuery}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                updateChart(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching latest data:', error);
+            });
+    }
+
+    function updateChart(data) {
+        // 새로운 타임스탬프 추가 (한국 시간으로 변환)
+        const measuredTime = new Date(data.latestData.measured_time); // ISO 형식의 날짜를 Date 객체로 변환
+
+        // 한국 시간으로 변환 (UTC+9)
+        measuredTime.setHours(measuredTime.getHours() + 9); // UTC에서 9시간 추가
+
+        // 날짜 형식을 YYYY-MM-DD HH:mm 형식으로 변환
+        const formattedTime = measuredTime
+            .toISOString()
+            .slice(0, 16)
+            .replace('T', ' ');
+
+        // Update labels
+        chartData.labels.push(formattedTime); // 형식화된 문자열로 추가
+
+        // Update temperature data
+        if (chartData.datasets[0].label === '온도') {
+            chartData.datasets[0].data.push(data.latestData.in_temperature);
+        }
+        if (chartData.datasets[0].label === '이산화탄소') {
+            chartData.datasets[0].data.push(data.latestData.co2_concentration);
+        }
+
+        if (chartData.datasets[0].label === '압력') {
+            chartData.datasets[0].data.push(data.latestData.pressure_upper);
+        }
+        lineChart.update();
+    }
+
+    // Set an interval to fetch the latest data every minute (60000 milliseconds)
+    setInterval(fetchLatestData, 60000);
+    fetchLatestData(); // Initial fetch on page load
     // 더블클릭 시 차트 축소 기능 추가
     document
         .getElementById('lineChart')
@@ -323,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .getElementById('lineChart')
         .addEventListener('mousemove', function (event) {
             if (isPanning) {
-                const sensitivity = 0.5; // 민감도 조절을 위한 비율 (0.5로 설정하여 민감도를 낮춤)
+                const sensitivity = 0.5;
                 const deltaX = (event.clientX - startX) * sensitivity;
                 const deltaY = (event.clientY - startY) * sensitivity;
                 const xScale = lineChart.scales['x'];

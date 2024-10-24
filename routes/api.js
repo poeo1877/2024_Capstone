@@ -2,27 +2,216 @@ var express = require('express');
 var router = express.Router();
 const db = require('../models'); // /models/index.js를 import
 const dayjs = require('dayjs');
+const { Op } = require('sequelize');
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 
-const { SensorMeasurement, Alert } = require('../models');
+let isStopped = false;
+
+const {
+    Batch,
+    SensorMeasurement,
+    Fermenter,
+    Alert,
+    DashboardLimit,
+} = require('../models');
 const {
     getSensorDataByBatchIds,
     getLatestSensorDataByBatchId,
     createExcelFileForBatchIds,
     getFermentingBatchId,
     getSensorDataByBatchIdDashboard,
+    getLatestSensorDashboardByBatchId,
 } = require('../services/db_services');
 
+const { sendTelegramMessage } = require('../services/telegram_bot');
+
+const checkAlert = async (measurement) => {
+    try {
+        const currentTime = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+        console.log(currentTime);
+
+        // measurement의 측정 시간을 조회
+        const measuredTime = new Date(measurement.measured_time);
+
+        // 각각의 센서 타입에 대해 경계값 조회
+        const temperatureLimits = await DashboardLimit.findAll({
+            where: {
+                sensor_type: 'temperature',
+                startdate: {
+                    [Op.lte]: measuredTime, // startdate가 측정 시간보다 작거나 같은 것만 조회
+                },
+                enddate: {
+                    [Op.gte]: measuredTime, // enddate가 측정 시간보다 크거나 같은 것만 조회
+                },
+            },
+            order: [['limit_id', 'DESC']],
+        });
+
+        const co2Limits = await DashboardLimit.findAll({
+            where: {
+                sensor_type: 'co2',
+                startdate: {
+                    [Op.lte]: measuredTime,
+                },
+                enddate: {
+                    [Op.gte]: measuredTime,
+                },
+            },
+            order: [['limit_id', 'DESC']],
+        });
+
+        const pressureLimits = await DashboardLimit.findAll({
+            where: {
+                sensor_type: 'pressure',
+                startdate: {
+                    [Op.lte]: measuredTime,
+                },
+                enddate: {
+                    [Op.gte]: measuredTime,
+                },
+            },
+            order: [['limit_id', 'DESC']],
+        });
+
+        let alerts = [];
+
+        // 온도 경계값 체크
+        if (temperatureLimits.length > 0) {
+            const limit = temperatureLimits[0];
+            if (measurement.in_temperature > limit.upper_limit) {
+                const exceedAmount =
+                    measurement.in_temperature - limit.upper_limit;
+                alerts.push(
+                    `온도가 상한값을 ${exceedAmount.toFixed(
+                        2,
+                    )}도 초과했습니다!`,
+                );
+            } else if (measurement.in_temperature < limit.lower_limit) {
+                const belowAmount =
+                    limit.lower_limit - measurement.in_temperature;
+                alerts.push(
+                    `온도가 하한값보다 ${belowAmount.toFixed(2)}도 낮습니다!`,
+                );
+            }
+        }
+
+        // CO2 경계값 체크
+        if (co2Limits.length > 0) {
+            const limit = co2Limits[0];
+            if (measurement.co2_concentration > limit.upper_limit) {
+                const exceedAmount =
+                    measurement.co2_concentration - limit.upper_limit;
+                alerts.push(
+                    `CO2 농도가 상한값을 ${exceedAmount.toFixed(
+                        2,
+                    )}ppm 초과했습니다!`,
+                );
+            } else if (measurement.co2_concentration < limit.lower_limit) {
+                const belowAmount =
+                    limit.lower_limit - measurement.co2_concentration;
+                alerts.push(
+                    `CO2 농도가 하한값보다 ${belowAmount.toFixed(
+                        2,
+                    )}ppm 낮습니다!`,
+                );
+            }
+        }
+
+        // 압력 경계값 체크
+        if (pressureLimits.length > 0) {
+            const limit = pressureLimits[0];
+            if (measurement.pressure_upper > limit.upper_limit) {
+                const exceedAmount =
+                    measurement.pressure_upper - limit.upper_limit;
+                alerts.push(
+                    `압력이 상한값을 ${exceedAmount.toFixed(
+                        2,
+                    )}Pa 초과했습니다!`,
+                );
+            } else if (measurement.pressure_lower < limit.lower_limit) {
+                const belowAmount =
+                    limit.lower_limit - measurement.pressure_lower;
+                alerts.push(
+                    `압력이 하한값보다 ${belowAmount.toFixed(2)}Pa 낮습니다!`,
+                );
+            }
+        }
+
+        // 모든 알림 메시지가 있다면 클라이언트로 전송 및 DB에 저장
+        if (alerts.length > 0) {
+            for (const message of alerts) {
+                // 데이터베이스에 알림 추가
+                await Alert.create({
+                    alert_message: message,
+                    alert_time: currentTime,
+                });
+
+                // Telegram으로 알림 전송
+                await sendTelegramMessage(message);
+            }
+        } else {
+            console.log('모든 센서가 정상 범위에 있습니다.');
+        }
+    } catch (error) {
+        console.error('경계값 체크 중 오류 발생:', error);
+    }
+};
+
+// 정지 상태를 설정하는 라우터
+router.post('/sensor/start', (req, res) => {
+    isStopped = false; // 정지 상태로 설정
+    res.status(200).json({ message: 'Sensor stopped successfully.' });
+});
+
+// 정지 상태를 설정하는 라우터
+router.post('/sensor/pause', (req, res) => {
+    isStopped = true; // 정지 상태로 설정
+    res.status(200).json({ message: 'Sensor stopped successfully.' });
+});
+
+// 정지 상태를 설정하고 fermenter 테이블의 상태를 업데이트하는 라우터
+router.post('/sensor/stop', async (req, res) => {
+    try {
+        // 현재 fermenting batch ID 가져오기
+        const batch_id = await getFermentingBatchId();
+
+        // batch_id에 해당하는 fermenter_id 조회
+        const batch = await Batch.findOne({
+            where: { batch_id },
+            attributes: ['fermenter_id'],
+        });
+
+        if (!batch) {
+            return res.status(404).json({ error: 'Batch not found.' });
+        }
+
+        const fermenter_id = batch.fermenter_id;
+
+        // fermenter 테이블의 상태를 COMPLETED로 업데이트
+        await Fermenter.update(
+            { status: 'COMPLETED' },
+            {
+                where: { fermenter_id: fermenter_id },
+            },
+        );
+
+        res.status(200).json({
+            message:
+                'Sensor stopped successfully and fermenter status updated.',
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
 /**
  * @swagger
  * /api/sensor/measurement: # 경로
  *  post: # HTTP 메서드
  *  summary: 라즈베리파이로 측정한 센서 데이터를 DB에 저장  # 요약
  */
-router.post('/sensor/measurement', async (req, res) => {
-    try {
-        /* 
+/* 
             라즈베리파이에서 데이터 전송시 다음과 같은 형태로 보내줘야 한다.
             {
                 "out_temperature": 14.79,
@@ -34,6 +223,13 @@ router.post('/sensor/measurement', async (req, res) => {
                 "measured_time": "2024-06-22T02:58:00"
             }
         */
+
+router.post('/sensor/measurement', async (req, res) => {
+    if (isStopped) {
+        return res.status(403).json({ error: 'Data storage is stopped.' }); // 정지 상태일 때 에러 반환
+    }
+
+    try {
         let {
             co2_concentration,
             brix,
@@ -45,47 +241,40 @@ router.post('/sensor/measurement', async (req, res) => {
             humidity,
         } = req.body;
 
-        // measured_time이 null인 경우 예외 처리
         if (!measured_time) {
             measured_time = new Date();
         } else {
             measured_time = new Date(measured_time);
         }
 
-        // batch_id 값을 가져옵니다.
         const batch_id = await getFermentingBatchId();
 
-        // 가장 처음 측정된 시간을 가져옵니다.
         const firstMeasurement = await SensorMeasurement.findOne({
             where: { batch_id },
             order: [['measured_time', 'ASC']],
             attributes: ['measured_time'],
         });
 
-        // relative_time을 계산합니다.
         let relative_time = firstMeasurement
             ? (measured_time - new Date(firstMeasurement.measured_time)) / 1000
             : 0;
-
         const newSensorMeasurement = await SensorMeasurement.create({
             measured_time: measured_time,
             co2_concentration: co2_concentration || null,
             in_temperature: in_temperature || null,
             pressure_upper: pressure_upper || null,
             relative_time,
-
-            // 매번 null로 전달될 것으로 예상되는 값들
             brix: brix || null,
             out_temperature: out_temperature || null,
             ph: ph || null,
             humidity: humidity || null,
+            batch_id: batch_id,
         });
 
-        // 데이터베이스에 새 데이터가 추가된 후 클라이언트에게 응답
+        await checkAlert(newSensorMeasurement);
+
         res.status(201).json(newSensorMeasurement);
     } catch (error) {
-        // 에러 발생 시 클라이언트에게 에러 메시지 반환
-
         res.status(500).json({ error: error.message });
     }
 });
@@ -269,6 +458,39 @@ router.get('/sensor/latest', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+router.get('/sensor/dashboard/latest', async (req, res) => {
+    const batchId = req.query.batchId;
+
+    if (!batchId) {
+        return res
+            .status(400)
+            .json({ error: 'batchId query parameter is required' });
+    }
+
+    // getLatestSensorDataByBatchId 함수 호출
+    const latestTwoSensorData = await getLatestSensorDashboardByBatchId(
+        batchId,
+    );
+
+    if (latestTwoSensorData.length < 2) {
+        return res
+            .status(400)
+            .json({ error: 'Not enough data to calculate difference' });
+    }
+
+    // Extract the latest and previous sensor data
+    const latestData = latestTwoSensorData[0];
+
+    res.json({
+        latestData: {
+            co2_concentration: latestData.co2_concentration,
+            in_temperature: latestData.in_temperature,
+            pressure_upper: latestData.pressure_upper,
+            measured_time: latestData.measured_time, // 측정 시간 추가
+        },
+    });
+});
 // 알림 조회 API
 router.get('/alerts', async (req, res) => {
     try {
@@ -284,6 +506,61 @@ router.get('/alerts', async (req, res) => {
             error: '알림을 가져오는 데 오류가 발생했습니다.',
         });
     }
+});
+
+router.post('/alerts/latest', async (req, res) => {
+    try {
+        // 최신 알림 메시지 가져오기 (최대 5개)
+        const latestAlerts = await Alert.findAll({
+            order: [['alert_id', 'DESC']], // 최근 알림 순으로 정렬
+            limit: 5, // 최대 5개의 알림만 가져오기
+        });
+
+        // 알림 메시지를 챗봇 출력 형식으로 변환
+        const alertOutputs = latestAlerts.map((alert) => ({
+            simpleText: {
+                text: alert.alert_time + '+' + alert.alert_message, // 알림 메시지 필드로 바꾸기
+            },
+        }));
+
+        const responseBody = {
+            version: '2.0',
+            template: {
+                outputs: [
+                    {
+                        simpleText: {
+                            text: '최신 알림입니다:',
+                        },
+                    },
+                    ...alertOutputs, // 변환된 알림 메시지 추가
+                ],
+            },
+        };
+
+        res.status(200).send(responseBody);
+    } catch (error) {
+        console.error('최신 알림 조회 중 오류 발생:', error);
+        res.status(500).json({
+            error: '최신 알림을 가져오는 데 오류가 발생했습니다.',
+        });
+    }
+});
+
+router.post('/sayHello', function (req, res) {
+    const responseBody = {
+        version: '2.0',
+        template: {
+            outputs: [
+                {
+                    simpleText: {
+                        text: "hello I'm Ryan",
+                    },
+                },
+            ],
+        },
+    };
+
+    res.status(200).send(responseBody);
 });
 
 router.post('/download-excel', async (req, res) => {
@@ -459,12 +736,10 @@ router.put('/material/inventory', async (req, res) => {
         const newReceivedQuantity = newInventory - totalUsed;
 
         if (newReceivedQuantity < 0) {
-            return res
-                .status(400)
-                .json({
-                    success: false,
-                    message: '재고량이 유효하지 않습니다.',
-                });
+            return res.status(400).json({
+                success: false,
+                message: '재고량이 유효하지 않습니다.',
+            });
         }
 
         // 입고 테이블에 새로운 재고를 반영
@@ -499,4 +774,6 @@ router.get('/sensor/excel', async (req, res) => {
     }
 });
 
-module.exports = router;
+module.exports = {
+    router,
+};

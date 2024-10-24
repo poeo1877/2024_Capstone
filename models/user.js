@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            chatId: {
+                type: DataTypes.STRING, // chatId는 문자열이므로 STRING 타입 사용
+                allowNull: true, // 초기에는 null 허용 (사용자가 봇과 상호작용할 때 저장)
+                unique: true, // 각 사용자마다 고유한 chatId를 저장하므로 unique 설정
+            },
             token: {
                 type: DataTypes.STRING,
                 allowNull: true,
