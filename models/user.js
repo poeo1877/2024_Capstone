@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 allowNull: false,
             },
-            username: {
-                type: DataTypes.STRING(50),
+            email: {
+                type: DataTypes.STRING(100),
                 allowNull: false,
                 unique: true,
             },
@@ -20,6 +20,14 @@ module.exports = (sequelize, DataTypes) => {
             hashedPassword: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            token: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            tokenExpiration: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
             createdAt: {
                 type: DataTypes.DATE,
