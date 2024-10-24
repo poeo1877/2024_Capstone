@@ -59,7 +59,7 @@
                                                 <select
                                                     class="form-control"
                                                     id="recipeSelect"
-                                                    onchange="populateRecipeDetails()"
+                                                    
                                                 >
                                                     <option value="" required>
                                                         레시피를 선택하세요
@@ -128,8 +128,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6 mb-4 ml-2">
-                                        <div class="form-group">
+                                    <div class="row ml-2">
+                                        <div class="col-lg mb-4">
                                             <label class="text-label">
                                                 제품 이름
                                             </label>
@@ -142,6 +142,22 @@
                                                     required
                                                     readonly
                                                 />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg mb-4">
+                                            <div class="form-group">
+                                                <label class="text-label">
+                                                    비율
+                                                </label>
+                                                <div class="input-group">
+                                                    <input
+                                                        type="text"
+                                                        id="Ratio"
+                                                        class="form-control"
+                                                        placeholder="비율을 적어주세요."
+                                                        required
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -253,7 +269,7 @@
                                             <select
                                                 class="form-control"
                                                 id="fermenterSelect"
-                                                onchange="populateFermenterDetails()"
+                                                
                                             >
                                                 <option value="">
                                                     발효조를 선택하세요
@@ -372,10 +388,10 @@
                     </div>
                     <!-- 재료 필드 (사용자가 입력한 재료 목록) -->
                     <div id="materials">
-                        <div class="form-group form-row" id="material-0">
+                        <div class="form-group form-row" id="material-0" style="display: flex; align-items: center;">
                             <div class="col">
                                 <label>재료</label>
-                                <select  class="form-control" name="materials[0][raw_material_id]" required>
+                                <select class="form-control" name="materials[0][raw_material_id]" required>
                                     <option value="">원료 선택...</option>
                                     <% rawMaterials.forEach(function(material) { %>
                                         <option value="<%= material.raw_material_id %>">
@@ -386,16 +402,22 @@
                             </div>
                             <div class="col">
                                 <label>사용량</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="materials[0][quantity]"
-                                    placeholder="사용량"
-                                    min="1"
-                                    required
+                                <div class="input-group">
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="materials[0][quantity]"
+                                        placeholder="사용량"
+                                        min="1"
+                                        required
                                     />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" id="unitLabel">단위</span>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-danger" style=" margin-top: 30px;" onclick="removeMaterial(0)">X</button>
+                            <!-- X 버튼은 flex 속성으로 같은 줄에 배치 -->
+                            <button type="button" class="btn btn-danger" style="margin-top: 30px;" onclick="removeMaterial(0)">X</button>
                         </div>
                     </div>
                     <!-- 재료 추가 버튼 -->

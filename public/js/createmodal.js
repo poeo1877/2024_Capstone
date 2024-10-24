@@ -31,9 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // 배치 생성 버튼 클릭 시 이벤트
     document.getElementById('createBatchButton').addEventListener('click', function () {
             event.preventDefault();  // 기본 폼 제출 방지
-            
+
             const recipeSelect = document.getElementById('recipeSelect');
             const fermenterSelect = document.getElementById('fermenterSelect');
+            const ratio = parseFloat(document.getElementById('Ratio').value);
 
             const recipeId = recipeSelect.selectedIndex;
             const fermenterId = fermenterSelect.selectedIndex;
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Selected Fermenter ID:', fermenterId);
 
             let isValid = true;
-
+            
             // 발효조 선택 상태 확인
             if (!fermenterId) {
                 $('#fermenterSelect').css({
@@ -76,6 +77,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            if (isNaN(ratio) || ratio <= 0) {
+                ratio = 1;  // 기본 비율
+            }
+
             // 서버로 데이터 전송
             fetch('./create', {
                 method: 'POST',
@@ -85,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: JSON.stringify({
                     recipe_id: recipeId,
                     fermenter_id: fermenterId,
+                    ratio: ratio,
                 }),
             })
                 .then((response) => response.json())
@@ -205,15 +211,41 @@ document.getElementById("addMaterialButton").addEventListener("click", function 
         </div>
         <div class="col">
             <label>사용량</label>
-            <input type="number" class="form-control" id="materialQuantity-${materialIndex}" name="materials[${materialIndex}][quantity]" placeholder="사용량" min="1" required>
+            <div class="input-group">
+                <input type="number" class="form-control" id="materialQuantity-${materialIndex}" name="materials[${materialIndex}][quantity]" placeholder="사용량" min="1" required>
+                <div class="input-group-append">
+                    <span class="input-group-text" id="unitLabel-${materialIndex}">단위</span>
+                </div>
+            </div>
         </div>
-        <div class="col-auto">
-            <button type="button" class="btn btn-danger" style=" margin-top: 30px;" onclick="removeMaterial(${materialIndex})">X</button>
+            <button type="button" class="btn btn-danger" style="margin-top: 30px;" onclick="removeMaterial(${materialIndex})">X</button>
         </div>
     `;
     
     // 새로운 필드를 materials 컨테이너에 추가
     materialsContainer.appendChild(newMaterial);
+
+    // 단위 정보를 가져오는 부분
+    const materialSelect = document.getElementById(`materialSelect-${materialIndex}`);
+    const unitLabel = document.getElementById(`unitLabel-${materialIndex}`);
+
+    // 재료 선택 시 단위 가져오기
+    materialSelect.addEventListener('change', function () {
+        fetch(`/api/material/unit?id=${materialSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.unit) {
+                    unitLabel.textContent = data.unit;  // 단위 표시
+                } else {
+                    unitLabel.textContent = "단위 없음";
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching unit:', error);
+                unitLabel.textContent = "오류";
+            });
+    });
+
     materialIndex++;  // 다음 필드를 위한 인덱스 증가
 });
 
@@ -248,5 +280,30 @@ document.getElementById("recipeForm").addEventListener("submit", function (event
     .catch(error => {
         console.error('Error:', error);
         alert('오류가 발생했습니다.');
+    });
+});
+
+document.querySelectorAll('select[name^="materials"]').forEach(selectElement => {
+    selectElement.addEventListener('change', function () {
+        const materialSelect = this;
+        const unitLabel = materialSelect.closest('.form-row').querySelector('#unitLabel');  // 해당 행의 단위 레이블 찾기
+
+        // 콘솔에 선택된 재료 ID를 출력하여 값 확인
+        console.log('Selected Material ID:', materialSelect.value);
+
+        // 선택된 재료의 단위를 가져옴
+        fetch(`/api/material/unit?id=${materialSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.unit) {
+                    unitLabel.textContent = data.unit;  // 단위 표시
+                } else {
+                    unitLabel.textContent = "단위 없음";
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching unit:', error);
+                unitLabel.textContent = "오류";
+            });
     });
 });

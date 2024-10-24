@@ -365,12 +365,22 @@ router.post('/material/receipt', async (req, res) => {
 });
 
 router.get('/material/unit', async (req, res) => {
-    const { name } = req.query;
+    const { name, id } = req.query;  // 이름(name) 또는 ID(id) 중 하나를 받을 수 있도록 설정
 
     try {
-        const material = await db.RawMaterial.findOne({
-            where: { raw_material_name: name },
-        });
+        let material;
+
+        // id가 존재하면 id로 조회, 없으면 name으로 조회
+        if (id) {
+            material = await db.RawMaterial.findOne({
+                where: { raw_material_id: id },  // ID로 조회
+            });
+        } else if (name) {
+            material = await db.RawMaterial.findOne({
+                where: { raw_material_name: name },  // 이름으로 조회
+            });
+        }
+
         if (material) {
             res.json({ unit: material.unit });
         } else {

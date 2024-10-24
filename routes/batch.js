@@ -48,17 +48,21 @@ router.get('/create', async (req, res) => {
 
 // 배치 생성 POST 요청
 router.post('/create', async (req, res) => {
-    const { recipe_id, fermenter_id } = req.body;
+    const { recipe_id, fermenter_id, ratio } = req.body;
 
     if (!recipe_id || !fermenter_id) {
         return res.status(400).json({ error: '레시피와 발효조를 선택하세요.' });
     }
 
+    if (!ratio || ratio <= 0) {
+        ratio = 1;  // 기본 비율
+    }
+    
     try {
         const newBatch = await Batch.create({
             start_time: new Date(), // 현재 시간
             end_time: null, // 초기값으로 null 설정
-            recipe_ratio: '', // 초기값으로 공백 설정
+            recipe_ratio: ratio, // 초기값으로 공백 설정
             recipe_id: recipe_id,
             fermenter_id: fermenter_id,
         });
@@ -69,6 +73,7 @@ router.post('/create', async (req, res) => {
 
         // 재료마다 출고 처리
         for (let material of materials) {
+            const adjustedQuantity = material.quantity * ratio;
             // quantity 값이 null이 아닌지 확인
             if (!material.quantity || material.quantity <= 0 || !material.raw_material_id) {
                 console.error(`Invalid data for material: ${JSON.stringify(material)}`);
@@ -77,7 +82,7 @@ router.post('/create', async (req, res) => {
 
             await db.RawMaterialUsage.create({
                 raw_material_id: material.raw_material_id,
-                quantity_used: material.quantity,  // 사용량
+                quantity_used: adjustedQuantity,  // 사용량
                 batch_id: newBatch.batch_id,
                 description : `${recipe.product_name}에서 사용`,
             });
