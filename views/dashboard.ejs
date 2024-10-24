@@ -156,7 +156,6 @@
                             <script>
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
 								var batchIds = JSON.parse('<%- batchId %>');
-								console.log(batchIds);
 								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
 								var temperatureData = JSON.parse('<%- temperatureData %>');
 							</script>
@@ -478,6 +477,33 @@
                         </div>
                     </div>
 
+	<div class="row">
+    <div class="col-xl col-lg col-md">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">알림 테이블</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>시작시간</th>
+                            <th>종료시간</th>
+                            <th>센서 종류</th>
+                            <th>상한값</th>
+                            <th>하한값</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="notificationTableBody">
+                        <!-- 데이터를 여기에 추가 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
 	<!-- 이 아래에서 통계 같은 것 시각화-->
@@ -515,7 +541,7 @@
         ***********************************-->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 
 <!-- Load Chart.js library first -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -535,42 +561,10 @@
 <!-- Load your custom chart script after Chart.js library -->
 <script src="/js/dashboard-linechart.js"></script>
 <script src="/js/dashboard-updatechange.js"></script>
-                
+<script src="/js/dashboard-limit-table.js"></script>
+<script src="/js/dashboard-pauseButton.js"></script>
+     
 
-<script>
-	// 버튼의 상태를 저장하는 변수 (true: 재생 중, false: 일시정지 상태)
-    let isPlaying = false;
-
-    // 재생 및 일시정지 버튼 토글 함수
-    function togglePlayPause() {
-        const pauseButton = document.getElementById("pauseButton");
-        const pauseIcon = document.getElementById("pauseIcon");
-
-        if (isPlaying) {
-            // 재생 중이면 일시정지로 전환 (아이콘 변경)
-            pauseIcon.classList.remove("fa-play");
-            pauseIcon.classList.add("fa-pause");
-            isPlaying = false;
-        } else {
-            // 일시정지 중이면 재생으로 전환 (아이콘 변경)
-            pauseIcon.classList.remove("fa-pause");
-            pauseIcon.classList.add("fa-play");
-            isPlaying = true;
-        }
-    }
-
-    // 정지 버튼 동작
-    function stop() {
-        const pauseIcon = document.getElementById("pauseIcon");
-
-        // 재생 또는 일시정지 상태에 상관없이 정지 시 일시정지 상태로 초기화 (아이콘 초기화)
-        pauseIcon.classList.remove("fa-play");
-        pauseIcon.classList.add("fa-pause");
-        isPlaying = false;
-        alert('정지되었습니다.');
-    }
-	
-</script>
 <script>
 	var baseURL = window.location.origin;
 	$(function() {
@@ -588,16 +582,16 @@
         }
     });
 });
-	$(document).ready(function () {
+	function fetchData() {
 		$.ajax({
-			url: `${baseURL}/api/sensor/latest?batchId=` + batchIds, // 요청 URL을 /sensor/latest로 변경하고 batchId를 쿼리 파라미터로 전달
+			url: `${baseURL}/api/sensor/latest?batchId=${batchIds}`, // 요청 URL을 /sensor/latest로 변경하고 batchId를 쿼리 파라미터로 전달
 			method: "GET",
 			success: function (data) {
 				if (data) {
 					$("#temperature").text(data.latestData.in_temperature || "N/A");
 					$("#co2").text(data.latestData.co2_concentration || "N/A");
 					$("#pressure").text(data.latestData.pressure_upper || "N/A");
-
+					
 					// 변화량 업데이트 및 색상 설정
 					updateChangeValue(
 						'#temperatureChange',
@@ -633,8 +627,12 @@
 				$("#pressure").text("Error loading data");
 			},
 		});
-	});
-	
+	};
+	// 최초 데이터 로드
+        fetchData();
+
+        // 1분마다 데이터 업데이트
+        setInterval(fetchData, 60 * 1000); // 60초마다 fetchData 호출
 </script>
             </div>
         </div>
