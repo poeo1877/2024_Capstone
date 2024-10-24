@@ -17,24 +17,24 @@
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
-                                    <h4 class="text-center mb-4">Sign up for an account</h4>
+                                    <h4 class="text-center mb-4">Sign up your account</h4>
                                     <% if (error) { %>
                                         <p style="color: red;" class="text-center"><%= error %></p>
                                     <% } %>
                                     <form action="/register" method="POST">
                                         <div class="form-group">
-                                            <label for="username"><strong>Username</strong></label>
-                                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" required>
+                                            <label for="email"><strong>Email</strong></label>
+                                            <input type="email" id="email" name="email" class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="password"><strong>Password</strong></label>
-                                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required>
+                                            <input type="password" id="password" name="password" class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="confirmPassword"><strong>Confirm Password</strong></label>
-                                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Confirm password" required>
+                                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
                                         </div>
-                                        <div class="text-center mt-4">
+                                        <div class="text-center">
                                             <button type="submit" class="btn btn-primary btn-block">Sign me up</button>
                                         </div>
                                     </form>
