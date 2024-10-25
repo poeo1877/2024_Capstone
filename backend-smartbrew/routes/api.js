@@ -4,6 +4,7 @@ const db = require('../models'); // /models/index.js를 import
 const dayjs = require('dayjs');
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
+const { Client } = require('ssh2');
 
 const { SensorMeasurement, Alert } = require('../models');
 const {
@@ -246,7 +247,7 @@ router.get('/test', async (req, res) => {
 		const batchId = 5;
 
 		if (batchId !== null) {
-			res.json(analyzeBatch(batchId));
+			res.json(await analyzeBatch(batchId));
 		} else {
 			res.status(404).send('함수 실행 실패');
 		}
@@ -425,6 +426,52 @@ router.get('/sensor/excel', async (req, res) => {
 		console.error('Error fetching sensor data:', error);
 		res.status(500).send('Server Error');
 	}
+});
+
+// 라즈베리파이 전원 끄기
+router.get('/shutdown-raspberry-pi', (req, res) => {
+	const conn = new Client();
+
+	// 라즈베리파이 SSH 접속 정보
+	const raspberryPiConfig = {
+		host: 'localhost', // 서버에서 라즈베리파이 접근은 localhost를 통해 이루어짐
+		port: 2222, // 서버의 2222번 포트를 통해 라즈베리파이의 22번 포트로 연결
+		username: 'pi', // 라즈베리파이 사용자 이름
+		password: 'your_password', // 라즈베리파이 비밀번호
+	};
+
+	conn.on('ready', () => {
+		console.log('SSH 연결 성공');
+
+		// 라즈베리파이에서 poweroff 명령어 실행
+		conn.exec('sudo poweroff', (err, stream) => {
+			if (err) {
+				console.error('명령어 실행 중 오류 발생: ', err);
+				res.status(500).send('라즈베리파이 종료 중 오류가 발생했습니다.');
+				return conn.end();
+			}
+
+			stream
+				.on('close', (code, signal) => {
+					console.log('명령어 실행 완료: ', code, signal);
+					conn.end();
+
+					// 라즈베리파이 종료 메시지 전송
+					res.send('라즈베리파이가 안전하게 종료되었습니다. 전원선을 뽑아도 괜찮습니다.');
+				})
+				.on('data', (data) => {
+					console.log('STDOUT: ' + data);
+				})
+				.stderr.on('data', (data) => {
+					console.log('STDERR: ' + data);
+				});
+		});
+	})
+		.on('error', (err) => {
+			console.error('SSH 연결 실패: ', err);
+			res.status(500).send('SSH 연결에 실패했습니다. 라즈베리파이 접속 설정을 확인해주세요.');
+		})
+		.connect(raspberryPiConfig);
 });
 
 module.exports = router;

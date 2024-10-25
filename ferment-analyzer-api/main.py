@@ -11,6 +11,7 @@ from pydantic import BaseModel
 # 개발환경에서 필요한 패키지 설치
 import matplotlib.pyplot as plt
 
+# kilo7816 자리에 자신의 DB 비밀번호 입력
 DATABASE_URL = "postgresql://postgres:kilo7816@localhost/COREDB"
 
 database = Database(DATABASE_URL)
@@ -75,7 +76,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins. 나중에 보안을 위해 수정 필요
+    allow_origins=["http://localhost:3000"],  # Allow all origins. 나중에 보안을 위해 수정 필요
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
