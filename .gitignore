@@ -1,5 +1,9 @@
-node_modules/
-.prettierrc
-.env
-smartbrew/
-yarn.lock
+backend-smartbrew/node_modules/
+backend-smartbrew/.prettierrc
+backend-smartbrew/.env
+backend-smartbrew/smartbrew/
+backend-smartbrew/yarn.lock
+backend-smartbrew/package-lock.json
+
+ferment-analyzer-api/.venv/
+ferment-analyzer-api/__pycache__/

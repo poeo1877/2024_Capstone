@@ -71,10 +71,27 @@
 										<i class="mdi mdi-account"></i>
 									</a>
 									<div class="dropdown-menu dropdown-menu-right">
-										<a href="/app-profile.html" class="dropdown-item">
-											<i class="icon-user"></i>
-											<span class="ml-2">Profile</span>
+										<a href="#" id="shutdownLink" class="dropdown-item">
+											<i class="icon-power"></i>
+											<span class="ml-2">라즈베리파이 종료</span>
 										</a>
+										<script>
+											document.getElementById('shutdownLink').addEventListener('click', function (event) {
+												event.preventDefault(); // 기본 링크 동작을 막음
+
+												fetch('/api/shutdown-raspberry-pi', {
+													method: 'GET',
+												})
+													.then((response) => response.json())
+													.then((data) => {
+														console.log('Success:', data);
+														// 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
+													})
+													.catch((error) => {
+														console.error('Error:', error);
+													});
+											});
+										</script>
 										<a href="/email-inbox.html" class="dropdown-item">
 											<i class="icon-envelope-open"></i>
 											<span class="ml-2">Inbox</span>
@@ -83,6 +100,26 @@
 											<i class="icon-key"></i>
 											<span class="ml-2">Logout</span>
 										</a>
+										<a href="#" id="dataTriggerLink" class="dropdown-item">
+											<span>데이터분석트리거</span>
+										</a>
+										<script>
+											document.getElementById('dataTriggerLink').addEventListener('click', function (event) {
+												event.preventDefault(); // 기본 링크 동작을 막음
+
+												fetch('/api/test', {
+													method: 'GET',
+												})
+													.then((response) => response.json())
+													.then((data) => {
+														console.log('Success:', data);
+														// 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
+													})
+													.catch((error) => {
+														console.error('Error:', error);
+													});
+											});
+										</script>
 									</div>
 								</li>
 							</ul>
