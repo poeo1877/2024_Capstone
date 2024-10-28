@@ -5,7 +5,9 @@ const { Op } = require('sequelize');
 const token = process.env.TELEGRAM_ACCESS_TOKEN; // 여기서 'YOUR_TELEGRAM_BOT_TOKEN'을 실제 토큰으로 교체하세요.
 
 // Telegram Bot 객체 생성
-const bot = new TelegramBot(token, { polling: true });
+// const bot = new TelegramBot(token, { polling: true });
+
+const bot = new TelegramBot(token);
 
 const saveChatIdForUser = async (username, chatId) => {
     try {
