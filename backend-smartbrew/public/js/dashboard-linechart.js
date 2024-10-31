@@ -2,14 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var ctxLineChart = document.getElementById('lineChart').getContext('2d');
     var baseURL = window.location.origin;
     var co2DataLoaded = false; // CO2 데이터가 로드되었는지 여부를 추적
-    var pressureDataLoaded = false; // 압력 데이터가 로드되었는지 여부를 추적
+    var pHDataLoaded = false; // 압력 데이터가 로드되었는지 여부를 추적
 
     var co2Data = []; // CO2 데이터를 저장할 배열
-    var pressureData = []; // 압력 데이터를 저장할 배열
+    var pHData = []; // 압력 데이터를 저장할 배열
 
     var temperatureAnnotations = []; // 온도 주석 배열
     var co2Annotations = []; // CO2 주석 배열
-    var pressureAnnotations = []; // CO2 주석 배열
+    var phAnnotations = []; // CO2 주석 배열
 
     var timestamps = temperatureData.map((entry) => entry.measured_time);
     var temperatureValues = temperatureData.map(
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function addAnnotations(limits) {
         temperatureAnnotations = [];
         co2Annotations = [];
-        pressureAnnotations = [];
+        phAnnotations = [];
 
         limits.forEach((limit) => {
             const lowerLine = {
@@ -130,9 +130,9 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (limit.sensor_type === 'co2') {
                 co2Annotations.push(lowerLine);
                 co2Annotations.push(upperLine);
-            } else if (limit.sensor_type === 'pressure') {
-                pressureAnnotations.push(lowerLine);
-                pressureAnnotations.push(upperLine);
+            } else if (limit.sensor_type === 'ph') {
+                phAnnotations.push(lowerLine);
+                phAnnotations.push(upperLine);
             }
         });
         if (lineChart.data.datasets[0].label === '온도') {
@@ -140,9 +140,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 temperatureAnnotations;
         } else if (lineChart.data.datasets[0].label === '이산화탄소') {
             lineChart.options.plugins.annotation.annotations = co2Annotations;
-        } else if (lineChart.data.datasets[0].label === '압력') {
-            lineChart.options.plugins.annotation.annotations =
-                pressureAnnotations;
+        } else if (lineChart.data.datasets[0].label === 'PH') {
+            lineChart.options.plugins.annotation.annotations = phAnnotations;
         }
 
         lineChart.update();
@@ -217,54 +216,50 @@ document.addEventListener('DOMContentLoaded', function () {
         lineChart.update();
     }
 
-    document
-        .getElementById('pressure-btn')
-        .addEventListener('click', function () {
-            if (!pressureDataLoaded) {
-                var batchIdsQuery = batchIds.join(',');
+    document.getElementById('pH-btn').addEventListener('click', function () {
+        if (!pHDataLoaded) {
+            var batchIdsQuery = batchIds.join(',');
 
-                fetch(
-                    `${baseURL}/api/sensor/dashboard/pressure?batchId=${batchIdsQuery}`,
-                )
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        pressureData = data.map((entry) => ({
-                            measured_time: entry.measured_time,
-                            pressure_upper: entry.pressure_upper,
-                        }));
+            fetch(`${baseURL}/api/sensor/dashboard/ph?batchId=${batchIdsQuery}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    pHData = data.map((entry) => ({
+                        measured_time: entry.measured_time,
+                        ph: entry.ph,
+                    }));
 
-                        pressureDataLoaded = true;
-                        updateChartWithPressureData();
-                    })
-                    .catch((error) =>
-                        console.error('Error fetching pressure data:', error),
-                    );
-            } else {
-                updateChartWithPressureData();
-            }
-        });
+                    pHDataLoaded = true;
+                    updateChartWithPHData();
+                })
+                .catch((error) =>
+                    console.error('Error fetching ph data:', error),
+                );
+        } else {
+            updateChartWithPHData();
+        }
+    });
 
-    function updateChartWithPressureData() {
-        var timestamps = pressureData.map((entry) => entry.measured_time);
-        var pressureValues = pressureData.map((entry) => entry.pressure_upper);
+    function updateChartWithPHData() {
+        var timestamps = pHData.map((entry) => entry.measured_time);
+        var phValues = pHData.map((entry) => entry.ph);
 
         lineChart.data.labels = timestamps;
         lineChart.data.datasets = [
             {
-                label: '압력',
-                data: pressureValues,
+                label: 'PH',
+                data: phValues,
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 2,
                 fill: false,
                 pointRadius: 0, // 데이터 포인트의 크기를 작게 설정
             },
         ];
-        lineChart.options.plugins.annotation.annotations = pressureAnnotations;
+        lineChart.options.plugins.annotation.annotations = phAnnotations;
         lineChart.resetZoom();
         lineChart.update();
     }
@@ -329,8 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
             chartData.datasets[0].data.push(data.latestData.co2_concentration);
         }
 
-        if (chartData.datasets[0].label === '압력') {
-            chartData.datasets[0].data.push(data.latestData.pressure_upper);
+        if (chartData.datasets[0].label === 'PH') {
+            chartData.datasets[0].data.push(data.latestData.ph);
         }
         lineChart.update();
     }

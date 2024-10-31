@@ -5,5 +5,8 @@ backend-smartbrew/smartbrew/
 backend-smartbrew/yarn.lock
 backend-smartbrew/package-lock.json
 
+.prettierrc
+node_modules/
+
 ferment-analyzer-api/.venv/
 ferment-analyzer-api/__pycache__/

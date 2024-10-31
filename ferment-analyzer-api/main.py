@@ -12,7 +12,7 @@ from pydantic import BaseModel
 import matplotlib.pyplot as plt
 
 # kilo7816 자리에 자신의 DB 비밀번호 입력
-DATABASE_URL = "postgresql://postgres:kilo7816@localhost/COREDB"
+DATABASE_URL = "postgresql://postgres:test1234@localhost/COREDB"
 
 database = Database(DATABASE_URL)
 metadata = MetaData()

@@ -63,9 +63,9 @@ const checkAlert = async (measurement) => {
             order: [['limit_id', 'DESC']],
         });
 
-        const pressureLimits = await DashboardLimit.findAll({
+        const pHLimits = await DashboardLimit.findAll({
             where: {
-                sensor_type: 'pressure',
+                sensor_type: 'ph',
                 startdate: {
                     [Op.lte]: measuredTime,
                 },
@@ -121,21 +121,17 @@ const checkAlert = async (measurement) => {
         }
 
         // 압력 경계값 체크
-        if (pressureLimits.length > 0) {
-            const limit = pressureLimits[0];
-            if (measurement.pressure_upper > limit.upper_limit) {
-                const exceedAmount =
-                    measurement.pressure_upper - limit.upper_limit;
+        if (pHLimits.length > 0) {
+            const limit = pHLimits[0];
+            if (measurement.ph > limit.upper_limit) {
+                const exceedAmount = measurement.ph - limit.upper_limit;
                 alerts.push(
-                    `압력이 상한값을 ${exceedAmount.toFixed(
-                        2,
-                    )}Pa 초과했습니다!`,
+                    `pH가 상한값을 ${exceedAmount.toFixed(2)}pH 초과했습니다!`,
                 );
-            } else if (measurement.pressure_lower < limit.lower_limit) {
-                const belowAmount =
-                    limit.lower_limit - measurement.pressure_lower;
+            } else if (measurement.ph < limit.lower_limit) {
+                const belowAmount = limit.lower_limit - measurement.ph;
                 alerts.push(
-                    `압력이 하한값보다 ${belowAmount.toFixed(2)}Pa 낮습니다!`,
+                    `pH가 하한값보다 ${belowAmount.toFixed(2)}pH 낮습니다!`,
                 );
             }
         }
@@ -240,7 +236,7 @@ router.post('/sensor/measurement', async (req, res) => {
             in_temperature,
             ph,
             pressure_upper,
-            humidity,
+            // humidity,
         } = req.body;
 
         // measured_time이 null인 경우 예외 처리
@@ -276,7 +272,7 @@ router.post('/sensor/measurement', async (req, res) => {
             brix: brix || null,
             out_temperature: out_temperature || null,
             ph: ph || null,
-            humidity: humidity || null,
+            // humidity: humidity || null,
         });
 
         await checkAlert(newSensorMeasurement);
@@ -318,15 +314,12 @@ router.get('/sensor/co2', async (req, res) => {
     }
 });
 
-router.get('/sensor/pressure', async (req, res) => {
+router.get('/sensor/ph', async (req, res) => {
     try {
         const batchIds = req.query.batchId.split(','); // 쿼리에서 batchId를 가져와서 배열로 변환
-        const pressureData = await getSensorDataByBatchIds(
-            batchIds,
-            'pressure_upper',
-        );
+        const pHData = await getSensorDataByBatchIds(batchIds, 'ph');
 
-        res.json(pressureData);
+        res.json(pHData);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -361,15 +354,12 @@ router.get('/sensor/dashboard/co2', async (req, res) => {
     }
 });
 
-router.get('/sensor/dashboard/pressure', async (req, res) => {
+router.get('/sensor/dashboard/ph', async (req, res) => {
     try {
         const batchIds = req.query.batchId.split(','); // 쿼리에서 batchId를 가져와서 배열로 변환
-        const pressureData = await getSensorDataByBatchIdDashboard(
-            batchIds,
-            'pressure_upper',
-        );
+        const pHData = await getSensorDataByBatchIdDashboard(batchIds, 'ph');
 
-        res.json(pressureData);
+        res.json(pHData);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -423,17 +413,13 @@ router.get('/sensor/latest', async (req, res) => {
             ).toFixed(3),
         );
 
-        const pressureDifference = parseFloat(
-            (
-                parseFloat(latestData.pressure_upper) -
-                parseFloat(previousData.pressure_upper)
-            ).toFixed(3),
+        const phDifference = parseFloat(
+            (parseFloat(latestData.ph) - parseFloat(previousData.ph)).toFixed(
+                3,
+            ),
         );
-        const pressurePercentageDifference = parseFloat(
-            (
-                (pressureDifference / parseFloat(previousData.pressure_upper)) *
-                100
-            ).toFixed(3),
+        const phPercentageDifference = parseFloat(
+            ((phDifference / parseFloat(previousData.ph)) * 100).toFixed(3),
         );
 
         console.log('데이터', {
@@ -441,12 +427,12 @@ router.get('/sensor/latest', async (req, res) => {
             differences: {
                 co2_concentration: co2Difference,
                 in_temperature: tempDifference,
-                pressure_upper: pressureDifference,
+                ph: phDifference,
             },
             percentageDifferences: {
                 co2_concentration: co2PercentageDifference,
                 in_temperature: tempPercentageDifference,
-                pressure_upper: pressurePercentageDifference,
+                ph: phPercentageDifference,
             },
         });
         // 결과 반환
@@ -455,12 +441,12 @@ router.get('/sensor/latest', async (req, res) => {
             differences: {
                 co2_concentration: co2Difference,
                 in_temperature: tempDifference,
-                pressure_upper: pressureDifference,
+                ph: phDifference,
             },
             percentageDifferences: {
                 co2_concentration: co2PercentageDifference,
                 in_temperature: tempPercentageDifference,
-                pressure_upper: pressurePercentageDifference,
+                ph: phPercentageDifference,
             },
         });
     } catch (error) {

@@ -137,7 +137,7 @@ async function getLatestSensorDataByBatchId(batchId) {
             SELECT 
                 co2_concentration,
                 in_temperature,
-                pressure_upper
+                ph
             FROM sensor_measurement
             WHERE batch_id = :batchId
             ORDER BY measured_time DESC
@@ -190,7 +190,7 @@ async function createExcelFileForBatchIds(batchIds) {
                     measured_time,
                     in_temperature,
                     co2_concentration,
-                    pressure_upper
+                    ph
                 FROM sensor_measurement
                 WHERE batch_id = :batchId
                 ORDER BY measured_time ASC
@@ -207,7 +207,7 @@ async function createExcelFileForBatchIds(batchIds) {
                 { header: '측정시간', key: 'measured_time', width: 20 },
                 { header: '온도', key: 'in_temperature', width: 15 },
                 { header: '이산화탄소', key: 'co2_concentration', width: 15 },
-                { header: '압력', key: 'pressure_upper', width: 15 },
+                { header: 'PH', key: 'ph', width: 15 },
             ];
 
             // Add data rows
@@ -222,10 +222,7 @@ async function createExcelFileForBatchIds(batchIds) {
                         row.co2_concentration !== null
                             ? parseInt(row.co2_concentration, 10)
                             : '',
-                    pressure_upper:
-                        row.pressure_upper !== null
-                            ? parseFloat(row.pressure_upper)
-                            : '',
+                    ph: row.ph !== null ? parseFloat(row.ph) : '',
                 });
             });
         }

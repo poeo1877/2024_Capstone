@@ -3,20 +3,18 @@ document.addEventListener('DOMContentLoaded', function () {
         .getElementById('temperatureChart')
         .getContext('2d');
     var ctxCo2Chart = document.getElementById('co2Chart').getContext('2d');
-    var ctxPressureChart = document
-        .getElementById('pressureChart')
-        .getContext('2d');
+    var ctxpHChart = document.getElementById('pHChart').getContext('2d');
 
     var baseURL = window.location.origin;
     var co2DataLoaded = false;
-    var pressureDataLoaded = false;
+    var pHDataLoaded = false;
 
     var co2Data = [];
-    var pressureData = [];
+    var pHData = [];
 
     var temperatureAnnotations = [];
     var co2Annotations = [];
-    var pressureAnnotations = [];
+    var pHAnnotations = [];
 
     // 랜덤 색상 생성 함수
     function getRandomColor() {
@@ -128,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             enabled: true,
                             mode: 'xy',
                             threshold: 10, // 팬이 발생하기 위한 최소 움직임
-                            modifierKey: 'ctrl', // Ctrl 키를 누른 상태에서만 팬 가능  
+                            modifierKey: 'ctrl', // Ctrl 키를 누른 상태에서만 팬 가능
                         },
                         zoom: {
                             wheel: {
@@ -160,8 +158,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var co2Chart = createChart(ctxCo2Chart, co2Datasets);
 
     // 압력 차트 생성
-    var pressureDatasets = createDatasets(pressureData, 'pressure_upper');
-    var pressureChart = createChart(ctxPressureChart, pressureDatasets);
+    var pHDatasets = createDatasets(pHData, 'ph');
+    var pHChart = createChart(ctxpHChart, pHDatasets);
 
     // 더블클릭 이벤트 핸들러 추가
     function addDoubleClickZoomOut(chart, chartElementId) {
@@ -174,14 +172,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     addDoubleClickZoomOut(temperatureChart, 'temperatureChart');
     addDoubleClickZoomOut(co2Chart, 'co2Chart');
-    addDoubleClickZoomOut(pressureChart, 'pressureChart');
+    addDoubleClickZoomOut(pHChart, 'pHChart');
 
     document
         .getElementById('temperature-btn')
         .addEventListener('click', function () {
             document.getElementById('temperatureChart').style.display = 'block';
             document.getElementById('co2Chart').style.display = 'none';
-            document.getElementById('pressureChart').style.display = 'none';
+            document.getElementById('pHChart').style.display = 'none';
             temperatureChart.resetZoom();
             temperatureChart.update();
         });
@@ -210,38 +208,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         document.getElementById('temperatureChart').style.display = 'none';
         document.getElementById('co2Chart').style.display = 'block';
-        document.getElementById('pressureChart').style.display = 'none';
+        document.getElementById('pHChart').style.display = 'none';
     });
 
-    document
-        .getElementById('pressure-btn')
-        .addEventListener('click', function () {
-            if (!pressureDataLoaded) {
-                var batchIdsQuery = batchIds.join(',');
-                fetch(`${baseURL}/api/sensor/pressure?batchId=${batchIdsQuery}`)
-                    .then((response) => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then((data) => {
-                        pressureDataLoaded = true;
-                        pressureDatasets = createDatasets(
-                            data,
-                            'pressure_upper',
-                        );
-                        pressureChart.data.datasets = pressureDatasets;
-                        pressureChart.update();
-                    })
-                    .catch((error) =>
-                        console.error('Error fetching pressure data:', error),
-                    );
-            } else {
-                pressureChart.update();
-            }
-            document.getElementById('temperatureChart').style.display = 'none';
-            document.getElementById('co2Chart').style.display = 'none';
-            document.getElementById('pressureChart').style.display = 'block';
-        });
+    document.getElementById('ph-btn').addEventListener('click', function () {
+        if (!pHDataLoaded) {
+            var batchIdsQuery = batchIds.join(',');
+            fetch(`${baseURL}/api/sensor/ph?batchId=${batchIdsQuery}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    pHDataLoaded = true;
+                    pHDatasets = createDatasets(data, 'ph');
+                    pHChart.data.datasets = pHDatasets;
+                    pHChart.update();
+                })
+                .catch((error) =>
+                    console.error('Error fetching pressure data:', error),
+                );
+        } else {
+            pHChart.update();
+        }
+        document.getElementById('temperatureChart').style.display = 'none';
+        document.getElementById('co2Chart').style.display = 'none';
+        document.getElementById('pHChart').style.display = 'block';
+    });
 });

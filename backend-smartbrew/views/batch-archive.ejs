@@ -2,91 +2,150 @@
             Content body start
         ***********************************-->
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
-					<button type="button" class="btn btn-rounded btn-outline-dark" id="temperature-btn" style="width: 50%">온도</button>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
-					<button type="button" class="btn btn-rounded btn-outline-dark" id="co2-btn" style="width: 50%">이산화탄소</button>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-body" style="display: flex; justify-content: center; align-items: center">
-					<button type="button" class="btn btn-rounded btn-outline-dark" id="pressure-btn" style="width: 50%">압력</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div
+                    class="card-body"
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    "
+                >
+                    <button
+                        type="button"
+                        class="btn btn-rounded btn-outline-dark"
+                        id="temperature-btn"
+                        style="width: 50%"
+                    >
+                        온도
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div
+                    class="card-body"
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    "
+                >
+                    <button
+                        type="button"
+                        class="btn btn-rounded btn-outline-dark"
+                        id="co2-btn"
+                        style="width: 50%"
+                    >
+                        이산화탄소
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div
+                    class="card-body"
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    "
+                >
+                    <button
+                        type="button"
+                        class="btn btn-rounded btn-outline-dark"
+                        id="ph-btn"
+                        style="width: 50%"
+                    >
+                        pH
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<!-- /# column -->
-	<div class="row">
-		<div class="col-xl col-lg col-md">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">Data Overview</h4>
-					<button type="submit" class="btn btn-dark" id="downloadExcel">Excel로 다운로드</button>
-				</div>
-				<div class="card-body">
-					<div class="row">
-						<div class="col-xl col-lg">
-							<script>
-								// EJS 템플릿에서 데이터를 JavaScript 변수로 설정
-								var batchIds = JSON.parse('<%- batchIds %>');
-								// EJS 템플릿에서 데이터를 JavaScript 변수로 전달
-								var temperatureData = JSON.parse('<%- temperatureData %>');
-								console.log(temperatureData);
-							</script>
-							<canvas id="temperatureChart" style="display: block; pointer-events: auto"></canvas>
-							<canvas id="co2Chart" style="display: none; pointer-events: auto"></canvas>
-							<canvas id="pressureChart" style="display: none; pointer-events: auto"></canvas>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
-	<!-- 이 아래에서 통계 같은 것 시각화-->
-	<div class="row">
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터</h4>
-				</div>
-				<div class="card-body">
-					<canvas id="heatmap"></canvas>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터 2</h4>
-				</div>
-				<div class="card-body">
-					<canvas id="density-plot"></canvas>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="card">
-				<div class="card-header">
-					<h4 class="card-title">데이터 3</h4>
-				</div>
-				<div class="card-body">
-					<div id="histogram"></div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- /# column -->
+    <div class="row">
+        <div class="col-xl col-lg col-md">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Data Overview</h4>
+                    <button
+                        type="submit"
+                        class="btn btn-dark"
+                        id="downloadExcel"
+                    >
+                        Excel로 다운로드
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl col-lg">
+                            <script>
+                                // EJS 템플릿에서 데이터를 JavaScript 변수로 설정
+                                var batchIds = JSON.parse('<%- batchIds %>');
+                                // EJS 템플릿에서 데이터를 JavaScript 변수로 전달
+                                var temperatureData = JSON.parse(
+                                    '<%- temperatureData %>',
+                                );
+                                console.log(temperatureData);
+                            </script>
+                            <canvas
+                                id="temperatureChart"
+                                style="display: block; pointer-events: auto"
+                            ></canvas>
+                            <canvas
+                                id="co2Chart"
+                                style="display: none; pointer-events: auto"
+                            ></canvas>
+                            <canvas
+                                id="pHChart"
+                                style="display: none; pointer-events: auto"
+                            ></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
+    <!-- 이 아래에서 통계 같은 것 시각화-->
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="heatmap"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터 2</h4>
+                </div>
+                <div class="card-body">
+                    <canvas id="density-plot"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">데이터 3</h4>
+                </div>
+                <div class="card-body">
+                    <div id="histogram"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!--**********************************
         Content body end
@@ -98,7 +157,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.2.0"></script>
 
-
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/dayjs.min.js"></script>
 <!-- Include the duration plugin -->
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/plugin/duration.js"></script>
@@ -107,7 +165,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
 
 <script>
-	dayjs.extend(window.dayjs_plugin_duration);
+    dayjs.extend(window.dayjs_plugin_duration);
 </script>
 
 <!-- Load your custom chart script after Chart.js library -->
