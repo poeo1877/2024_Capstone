@@ -15,12 +15,13 @@ const {
     DashboardLimit,
 } = require('../models');
 const {
-    getSensorDataByBatchIds,
-    getLatestSensorDataByBatchId,
-    createExcelFileForBatchIds,
-    getFermentingBatchId,
-    getSensorDataByBatchIdDashboard,
-    getLatestSensorDashboardByBatchId,
+	getSensorDataByBatchIds,
+	getLatestSensorDataByBatchId,
+	createExcelFileForBatchIds,
+	getFermentingBatchId,
+	getSensorDataByBatchIdDashboard,
+	getLatestSensorDashboardByBatchId,
+	createExcelForMaterials,
 } = require('../services/db_services');
 const { analyzeBatch } = require('../services/fastapi_service');
 
@@ -896,5 +897,20 @@ router.post('/recipe/add', upload.none(), async (req, res) => {
         });
     }
 });
+
+router.post('/download-materials-excel', async (req, res) => {
+    try {
+        const { selectedData } = req.body;
+        const excelBuffer = await createExcelForMaterials(selectedData);
+
+        res.setHeader('Content-Disposition', 'attachment; filename="materials_data.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(excelBuffer);
+    } catch (error) {
+        console.error('Error generating Excel file:', error);
+        res.status(500).send('Failed to generate Excel file');
+    }
+});
+
 
 module.exports = { router };

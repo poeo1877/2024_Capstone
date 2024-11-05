@@ -64,29 +64,31 @@
                                                     <option value="" required>
                                                         레시피를 선택하세요
                                                     </option>
-                                                    <% recipes.forEach(function(recipe){ %>
+                                                    <% recipes.forEach(function(recipe) { %>
                                                         <% 
-                                                        let recipeInfo = '정보 없음';  // 기본 값 설정
-                                                        try {
-                                                            // recipe_detail을 JSON으로 파싱
-                                                            const recipeDetail = JSON.parse(recipe.recipe_detail);
-                                                
-                                                            // 재료명과 수량을 "재료명 수량" 형식으로 변환
-                                                            if (Array.isArray(recipeDetail)) {
-                                                                recipeInfo = recipeDetail.map(material => `${material.raw_material_name} ${material.quantity}`).join(', ');
+                                                            let recipeInfo = '정보 없음';  // 기본 값 설정
+                                                            try {
+                                                                // recipe_detail에 대한 정보가 있는 경우
+                                                                const recipeDetail = recipe.recipe_detail;
+                                                    
+                                                                // 재료명, 수량, 단위를 "재료명 수량 단위" 형식으로 변환
+                                                                if (Array.isArray(recipeDetail)) {
+                                                                    recipeInfo = recipeDetail.map(material => 
+                                                                        `${material.raw_material_name} ${material.quantity}${material.unit || ''}`
+                                                                    ).join(', ');
+                                                                }
+                                                            } catch (error) {
+                                                                console.error('Error processing recipe_detail:', error);  // 오류 로깅
                                                             }
-                                                        } catch (error) {
-                                                            console.error('Error parsing recipe_detail:', error);  // 오류 로깅
-                                                        }
-                                                    %>
-                                                    <option
-                                                        value="<%= recipe.id %>"
-                                                        data-name="<%= recipe.recipe_name %>"
-                                                        data-info="<%= recipeInfo %>"
-                                                        data-product="<%= recipe.product_name %>"
-                                                    >
-                                                        <%= recipe.recipe_name%>
-                                                    </option>
+                                                        %>
+                                                        <option
+                                                            value="<%= recipe.id %>"
+                                                            data-name="<%= recipe.recipe_name %>"
+                                                            data-info="<%= recipeInfo %>"
+                                                            data-product="<%= recipe.product_name %>"
+                                                        >
+                                                            <%= recipe.recipe_name%>
+                                                        </option>
                                                     <% }); %>
                                                 </select>
                                             </div>
@@ -154,7 +156,7 @@
                                                         type="text"
                                                         id="Ratio"
                                                         class="form-control"
-                                                        placeholder="비율을 적어주세요."
+                                                        placeholder="비율을 적어주세요. (기본 비율 1)"
                                                         required
                                                     />
                                                 </div>
@@ -394,19 +396,12 @@
                         >
                             <div class="col">
                                 <label>재료</label>
-                                <select
-                                    class="form-control"
-                                    name="materials[0][raw_material_id]"
-                                    required
-                                >
-                                    <option value="">원료 선택...</option>
-                                    <% rawMaterials.forEach(function(material) {
-                                    %>
-                                    <option
-                                        value="<%= material.raw_material_id %>"
-                                    >
-                                        <%= material.raw_material_name %>
-                                    </option>
+                                <select class="form-control" name="materials[0][raw_material_id]" required>
+                                    <option value="">재료 선택...</option>
+                                    <% rawMaterials.forEach(function(material) { %>
+                                        <option value="<%= material.raw_material_id %>">
+                                            <%= material.raw_material_name %>
+                                        </option>
                                     <% }) %>
                                 </select>
                             </div>

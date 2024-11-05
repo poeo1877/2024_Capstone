@@ -130,7 +130,8 @@ $(document).ready(function() {
             { "width": "150px", "targets": 2 },
             { "width": "150px", "targets": 3 },
             { "width": "150px", "targets": 4 },
-            { "width": "300px", "targets": 5 },
+            { "width": "150px", "targets": 5 },
+            { "width": "300px", "targets": 6 },
         ],
     });
 });
@@ -145,7 +146,8 @@ $(document).ready(function() {
             { "width": "150px", "targets": 2 },
             { "width": "150px", "targets": 3 },
             { "width": "150px", "targets": 4 },
-            { "width": "300px", "targets": 5 },
+            { "width": "150px", "targets": 5 },
+            { "width": "300px", "targets": 6 },
         ]
     });
 });
@@ -160,7 +162,8 @@ $(document).ready(function() {
             { "width": "150px", "targets": 2 },
             { "width": "150px", "targets": 3 },
             { "width": "150px", "targets": 4 },
-            { "width": "300px", "targets": 5 },
+            { "width": "150px", "targets": 5 },
+            { "width": "300px", "targets": 6 },
         ]
     });
 });
