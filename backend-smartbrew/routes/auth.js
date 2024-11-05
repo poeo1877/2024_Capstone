@@ -6,6 +6,20 @@ const { Op } = require('sequelize'); // Op 연산자 가져오기
 const router = express.Router();
 const { User } = require('../models'); // User 모델 가져오기
 
+const rateLimit = require('express-rate-limit');
+
+// 메모리 기반 로그인 시도 제한 설정
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15분 동안
+    max: 5, // 최대 5번 로그인 시도 허용
+    message: "Too many login attempts from this IP, please try again after 15 minutes.",
+    handler: (req, res) => {
+        console.log(`Blocked IP due to too many login attempts: ${req.ip}`);
+        res.status(429).send('Too many login attempts. Your IP has been blocked for 15 minutes.');
+    }
+});
+
+
 // Nodemailer 설정 (Gmail 사용)
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
@@ -15,10 +29,10 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
-// 회원가입 페이지 렌더링
-router.get('/register', (req, res) => {
-	res.render('register', { error: null, showMenu: false, showHeaderFooter: false, layout: false });
-});
+// // 회원가입 페이지 렌더링
+// router.get('/register', (req, res) => {
+// 	res.render('register', { error: null, showMenu: false, showHeaderFooter: false, layout: false });
+// });
 
 // 로그인 페이지 렌더링
 router.get('/login', (req, res) => {
@@ -26,35 +40,35 @@ router.get('/login', (req, res) => {
 });
 
 // 회원가입 처리
-router.post('/register', async (req, res) => {
-	const { email, password } = req.body;
+// router.post('/register', async (req, res) => {
+// 	const { email, password } = req.body;
 
-	if (!email || !password) {
-		return res.render('register', { error: 'All fields are required.' });
-	}
+// 	if (!email || !password) {
+// 		return res.render('register', { error: 'All fields are required.' });
+// 	}
 
-	try {
-		const existingUser = await User.findOne({ where: { email } });
-		if (existingUser) {
-			return res.render('register', { error: 'Email already exists.' });
-		}
+// 	try {
+// 		const existingUser = await User.findOne({ where: { email } });
+// 		if (existingUser) {
+// 			return res.render('register', { error: 'Email already exists.' });
+// 		}
 
-		const hashedPassword = await bcrypt.hash(password, 10);
-		await User.create({
-			email,
-			password, // 원본 비밀번호 저장
-			hashedPassword, // 해시된 비밀번호 저장
-		});
+// 		const hashedPassword = await bcrypt.hash(password, 10);
+// 		await User.create({
+// 			email,
+// 			password, // 원본 비밀번호 저장
+// 			hashedPassword, // 해시된 비밀번호 저장
+// 		});
 
-		res.redirect('/login');
-	} catch (error) {
-		console.error('Registration error:', error);
-		res.status(500).render('register', { error: 'An error occurred during registration.', layout: false });
-	}
-});
+// 		res.redirect('/login');
+// 	} catch (error) {
+// 		console.error('Registration error:', error);
+// 		res.status(500).render('register', { error: 'An error occurred during registration.', layout: false });
+// 	}
+// });
 
 // 로그인 처리
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter,async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!email || !password) {

@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
 // 사용자 인증 미들웨어
 function isAuthenticated(req, res, next) {
 	// 에러 페이지와 로그인, 회원가입 페이지 접근 시 인증 제외
-	if (req.path.startsWith('/error') || req.path === '/login' || req.path === '/register') {
+	if (req.path.startsWith('/error') || req.path === '/login') {
 		return next();
 	}
 

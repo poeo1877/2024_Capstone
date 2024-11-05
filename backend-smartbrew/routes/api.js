@@ -709,16 +709,15 @@ router.get('/shutdown-raspberry-pi', (req, res) => {
 				});
 		});
 	})
-	.on('error', (err) => {
-		// SSH 연결 실패 시 예외 처리 추가
-		console.error('SSH 연결 실패: ', err);
+		.on('error', (err) => {
+			// SSH 연결 실패 시 예외 처리 추가
+			console.error('SSH 연결 실패: ', err);
 
-		// 연결 실패 시에도 정상적인 응답을 보냄
-		res.status(200).send('라즈베리파이 종료 명령을 보낼 수 없습니다. SSH 연결이 설정되지 않았습니다.');
-	})
-	.connect(raspberryPiConfig);
+			// 연결 실패 시에도 정상적인 응답을 보냄
+			res.status(200).send('라즈베리파이 종료 명령을 보낼 수 없습니다. SSH 연결이 설정되지 않았습니다.');
+		})
+		.connect(raspberryPiConfig);
 });
-
 
 const multer = require('multer');
 const upload = multer(); // multer 설정 (파일 업로드 없이 사용)

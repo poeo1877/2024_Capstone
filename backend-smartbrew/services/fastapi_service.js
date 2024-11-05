@@ -4,7 +4,7 @@ async function analyzeBatch(batchId) {
 		const response = await axios.post(
 			'http://localhost:8000/analyze',
 			{
-				batch_id: batchId,
+				batch_id: batchId
 			},
 			{
 				headers: {
@@ -12,6 +12,8 @@ async function analyzeBatch(batchId) {
 				},
 			}
 		);
+		console.log('FastAPI Response:', response);
+		return response;
 	} catch (error) {
 		console.error('Error calling FastAPI:', error.message);
 
