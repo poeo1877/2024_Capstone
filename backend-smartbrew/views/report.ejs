@@ -41,9 +41,10 @@
                             <thead style="text-align: right;">
                                 <tr>
                                     <th style="text-align: left;">입고 날짜</th>
-                                    <th>원료명</th>
+                                    <th>제품명</th>
+                                    <th>카테고리</th>
                                     <th>입고 수량</th>
-                                    <th>단가</th>
+                                    <th>단위당 가격</th>
                                     <th>총 금액</th>
                                     <th>비고</th>
                                 </tr>
@@ -53,9 +54,10 @@
                                     <tr>
                                         <td style="text-align: left;"><%= new Date(receipt.created_at).toLocaleDateString() %></td>  <!-- 입고날짜 -->
                                         <td><%= receipt.RawMaterial.raw_material_name %></td>  <!-- 원료명 -->
+                                        <td><%= receipt.RawMaterial.category %></td>  <!-- 카테고리 -->
                                         <td><%= Math.floor(receipt.quantity)%><%= receipt.RawMaterial.unit %></td>  <!-- 입고 수량 (소수점 제거) -->
-                                        <td><%= Math.floor(receipt.unit_price) %></td>  <!-- 단가 -->
-                                        <td>￦<%= (receipt.quantity * receipt.unit_price).toLocaleString() %></td>  <!-- 총 금액 (세 자리마다 쉼표, 원) -->
+                                        <td>￦<%= (Math.floor(receipt.unit_price / receipt.quantity)).toLocaleString() %></td>  <!-- 제품당 가격 -->
+                                        <td>￦<%= (receipt.unit_price).toLocaleString() %></td>  <!-- 총 금액 (세 자리마다 쉼표, 원) -->
                                         <td><%= receipt.description %></td>  <!-- 비고 -->
                                     </tr>
                                     <% }); %>
@@ -82,7 +84,8 @@
                             <thead style="text-align: right;">
                                 <tr>
                                     <th style="text-align: left;">출고 날짜</th>
-                                    <th>원료명</th>
+                                    <th>제품명</th>
+                                    <th>카테고리</th>
                                     <th>출고 수량</th>
                                     <th>출고처</th>
                                     <th></th>
@@ -94,8 +97,9 @@
                                     <tr>
                                         <td style="text-align: left;"><%= new Date(usage.created_at).toLocaleDateString() %></td>  <!-- 출고날짜 -->
                                         <td><%= usage.RawMaterial.raw_material_name %></td>  <!-- 원료명 -->
+                                        <td><%= usage.RawMaterial.category %></td>  <!-- 카테고리 -->
                                         <td><%= Math.floor(usage.quantity_used)%><%= usage.RawMaterial.unit %></td>  <!-- 출고 수량 (소수점 제거) -->
-                                        <td>Batch <%= usage.batch_id %></td>  <!-- batch_id -->
+                                        <td><%= usage.batch_id ? `Batch ${usage.batch_id}` : '임의 출고' %></td>  <!-- batch_id -->
                                         <td></td>
                                         <td><%= usage.description %></td>  <!-- 비고 -->
                                     </tr>
@@ -122,10 +126,11 @@
                         >
                             <thead style="text-align: right;">
                                 <tr>
-                                    <th>원료명</th>
+                                    <th>제품명</th>
+                                    <th>카테고리</th>
                                     <th>현재 재고량</th>
-                                    <th>최소 재고량</th>
-                                    <th>재고 상태</th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th>비고</th>
                                 </tr>
@@ -134,13 +139,12 @@
                                 <% rawMaterials.forEach(function(material) { %>
                                     <tr>
                                         <td><%= material.raw_material_name %></td>  <!-- 원료명 -->
+                                        <td><%= material.category %></td>  <!-- 카테고리 -->
                                         <td>
                                             <%= Math.floor(material.today_stock) %><%= material.unit %>  <!-- 현재 재고량 (소수점 제거) -->
                                           </td>
-                                        <td>0</td>  <!-- 최소 재고량 -->
-                                        <td>
-                                            <%= material.today_stock > 0 ? "정상" : "재고 부족" %>
-                                        </td>
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                         <td><%= material.description %></td>  <!-- 비고 -->
                                     </tr>
@@ -189,10 +193,28 @@
                         </button>
                     </div>
                 </div>
+                <div class="card">
+                    <div class="card-body">
+                        <button
+                            type="button"
+                            class="btn btn-outline-info"
+                            data-toggle="modal" 
+                            data-target="#excelDownloadModal" 
+                            style="
+                                padding: 0.5rem 1.875rem;
+                                font-size: 1.2rem;
+                                float: right;
+                                margin-right: 0.725rem;"
+                        >
+                            Excel로 다운로드
+                        </button>
+                    </div>
+              </div>
             </div>
         </div>
     </div>
-    
+
+  </div>
 </div>
   
 <!-- 원료 추가 모달 -->
@@ -208,21 +230,21 @@
         <div class="modal-body">
           <!-- 원료명 드롭다운 또는 새로운 원료 입력 -->
           <div class="form-group">
-            <label for="materialName">원료명</label>
+            <label for="materialName">제품명</label>
             <select id="materialNameSelect" class="form-control">
-              <option value="">원료 선택...</option>
+              <option value="">제품 선택...</option>
               <% rawMaterials.forEach(function(material) { %>
               <option value="<%= material.raw_material_name %>"><%= material.raw_material_name %></option>
               <% }); %>
-              <option value="new">새로운 원료 추가</option>
+              <option value="new">새로운 제품 추가</option>
             </select>
-            <input type="text" id="newMaterialName" class="form-control mt-2" placeholder="새 원료명 입력" style="display: none;">
+            <input type="text" id="newMaterialName" class="form-control mt-2" placeholder="추가할 제품명 입력" style="display: none;">
           </div>
   
           <!-- 카테고리 입력 -->
           <div class="form-group" id="categoryGroup" style="display: none;">
             <label for="category">카테고리</label>
-            <input type="text" id="category" class="form-control" placeholder="카테고리 입력">
+            <input type="text" id="category" class="form-control" placeholder="카테고리 입력 (ex. 물, 쌀, 효모 등)">
           </div>
   
           <!-- 단위 입력 -->
@@ -244,14 +266,14 @@
   
           <!-- 단가 입력 -->
           <div class="form-group">
-            <label for="unitPrice">단가</label>
-            <input type="number" id="unitPrice" class="form-control" placeholder="단가 입력">
+            <label for="unitPrice">총 금액</label>
+            <input type="number" id="unitPrice" class="form-control" placeholder="총 금액 입력">
           </div>
   
           <!-- 비고 입력 -->
           <div class="form-group">
             <label for="description">비고</label>
-            <textarea id="description" class="form-control" placeholder="비고 입력"></textarea>
+            <textarea id="description" class="form-control" placeholder="비고 입력 (처음 추가하실 때는 제품 설명을 적어주세요.)"></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -275,9 +297,9 @@
         <div class="modal-body">
           <!-- 원료명 선택 (기존 원료만 선택) -->
           <div class="form-group">
-            <label for="materialName">원료명</label>
+            <label for="materialName">제품명</label>
             <select id="materialNameSelectUsage" class="form-control">
-              <option value="">원료 선택...</option>
+              <option value="">제품 선택...</option>
               <% rawMaterials.forEach(function(material) { %>
               <option value="<%= material.raw_material_name %>"><%= material.raw_material_name %></option>
               <% }); %>
@@ -328,9 +350,9 @@
         <div class="modal-body">
           <!-- 원료명 선택 (기존 원료만 선택) -->
           <div class="form-group">
-            <label for="materialName">원료명</label>
+            <label for="materialName">제품명</label>
             <select id="materialNameSelectInventory" class="form-control">
-              <option value="">원료 선택...</option>
+              <option value="">제품 선택...</option>
               <% rawMaterials.forEach(function(material) { %>
               <option value="<%= material.raw_material_name %>"><%= material.raw_material_name %></option>
               <% }); %>
@@ -362,6 +384,41 @@
       </div>
     </div>
   </div>
+
+
+<!-- Excel 다운로드 모달 -->
+<div class="modal fade" id="excelDownloadModal" tabindex="-1" aria-labelledby="excelDownloadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="excelDownloadModalLabel">다운로드할 항목 선택</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <form id="excelDownloadForm">
+                  <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="receipts" name="dataOptions" value="receipt">
+                      <label class="form-check-label" for="receipts" style="color :black">입고</label>
+                  </div>
+                  <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="usages" name="dataOptions" value="usage">
+                      <label class="form-check-label" for="usages" style="color :black">출고</label>
+                  </div>
+                  <div class="form-check">
+                      <input type="checkbox" class="form-check-input" id="inventory" name="dataOptions" value="inventory">
+                      <label class="form-check-label" for="inventory" style="color :black">재고</label>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+              <button type="button" class="btn btn-primary" id="downloadExcelButton">다운로드</button>
+          </div>
+      </div>
+  </div>
+</div>
 
 <script src="/js/reportmodal.js"></script>
 <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>

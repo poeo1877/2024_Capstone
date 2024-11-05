@@ -239,6 +239,100 @@ async function createExcelFileForBatchIds(batchIds) {
     }
 }
 
+async function createExcelForMaterials(selectedData) {
+    const workbook = new ExcelJS.Workbook();
+
+    if (selectedData.includes('receipt')) {
+        const receipts = await db.RawMaterialReceipt.findAll({
+            include: { model: db.RawMaterial, attributes: ['raw_material_name', 'category', 'unit'] },
+        });
+        const receiptSheet = workbook.addWorksheet('입고');
+        receiptSheet.columns = [
+            { header: '입고날짜', key: 'created_at', width: 15 },
+            { header: '제품명', key: 'raw_material_name', width: 15 },
+            { header: '카테고리', key: 'category', width: 15 },
+            { header: '입고 수량', key: 'quantity', width: 15 },
+            { header: '단위당 가격', key: 'price', width: 15 },
+            { header: '총 금액', key: 'unit_price', width: 15 },
+            { header: '비고', key: 'description', width: 20 },
+        ];
+        receipts.forEach((record) => {
+            const row = receiptSheet.addRow({
+                created_at: record.created_at,
+                raw_material_name: record.RawMaterial ? record.RawMaterial.raw_material_name : '',
+                category: record.RawMaterial ? record.RawMaterial.category : '',
+                quantity: `${record.quantity} ${record.RawMaterial.unit || ''}`,
+                price : (Math.floor(record.unit_price / record.quantity)).toLocaleString(),
+                unit_price: record.unit_price,
+                description: record.description,
+            });
+
+            // 모든 셀에 오른쪽 정렬 적용
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'right' };
+            });
+            // 단가와 총 금액에 ￦ 기호 추가
+            row.getCell('price').value = `￦${(Math.floor(record.unit_price / record.quantity)).toLocaleString()}`;
+            row.getCell('unit_price').value = `￦${record.unit_price}`;
+
+        });
+    }
+
+    if (selectedData.includes('usage')) {
+        const usages = await db.RawMaterialUsage.findAll({
+            include: [{ model: db.RawMaterial, attributes: ['raw_material_name', 'category', 'unit'] }],
+        });
+        const usageSheet = workbook.addWorksheet('출고');
+        usageSheet.columns = [
+            { header: '출고날짜', key: 'created_at', width: 15 },
+            { header: '제품명', key: 'raw_material_name', width: 15 },
+            { header: '카테고리', key: 'category', width: 15 },
+            { header: '출고 수량', key: 'quantity_used', width: 15 },
+            { header: '출고처', key: 'batch_id', width: 15 },
+            { header: '비고', key: 'description', width: 20 },
+        ];
+        usages.forEach((record) => {
+            const row = usageSheet.addRow({
+                created_at: record.created_at,
+                raw_material_name: record.RawMaterial ? record.RawMaterial.raw_material_name : '',
+                category: record.RawMaterial ? record.RawMaterial.category : '',
+                quantity_used: `${record.quantity_used}${record.RawMaterial.unit || ''}`,
+                batch_id: record.batch_id,
+                description: record.description,
+            });
+            // 모든 셀에 오른쪽 정렬 적용
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'right' };
+            });
+        });
+    }
+
+    if (selectedData.includes('inventory')) {
+        const inventory = await db.RawMaterial.findAll({});
+        const inventorySheet = workbook.addWorksheet('재고');
+        inventorySheet.columns = [
+            { header: '제품명', key: 'raw_material_name', width: 15 },
+            { header: '카테고리', key: 'category', width: 15 },
+            { header: '현재 재고량', key: 'today_stock', width: 15 },
+            { header: '비고', key: 'description', width: 20 },
+        ];
+        inventory.forEach((record) => {
+            const row = inventorySheet.addRow({
+                raw_material_name: record.raw_material_name,
+                category: record.category,
+                today_stock: `${record.today_stock} ${record.unit || ''}`,
+                description: record.description,
+            })
+            // 모든 셀에 오른쪽 정렬 적용
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'right' };
+            });
+        });
+    }
+
+    return await workbook.xlsx.writeBuffer();
+}
+
 module.exports = {
     getSensorDataByBatchIds,
     getLatestSensorDataByBatchId,
@@ -246,4 +340,5 @@ module.exports = {
     getFermentingBatchId,
     getSensorDataByBatchIdDashboard,
     getLatestSensorDashboardByBatchId,
+    createExcelForMaterials,
 };

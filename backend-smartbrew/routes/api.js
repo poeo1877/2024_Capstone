@@ -7,7 +7,7 @@ const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 const { Client } = require('ssh2');
 
-const { SensorMeasurement, Alert, Batch, SensorMeasurement, Fermenter, Alert, DashboardLimit } = require('../models');
+const { SensorMeasurement, Alert, Batch, Fermenter, DashboardLimit } = require('../models');
 const {
 	getSensorDataByBatchIds,
 	getLatestSensorDataByBatchId,
@@ -15,6 +15,7 @@ const {
 	getFermentingBatchId,
 	getSensorDataByBatchIdDashboard,
 	getLatestSensorDashboardByBatchId,
+	createExcelForMaterials,
 } = require('../services/db_services');
 const { analyzeBatch } = require('../services/fastapi_service');
 
@@ -753,5 +754,20 @@ router.post('/recipe/add', upload.none(), async (req, res) => {
 		res.status(500).json({ success: false, error: 'Failed to save recipe' });
 	}
 });
+
+router.post('/download-materials-excel', async (req, res) => {
+    try {
+        const { selectedData } = req.body;
+        const excelBuffer = await createExcelForMaterials(selectedData);
+
+        res.setHeader('Content-Disposition', 'attachment; filename="materials_data.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(excelBuffer);
+    } catch (error) {
+        console.error('Error generating Excel file:', error);
+        res.status(500).send('Failed to generate Excel file');
+    }
+});
+
 
 module.exports = { router };

@@ -2,7 +2,6 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 var session = require('express-session');
 require('dotenv').config();
 
@@ -32,7 +31,6 @@ app.set('layout extractScripts', true);
 app.set('layout extractStyles', true);
 app.set('layout extractMetas', true);
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -75,7 +73,7 @@ function isAuthenticated(req, res, next) {
 
 // 모든 라우트에 대해 인증 미들웨어 적용
 app.use('/', indexRouter);
-app.use(isAuthenticated);
+//app.use(isAuthenticated);
 app.use('/dashboard', DashboardRouter);
 app.use('/batch', BatchRouter);
 app.use('/recipe', RecipeRouter);

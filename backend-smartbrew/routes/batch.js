@@ -33,9 +33,36 @@ router.get('/create', async (req, res) => {
         // Batch와 Recipe를 조인하여 데이터 가져오기
         const recipes = await Recipe.findAll({});
         const fermenters = await Fermenter.findAll({});
-        const rawMaterials = await db.RawMaterial.findAll({});
+        const rawMaterials = await db.RawMaterial.findAll({ attributes: ['raw_material_id', 'raw_material_name', 'unit'] });
+
+        // rawMaterial 데이터를 사용해 recipe_detail에 unit 정보 추가
+        const recipesWithUnits = recipes.map(recipe => {
+            let recipeDetail = [];
+            
+            // recipe_detail을 JSON 파싱
+            try {
+                recipeDetail = JSON.parse(recipe.recipe_detail);
+            } catch (error) {
+                console.error('Error parsing recipe_detail:', error);
+            }
+
+            // 각 재료에 대해 unit 정보 추가
+            const recipeDetailWithUnits = Array.isArray(recipeDetail) ? recipeDetail.map(material => {
+                const materialInfo = rawMaterials.find(rm => rm.raw_material_id === material.raw_material_id);
+                return {
+                    ...material,
+                    unit: materialInfo ? materialInfo.unit : ''
+                };
+            }) : [];
+
+            return {
+                ...recipe.toJSON(),
+                recipe_detail: recipeDetailWithUnits
+            };
+        });
+        
         // EJS 템플릿에 데이터를 전달하여 렌더링
-        res.render('batch/create', { recipes, fermenters, rawMaterials });
+        res.render('batch/create', { recipes : recipesWithUnits, fermenters, rawMaterials });
     } catch (error) {
         console.error('Error fetching batch list:', error);
         res.status(500).send('Internal Server Error');
@@ -53,8 +80,26 @@ router.post('/create', async (req, res) => {
     if (!ratio || ratio <= 0) {
         ratio = 1;  // 기본 비율
     }
-    
+
     try {
+        // 레시피에 저장된 재료 정보 가져오기
+        const recipe = await db.Recipe.findOne({ where: { recipe_id } });
+        const materials = JSON.parse(recipe.recipe_detail);
+
+        // 출고할 각 재료의 재고가 충분한지 확인
+        for (let material of materials) {
+            const adjustedQuantity = material.quantity * ratio;
+
+            // 재고 확인
+            const rawMaterial = await db.RawMaterial.findOne({
+                where: { raw_material_id: material.raw_material_id }
+            });
+
+            if (!rawMaterial || rawMaterial.today_stock < adjustedQuantity) {
+                return res.status(400).json({ error: '재고 부족' });
+            }
+        }
+
         const newBatch = await Batch.create({
             start_time: new Date(), // 현재 시간
             end_time: null, // 초기값으로 null 설정
@@ -62,10 +107,6 @@ router.post('/create', async (req, res) => {
             recipe_id: recipe_id,
             fermenter_id: fermenter_id,
         });
-
-        // 레시피에 저장된 재료 정보 가져오기
-        const recipe = await db.Recipe.findOne({ where: { recipe_id } });
-        const materials = JSON.parse(recipe.recipe_detail);
 
         // 재료마다 출고 처리
         for (let material of materials) {
@@ -85,7 +126,7 @@ router.post('/create', async (req, res) => {
 
         // 재고에서 해당 재료 출고 처리
             await db.RawMaterial.update(
-                { today_stock: db.sequelize.literal(`today_stock - ${material.quantity}`) },
+                { today_stock: db.sequelize.literal(`today_stock - ${adjustedQuantity}`) },
                 { where: { raw_material_id: material.raw_material_id } }
             );
         }
