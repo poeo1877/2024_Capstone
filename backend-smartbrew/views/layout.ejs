@@ -1,214 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<%- meta %>
-		<title>Smartbrew</title>
-		<link rel="icon" type="image/png" sizes="16x16" href="/images/logo_circle.png" />
-		<link href="/css/style.css" rel="stylesheet" />
-		<%- style %>
-	</head>
-	<body>
-		<div id="alert-container"></div>
-		<div id="main-wrapper">
-			<!-- 헤더 숨기기 -->
-			<% if (typeof showHeaderFooter === 'undefined' || showHeaderFooter) { %>
-			<!--**********************************
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <%- meta %>
+        <title>Smartbrew</title>
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/logo_circle.png"
+        />
+        <link href="/css/style.css" rel="stylesheet" />
+        <%- style %>
+    </head>
+    <body>
+        <div id="alert-container"></div>
+        <div id="main-wrapper">
+            <!-- 헤더 숨기기 -->
+            <% if (typeof showHeaderFooter === 'undefined' || showHeaderFooter)
+            { %>
+            <!--**********************************
             Nav header start
         ***********************************-->
-			<div class="nav-header">
-				<a class="brand-logo">
-					<img class="logo-abbr" style="width: 50px; height: 50px" src="/images/logo_circle.png" alt="" />
-					<img class="logo-compact" src="/images/smartbrew_logo.png" alt="" />
-					<img class="brand-title" src="/images/smartbrew_logo.png" alt="" />
-				</a>
+            <div class="nav-header">
+                <a class="brand-logo">
+                    <img
+                        class="logo-abbr"
+                        style="width: 50px; height: 50px"
+                        src="/images/logo_circle.png"
+                        alt=""
+                    />
+                    <img
+                        class="logo-compact"
+                        src="/images/smartbrew_logo.png"
+                        alt=""
+                    />
+                    <img
+                        class="brand-title"
+                        src="/images/smartbrew_logo.png"
+                        alt=""
+                    />
+                </a>
 
-				<div class="nav-control">
-					<div class="hamburger">
-						<span class="line"></span>
-						<span class="line"></span>
-						<span class="line"></span>
-					</div>
-				</div>
-			</div>
-			<!--**********************************
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="line"></span>
+                        <span class="line"></span>
+                        <span class="line"></span>
+                    </div>
+                </div>
+            </div>
+            <!--**********************************
         Nav header end
     ***********************************-->
-			<div class="header">
-				<div class="header-content">
-					<nav class="navbar navbar-expand">
-						<div class="collapse navbar-collapse justify-content-between">
-							<div class="header-left">
-								<div class="search_bar dropdown">
-									<span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-										<i class="mdi mdi-magnify"></i>
-									</span>
-									<div class="dropdown-menu p-0 m-0">
-										<form>
-											<input class="form-control" type="search" placeholder="Search" aria-label="Search" />
-										</form>
-									</div>
-								</div>
-							</div>
-							<ul class="navbar-nav header-right">
-								<li class="nav-item dropdown notification_dropdown">
-									<a class="nav-link" href="#" role="button" data-toggle="dropdown" id="notificationDropdown">
-										<i class="mdi mdi-bell"></i>
-										<div class="pulse-css"></div>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right" id="notificationList">
-										<ul class="list-unstyled" id="alertList"></ul>
-										<a class="all-notification" href="/alert">
-											See all notifications
-											<i class="ti-arrow-right"></i>
-										</a>
-									</div>
-								</li>
-								<li class="nav-item dropdown header-profile">
-									<a class="nav-link" href="#" role="button" data-toggle="dropdown">
-										<i class="mdi mdi-account"></i>
-									</a>
-									<div class="dropdown-menu dropdown-menu-right">
-										<a href="#" id="shutdownLink" class="dropdown-item">
-											<i class="icon-power"></i>
-											<span class="ml-2"> 라즈베리파이 종료 </span>
-										</a>
-										<script>
-											document.getElementById('shutdownLink').addEventListener('click', function (event) {
-												event.preventDefault(); // 기본 링크 동작을 막음
+            <div class="header">
+                <div class="header-content">
+                    <nav class="navbar navbar-expand">
+                        <div
+                            class="collapse navbar-collapse justify-content-between"
+                        >
+                            <div class="header-left">
+                                <div class="search_bar dropdown"></div>
+                            </div>
+                            <ul class="navbar-nav header-right">
+                                <li
+                                    class="nav-item dropdown notification_dropdown"
+                                >
+                                    <a
+                                        class="nav-link"
+                                        href="#"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        id="notificationDropdown"
+                                    >
+                                        <i class="mdi mdi-bell"></i>
+                                        <div class="pulse-css"></div>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu dropdown-menu-right"
+                                        id="notificationList"
+                                    >
+                                        <ul
+                                            class="list-unstyled"
+                                            id="alertList"
+                                        ></ul>
+                                        <a
+                                            class="all-notification"
+                                            href="/alert"
+                                        >
+                                            See all notifications
+                                            <i class="ti-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="nav-item dropdown header-profile">
+                                    <a
+                                        class="nav-link"
+                                        href="#"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                    >
+                                        <i class="mdi mdi-account"></i>
+                                    </a>
+                                    <div
+                                        class="dropdown-menu dropdown-menu-right"
+                                    >
+                                        <a
+                                            href="#"
+                                            id="shutdownLink"
+                                            class="dropdown-item"
+                                        >
+                                            <i class="icon-power"></i>
+                                            <span class="ml-2">
+                                                라즈베리파이 종료
+                                            </span>
+                                        </a>
+                                        <script>
+                                            document
+                                                .getElementById('shutdownLink')
+                                                .addEventListener(
+                                                    'click',
+                                                    function (event) {
+                                                        event.preventDefault(); // 기본 링크 동작을 막음
 
-												fetch('/api/shutdown-raspberry-pi', {
-													method: 'GET',
-												})
-													.then((response) => response.text())
-													.then((data) => {
-														console.log('Success:', data);
-														// 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
-													})
-													.catch((error) => {
-														console.error('Error:', error);
-													});
-											});
-										</script>
-										<a href="/email-inbox.html" class="dropdown-item">
-											<i class="icon-envelope-open"></i>
-											<span class="ml-2">Inbox</span>
-										</a>
-										<a href="/login" class="dropdown-item">
-											<i class="icon-key"></i>
-											<span class="ml-2">Logout</span>
-										</a>
-										<a href="#" id="dataTriggerLink" class="dropdown-item">
-											<span>데이터분석트리거</span>
-										</a>
-										<script>
-											document.getElementById('dataTriggerLink').addEventListener('click', function (event) {
-												event.preventDefault(); // 기본 링크 동작을 막음
+                                                        fetch(
+                                                            '/api/shutdown-raspberry-pi',
+                                                            {
+                                                                method: 'GET',
+                                                            },
+                                                        )
+                                                            .then((response) =>
+                                                                response.text(),
+                                                            )
+                                                            .then((data) => {
+                                                                console.log(
+                                                                    'Success:',
+                                                                    data,
+                                                                );
+                                                                // 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
+                                                            })
+                                                            .catch((error) => {
+                                                                console.error(
+                                                                    'Error:',
+                                                                    error,
+                                                                );
+                                                            });
+                                                    },
+                                                );
+                                        </script>
+                                        <!-- <a
+                                            href="/email-inbox.html"
+                                            class="dropdown-item"
+                                        >
+                                            <i class="icon-envelope-open"></i>
+                                            <span class="ml-2">Inbox</span>
+                                        </a> -->
+                                        <a href="/login" class="dropdown-item">
+                                            <i class="icon-key"></i>
+                                            <span class="ml-2">Logout</span>
+                                        </a>
+                                        <!-- <a
+                                            href="#"
+                                            id="dataTriggerLink"
+                                            class="dropdown-item"
+                                        >
+                                            <span>데이터분석트리거</span>
+                                        </a> -->
+                                        <script>
+                                            document
+                                                .getElementById(
+                                                    'dataTriggerLink',
+                                                )
+                                                .addEventListener(
+                                                    'click',
+                                                    function (event) {
+                                                        event.preventDefault(); // 기본 링크 동작을 막음
 
-												fetch('/api/test', {
-													method: 'GET',
-												})
-													.then((response) => response.json())
-													.then((data) => {
-														console.log('Success:', data);
-														// 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
-													})
-													.catch((error) => {
-														console.error('Error:', error);
-													});
-											});
-										</script>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</nav>
-				</div>
-			</div>
-			<% } %>
+                                                        fetch('/api/test', {
+                                                            method: 'GET',
+                                                        })
+                                                            .then((response) =>
+                                                                response.json(),
+                                                            )
+                                                            .then((data) => {
+                                                                console.log(
+                                                                    'Success:',
+                                                                    data,
+                                                                );
+                                                                // 필요한 경우, 응답 데이터를 처리하는 코드를 여기에 추가
+                                                            })
+                                                            .catch((error) => {
+                                                                console.error(
+                                                                    'Error:',
+                                                                    error,
+                                                                );
+                                                            });
+                                                    },
+                                                );
+                                        </script>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+            <% } %>
 
-			<!-- 사이드바 숨기기 -->
-			<% if (typeof showMenu === 'undefined' || showMenu) { %>
-			<div class="quixnav">
-				<div class="quixnav-scroll">
-					<ul class="metismenu" id="menu">
-						<li class="nav-label first">Main Menu</li>
-						<li>
-							<a href="/dashboard">
-								<i class="icon icon-home-minimal"></i>
-								<span class="nav-text">Dashboard</span>
-							</a>
-						</li>
-						<li>
-							<a class="has-arrow" href="javascript:void()" aria-expanded="false">
-								<i class="icon icon-analytics"></i>
-								<span class="nav-text">Batch</span>
-							</a>
-							<ul aria-expanded="false">
-								<li><a href="/batch/list">Batch list</a></li>
-							</ul>
-						</li>
-						<li>
-							<a class="has-arrow" href="javascript:void()" aria-expanded="false">
-								<i class="icon icon-single-copy-06"></i>
-								<span class="nav-text">Report</span>
-							</a>
-							<ul aria-expanded="false">
-								<li><a href="/report">원료수불부</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<% } %>
+            <!-- 사이드바 숨기기 -->
+            <% if (typeof showMenu === 'undefined' || showMenu) { %>
+            <div class="quixnav">
+                <div class="quixnav-scroll">
+                    <ul class="metismenu" id="menu">
+                        <li class="nav-label first">Main Menu</li>
+                        <li>
+                            <a href="/dashboard">
+                                <i class="icon icon-home-minimal"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="has-arrow"
+                                href="javascript:void()"
+                                aria-expanded="false"
+                            >
+                                <i class="icon icon-analytics"></i>
+                                <span class="nav-text">Batch</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="/batch/list">Batch list</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a
+                                class="has-arrow"
+                                href="javascript:void()"
+                                aria-expanded="false"
+                            >
+                                <i class="icon icon-single-copy-06"></i>
+                                <span class="nav-text">Report</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="/report">원료수불부</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <% } %>
 
-			<!-- 콘텐츠 부분 -->
-			<div class="content-body"><%- body %></div>
+            <!-- 콘텐츠 부분 -->
+            <div class="content-body"><%- body %></div>
 
-			<!-- 푸터 숨기기 -->
-			<% if (typeof showHeaderFooter === 'undefined' || showHeaderFooter) { %>
-			<div class="footer">
-				<div class="copyright">
-					<p>
-						Copyright © Designed &amp; Developed by
-						<a href="#" target="_blank">Quixkit</a>
-						2019
-					</p>
-				</div>
-			</div>
-			<% } %>
-		</div>
+            <!-- 푸터 숨기기 -->
+            <% if (typeof showHeaderFooter === 'undefined' || showHeaderFooter)
+            { %>
+            <div class="footer">
+                <div class="copyright">
+                    <p>
+                        Copyright © Designed &amp; Developed by
+                        <a href="#" target="_blank">Quixkit</a>
+                        2019
+                    </p>
+                </div>
+            </div>
+            <% } %>
+        </div>
 
-		<script src="/vendor/global/global.min.js"></script>
-		<script src="/js/quixnav-init.js"></script>
-		<script src="/js/custom.min.js"></script>
-		<script src="/vendor/highlightjs/highlight.pack.min.js"></script>
-		<%- script %>
-		<script>
-			document.getElementById('notificationDropdown').addEventListener('click', function () {
-				// pulse-css 비활성화
-				const pulseElement = document.querySelector('.pulse-css');
-				if (pulseElement) {
-					pulseElement.style.display = 'none'; // pulse-css를 비활성화
-				}
+        <script src="/vendor/global/global.min.js"></script>
+        <script src="/js/quixnav-init.js"></script>
+        <script src="/js/custom.min.js"></script>
+        <script src="/vendor/highlightjs/highlight.pack.min.js"></script>
+        <%- script %>
+        <script>
+            document
+                .getElementById('notificationDropdown')
+                .addEventListener('click', function () {
+                    // pulse-css 비활성화
+                    const pulseElement = document.querySelector('.pulse-css');
+                    if (pulseElement) {
+                        pulseElement.style.display = 'none'; // pulse-css를 비활성화
+                    }
 
-				// 여기서 알림 리스트를 가져오는 로직이 있을 수 있습니다.
-				// fetch('/api/notifications') 등으로 알림 데이터를 가져오는 부분
-			});
-			document.addEventListener('DOMContentLoaded', function () {
-				fetch('/api/alerts') // 알림 API 경로를 호출
-					.then((response) => response.json())
-					.then((alerts) => {
-						const alertList = document.getElementById('alertList');
-						const limitedAlerts = alerts.slice(0, 5);
+                    // 여기서 알림 리스트를 가져오는 로직이 있을 수 있습니다.
+                    // fetch('/api/notifications') 등으로 알림 데이터를 가져오는 부분
+                });
+            document.addEventListener('DOMContentLoaded', function () {
+                fetch('/api/alerts') // 알림 API 경로를 호출
+                    .then((response) => response.json())
+                    .then((alerts) => {
+                        const alertList = document.getElementById('alertList');
+                        const limitedAlerts = alerts.slice(0, 5);
 
-						limitedAlerts.forEach((alert) => {
-							const listItem = document.createElement('li');
-							listItem.className = 'media dropdown-item';
+                        limitedAlerts.forEach((alert) => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'media dropdown-item';
 
-							listItem.innerHTML = `
+                            listItem.innerHTML = `
                             <span class="success">
                                 <i class="ti-user"></i>
                             </span>
@@ -220,15 +311,19 @@
                                 </a>
                             </div>
                             <span class="notify-time">
-                                ${new Date(alert.alert_time).toLocaleTimeString()}  <!-- 시간 형식 변환 -->
+                                ${new Date(
+                                    alert.alert_time,
+                                ).toLocaleTimeString()}  <!-- 시간 형식 변환 -->
                             </span>
                         `;
 
-							alertList.appendChild(listItem); // 알림 항목을 리스트에 추가
-						});
-					})
-					.catch((error) => console.error('알림을 가져오는 중 오류 발생:', error));
-			});
-		</script>
-	</body>
+                            alertList.appendChild(listItem); // 알림 항목을 리스트에 추가
+                        });
+                    })
+                    .catch((error) =>
+                        console.error('알림을 가져오는 중 오류 발생:', error),
+                    );
+            });
+        </script>
+    </body>
 </html>

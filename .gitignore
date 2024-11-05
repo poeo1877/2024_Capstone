@@ -6,6 +6,7 @@ backend-smartbrew/yarn.lock
 backend-smartbrew/package-lock.json
 
 .prettierrc
+.prettierignore
 node_modules/
 
 ferment-analyzer-api/.venv/
