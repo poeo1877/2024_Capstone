@@ -49,7 +49,6 @@ router.get('/', (req, res) => {
     res.redirect('/dashboard');
 });
 
-
 router.get('/alert', async (req, res) => {
     res.render('alert');
 });
@@ -62,6 +61,8 @@ router.get('/error', async (req, res) => {
     const errorNumber = req.query.error || 100;
     let errorTitle;
     let errorMessage;
+    let errorLink;
+    let errorButtonText;
 
     switch (parseInt(errorNumber)) {
         case 400:
@@ -90,7 +91,8 @@ router.get('/error', async (req, res) => {
             errorMessage = 'An unknown error occurred.';
             break;
     }
-
+    errorLink = '/';
+    errorButtonText = 'Back to Home';
     // 헤더와 푸터를 숨기고, 에러 페이지에 필요한 정보만 전달
     res.render('error.ejs', {
         errorLink: '/',

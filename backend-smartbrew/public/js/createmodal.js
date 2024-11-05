@@ -1,17 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("DOMContentLoaded 이벤트 실행됨");
+    console.log('DOMContentLoaded 이벤트 실행됨');
     function populateRecipeDetails() {
         const select = document.getElementById('recipeSelect');
         const selectedOption = select.options[select.selectedIndex];
 
         document.getElementById('recipeName').value =
             selectedOption.getAttribute('data-name') || '';
-        document.getElementById('recipeInfo').value =
-            selectedOption.getAttribute('data-info') || '';
+        const recipeInfoField = document.getElementById('recipeInfo');
+        recipeInfoField.value = '레시피 정보를 확인하려면 클릭하세요';
+        recipeInfoField.classList.add('text-muted'); // 안내 문구를 회색으로 표시
+        recipeInfoField.dataset.info =
+            selectedOption.getAttribute('data-info') || ''; // 실제 레시피 정보를 저장
         document.getElementById('productName').value =
             selectedOption.getAttribute('data-product') || '';
     }
-
+    document
+        .getElementById('recipeInfo')
+        .addEventListener('click', function () {
+            // 데이터셋에 저장된 실제 정보를 표시하고, 회색 스타일 제거
+            this.value = this.dataset.info || '정보 없음';
+            this.classList.remove('text-muted');
+        });
     function populateFermenterDetails() {
         const select = document.getElementById('fermenterSelect');
         const selectedOption = select.options[select.selectedIndex];
@@ -23,14 +32,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 레시피 선택 시 이벤트 연결
-    document.getElementById('recipeSelect').addEventListener('change', populateRecipeDetails);
+    document
+        .getElementById('recipeSelect')
+        .addEventListener('change', populateRecipeDetails);
 
     // 발효조 선택 시 이벤트 연결
-    document.getElementById('fermenterSelect').addEventListener('change', populateFermenterDetails);
+    document
+        .getElementById('fermenterSelect')
+        .addEventListener('change', populateFermenterDetails);
 
     // 배치 생성 버튼 클릭 시 이벤트
-    document.getElementById('createBatchButton').addEventListener('click', function () {
-            event.preventDefault();  // 기본 폼 제출 방지
+    document
+        .getElementById('createBatchButton')
+        .addEventListener('click', function () {
+            event.preventDefault(); // 기본 폼 제출 방지
 
             const recipeSelect = document.getElementById('recipeSelect');
             const fermenterSelect = document.getElementById('fermenterSelect');
@@ -42,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Selected Fermenter ID:', fermenterId);
 
             let isValid = true;
-            
+
             // 발효조 선택 상태 확인
             if (!fermenterId) {
                 $('#fermenterSelect').css({
@@ -78,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (isNaN(ratio) || ratio <= 0) {
-                ratio = 1;  // 기본 비율
+                ratio = 1; // 기본 비율
             }
 
             // 서버로 데이터 전송
@@ -99,7 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         alert('Batch created successfully');
                         window.location.href = '/dashboard';
                     } else {
-                        alert('Error creating batch: ' + (data.error || 'Unknown error'));
+                        alert(
+                            'Error creating batch: ' +
+                                (data.error || 'Unknown error'),
+                        );
                     }
                 })
                 .catch((error) => {
@@ -108,17 +126,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
 
-
     // 발효조 추가 버튼 클릭 시 이벤트
     function submitFermenter() {
-        const fermenterLine = document.getElementById('fermenterLineInput').value;
-        const fermenterVolume = document.getElementById('fermenterVolumeInput').value;
-    
+        const fermenterLine =
+            document.getElementById('fermenterLineInput').value;
+        const fermenterVolume = document.getElementById(
+            'fermenterVolumeInput',
+        ).value;
+
         if (!fermenterLine || !fermenterVolume) {
             alert('발효조 라인과 크기를 입력하세요.');
             return;
         }
-    
+
         fetch('/fermenter/add', {
             method: 'POST',
             headers: {
@@ -129,50 +149,55 @@ document.addEventListener('DOMContentLoaded', function () {
                 fermenter_volume: fermenterVolume,
             }),
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                alert('발효조가 추가되었습니다.');
-    
-                // 발효조 선택 창에 새 발효조 추가
-                const fermenterSelect = document.getElementById('fermenterSelect');
-                const newOption = document.createElement('option');
-                newOption.value = data.fermenter.id; 
-                newOption.setAttribute('data-volume', data.fermenter.fermenter_volume);
-                newOption.setAttribute('data-line', data.fermenter.fermenter_line);
-                newOption.textContent = data.fermenter.fermenter_line;
-    
-                fermenterSelect.appendChild(newOption);
-    
-                // 모달 닫기 및 입력 필드 초기화
-                $('#fermenterModal').modal('hide');
-    
-                // `fermenterForm` 요소가 존재하는지 확인
-                const fermenterForm = document.getElementById('fermenterForm');
-                if (fermenterForm) {
-                    fermenterForm.reset();  // 폼이 존재할 경우에만 초기화
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('발효조가 추가되었습니다.');
+
+                    // 발효조 선택 창에 새 발효조 추가
+                    const fermenterSelect =
+                        document.getElementById('fermenterSelect');
+                    const newOption = document.createElement('option');
+                    newOption.value = data.fermenter.id;
+                    newOption.setAttribute(
+                        'data-volume',
+                        data.fermenter.fermenter_volume,
+                    );
+                    newOption.setAttribute(
+                        'data-line',
+                        data.fermenter.fermenter_line,
+                    );
+                    newOption.textContent = data.fermenter.fermenter_line;
+
+                    fermenterSelect.appendChild(newOption);
+
+                    // 모달 닫기 및 입력 필드 초기화
+                    $('#fermenterModal').modal('hide');
+
+                    // `fermenterForm` 요소가 존재하는지 확인
+                    const fermenterForm =
+                        document.getElementById('fermenterForm');
+                    if (fermenterForm) {
+                        fermenterForm.reset(); // 폼이 존재할 경우에만 초기화
+                    } else {
+                        console.error('fermenterForm not found.');
+                    }
                 } else {
-                    console.error('fermenterForm not found.');
+                    alert('발효조 추가 중 오류 발생: ' + data.error);
                 }
-            } else {
-                alert('발효조 추가 중 오류 발생: ' + data.error);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            alert('발효조 추가 중 오류가 발생했습니다.');
-        });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('발효조 추가 중 오류가 발생했습니다.');
+            });
     }
-    
-    
 
     // 글로벌 함수로 등록
     window.submitFermenter = submitFermenter;
 });
 
-
 // 전역에서 materialIndex 초기화
-let materialIndex = 1;  // 필드 추가할 때 사용할 인덱스
+let materialIndex = 1; // 필드 추가할 때 사용할 인덱스
 
 // HTML 엔티티를 디코딩하는 함수
 function decodeHtmlEntities(str) {
@@ -182,26 +207,33 @@ function decodeHtmlEntities(str) {
 }
 
 // HTML 엔티티를 디코딩하고 JSON 데이터를 가져오는 코드
-const rawMaterialsText = document.getElementById('rawMaterialsData').textContent;
+const rawMaterialsText =
+    document.getElementById('rawMaterialsData').textContent;
 const decodedText = decodeHtmlEntities(rawMaterialsText);
 const rawMaterials = JSON.parse(decodedText);
 
 // 재료 추가 버튼에 이벤트 리스너 추가
-document.getElementById("addMaterialButton").addEventListener("click", function () {
-    const materialsContainer = document.getElementById('materials');
+document
+    .getElementById('addMaterialButton')
+    .addEventListener('click', function () {
+        const materialsContainer = document.getElementById('materials');
 
-    // 새로운 필드를 추가
-    const newMaterial = document.createElement('div');
-    newMaterial.classList.add('form-group', 'form-row');
-    newMaterial.id = `material-${materialIndex}`;
+        // 새로운 필드를 추가
+        const newMaterial = document.createElement('div');
+        newMaterial.classList.add('form-group', 'form-row');
+        newMaterial.id = `material-${materialIndex}`;
 
-    // 옵션 HTML 생성
-    const optionsHtml = rawMaterials.map(material => `
+        // 옵션 HTML 생성
+        const optionsHtml = rawMaterials
+            .map(
+                (material) => `
         <option value="${material.raw_material_id}">${material.raw_material_name}</option>
-    `).join('');
+    `,
+            )
+            .join('');
 
-    // 새 필드 HTML 작성 (name 속성 추가)
-    newMaterial.innerHTML = `
+        // 새 필드 HTML 작성 (name 속성 추가)
+        newMaterial.innerHTML = `
         <div class="col">
             <label>재료</label>
             <select name="materials[${materialIndex}][raw_material_id]" id="materialSelect-${materialIndex}" class="form-control" required>
@@ -221,34 +253,35 @@ document.getElementById("addMaterialButton").addEventListener("click", function 
             <button type="button" class="btn btn-danger" style="margin-top: 30px;" onclick="removeMaterial(${materialIndex})">X</button>
         </div>
     `;
-    
-    // 새로운 필드를 materials 컨테이너에 추가
-    materialsContainer.appendChild(newMaterial);
 
-    // 단위 정보를 가져오는 부분
-    const materialSelect = document.getElementById(`materialSelect-${materialIndex}`);
-    const unitLabel = document.getElementById(`unitLabel-${materialIndex}`);
+        // 새로운 필드를 materials 컨테이너에 추가
+        materialsContainer.appendChild(newMaterial);
 
-    // 재료 선택 시 단위 가져오기
-    materialSelect.addEventListener('change', function () {
-        fetch(`/api/material/unit?id=${materialSelect.value}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.unit) {
-                    unitLabel.textContent = data.unit;  // 단위 표시
-                } else {
-                    unitLabel.textContent = "단위 없음";
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching unit:', error);
-                unitLabel.textContent = "오류";
-            });
+        // 단위 정보를 가져오는 부분
+        const materialSelect = document.getElementById(
+            `materialSelect-${materialIndex}`,
+        );
+        const unitLabel = document.getElementById(`unitLabel-${materialIndex}`);
+
+        // 재료 선택 시 단위 가져오기
+        materialSelect.addEventListener('change', function () {
+            fetch(`/api/material/unit?id=${materialSelect.value}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.unit) {
+                        unitLabel.textContent = data.unit; // 단위 표시
+                    } else {
+                        unitLabel.textContent = '단위 없음';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching unit:', error);
+                    unitLabel.textContent = '오류';
+                });
+        });
+
+        materialIndex++; // 다음 필드를 위한 인덱스 증가
     });
-
-    materialIndex++;  // 다음 필드를 위한 인덱스 증가
-});
-
 
 // 재료 삭제 함수
 function removeMaterial(index) {
@@ -256,54 +289,60 @@ function removeMaterial(index) {
     materialElement.remove();
 }
 
-document.getElementById("recipeForm").addEventListener("submit", function (event) {
-    event.preventDefault();  // 폼의 기본 제출 동작을 막음
+document
+    .getElementById('recipeForm')
+    .addEventListener('submit', function (event) {
+        event.preventDefault(); // 폼의 기본 제출 동작을 막음
 
-    const form = document.getElementById('recipeForm');
-    const formData = new FormData(form);
+        const form = document.getElementById('recipeForm');
+        const formData = new FormData(form);
 
-    // AJAX 요청으로 서버에 데이터 전송
-    fetch('/api/recipe/add', {
-        method: 'POST',
-        body: formData  // FormData로 폼 데이터 전송
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('레시피가 성공적으로 저장되었습니다.');
-            // 필요하면 페이지를 새로고침하거나 다른 작업을 수행할 수 있음
-            window.location.reload();  // 페이지 새로고침 (선택 사항)
-        } else {
-            alert('레시피 저장에 실패했습니다: ' + data.error);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('오류가 발생했습니다.');
-    });
-});
-
-document.querySelectorAll('select[name^="materials"]').forEach(selectElement => {
-    selectElement.addEventListener('change', function () {
-        const materialSelect = this;
-        const unitLabel = materialSelect.closest('.form-row').querySelector('#unitLabel');  // 해당 행의 단위 레이블 찾기
-
-        // 콘솔에 선택된 재료 ID를 출력하여 값 확인
-        console.log('Selected Material ID:', materialSelect.value);
-
-        // 선택된 재료의 단위를 가져옴
-        fetch(`/api/material/unit?id=${materialSelect.value}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.unit) {
-                    unitLabel.textContent = data.unit;  // 단위 표시
+        // AJAX 요청으로 서버에 데이터 전송
+        fetch('/api/recipe/add', {
+            method: 'POST',
+            body: formData, // FormData로 폼 데이터 전송
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('레시피가 성공적으로 저장되었습니다.');
+                    // 필요하면 페이지를 새로고침하거나 다른 작업을 수행할 수 있음
+                    window.location.reload(); // 페이지 새로고침 (선택 사항)
                 } else {
-                    unitLabel.textContent = "단위 없음";
+                    alert('레시피 저장에 실패했습니다: ' + data.error);
                 }
             })
-            .catch(error => {
-                console.error('Error fetching unit:', error);
-                unitLabel.textContent = "오류";
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
             });
     });
-});
+
+document
+    .querySelectorAll('select[name^="materials"]')
+    .forEach((selectElement) => {
+        selectElement.addEventListener('change', function () {
+            const materialSelect = this;
+            const unitLabel = materialSelect
+                .closest('.form-row')
+                .querySelector('#unitLabel'); // 해당 행의 단위 레이블 찾기
+
+            // 콘솔에 선택된 재료 ID를 출력하여 값 확인
+            console.log('Selected Material ID:', materialSelect.value);
+
+            // 선택된 재료의 단위를 가져옴
+            fetch(`/api/material/unit?id=${materialSelect.value}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.unit) {
+                        unitLabel.textContent = data.unit; // 단위 표시
+                    } else {
+                        unitLabel.textContent = '단위 없음';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error fetching unit:', error);
+                    unitLabel.textContent = '오류';
+                });
+        });
+    });
