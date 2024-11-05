@@ -194,3 +194,31 @@ document.getElementById("saveInventoryButton").addEventListener("click", functio
     }
   });
 });
+
+document.getElementById('downloadExcelButton').addEventListener('click', () => {
+  const selectedData = Array.from(document.querySelectorAll('.form-check-input:checked'))
+      .map((checkbox) => checkbox.value);
+
+  console.log("Selected Data:", selectedData);  // 콘솔로 선택된 데이터 확인
+
+  if (selectedData.length === 0) {
+      alert('다운로드할 항목을 선택하세요.');
+      return;
+  }
+
+  fetch('/api/download-materials-excel', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ selectedData }),
+  })
+  .then(response => response.blob())
+  .then(blob => {
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'materials_data.xlsx';
+      link.click();
+  })
+  .catch(error => console.error('Error downloading Excel:', error));
+});
