@@ -58,6 +58,7 @@ async def analyze_batch(request: BatchRequest):
     # 정상성 검증
     try:
         stationarity_result = check_stationarity(df['in_temperature'])
+        # stationarity_result = check_stationarity(df['co2_concentration'])
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during stationarity check: {str(e)}")
 
@@ -72,6 +73,7 @@ async def analyze_batch(request: BatchRequest):
     # 계절성 분해
     try:
         decomposition_result = decompose_seasonality(df['in_temperature'], period=1440)
+        # decomposition_result = decompose_seasonality(df['co2_concentration'], period=1440)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during seasonal decomposition: {str(e)}")
 

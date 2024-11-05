@@ -1,5 +1,24 @@
 import pandas as pd
 
+
+### co2 데이터 replace용 함수 ###
+R = 8.314  # J/(mol·K), 이상 기체 상수
+V = 0.000366588  # m^3로 변환
+
+
+# 몰질량 상수 및 부피 설정
+M_CO2 = 44.01  # CO₂의 몰질량 (g/mol)
+V_l = 0.000366588  # L 단위 부피 (몰질량 계산용)
+R_l = 22.414  # STP에서 1몰의 기체가 차지하는 부피 (L/mol)
+
+# 기존 방식의 몰질량 계산 함수 정의
+def calculate_molar_mass(ppm, volume=V_l, molar_volume=R_l, molar_mass=M_CO2):
+    mol = (ppm * volume) / (10**6 * molar_volume)
+    return mol * molar_mass
+
+#################################
+
+
 # 중복된 시간 제거 (평균으로 집계)
 def remove_duplicates(df, time_column):
     """
@@ -109,6 +128,12 @@ def preprocess_data(df, relative_time_column, columns):
         print("Warning: NaN values found after preprocessing. Performing forward fill.")
         df = df.fillna(method='ffill').fillna(method='bfill')  # Forward fill 후 backward fill 수행
 
+    ### co2 값 replace ###
+    # 이상기체 방정식을 이용한 몰질량 계산
+    df["co2_concentration"] = (df["pressure_upper"] * V) / (R * (df["in_temperature"] + 273.15)) * M_CO2
+    ######################
+    
+    
     # DataFrame을 CSV 파일로 저장
     df.to_csv('preprocessed_data.csv', index=False)
     print("DataFrame saved to preprocessed_data.csv")

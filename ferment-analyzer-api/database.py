@@ -31,6 +31,7 @@ sensor_measurement = Table(
     Column("relative_time", Integer),
 )
 
+
 # # 이 파일에서 결측치랑 데이터 전처리를 한다. 우선 임시로 이렇게
 async def get_batch_data(batch_id: int):
     query = sensor_measurement.select().where(
