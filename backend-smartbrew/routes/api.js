@@ -299,6 +299,7 @@ router.post('/sensor/measurement', async (req, res) => {
                 brix: brix || null,
                 out_temperature: out_temperature || null,
                 ph: ph || null,
+                // humidity: humidity || null,
             });
 
             await checkAlert(newSensorMeasurement);
@@ -806,7 +807,7 @@ router.get('/shutdown-raspberry-pi', (req, res) => {
         host: 'localhost', // 서버에서 라즈베리파이 접근은 localhost를 통해 이루어짐
         port: 2222, // 서버의 2222번 포트를 통해 라즈베리파이의 22번 포트로 연결
         username: 'pi', // 라즈베리파이 사용자 이름
-        password: 'your_password', // 라즈베리파이 비밀번호
+        password: 'test1234', // 라즈베리파이 비밀번호
     };
 
     conn.on('ready', () => {
@@ -816,10 +817,9 @@ router.get('/shutdown-raspberry-pi', (req, res) => {
         conn.exec('sudo poweroff', (err, stream) => {
             if (err) {
                 console.error('명령어 실행 중 오류 발생: ', err);
-                res.status(500).send(
-                    '라즈베리파이 종료 중 오류가 발생했습니다.',
-                );
-                return conn.end();
+                return res
+                    .status(500)
+                    .send('라즈베리파이 종료 중 오류가 발생했습니다.');
             }
 
             stream
@@ -841,9 +841,12 @@ router.get('/shutdown-raspberry-pi', (req, res) => {
         });
     })
         .on('error', (err) => {
+            // SSH 연결 실패 시 예외 처리 추가
             console.error('SSH 연결 실패: ', err);
-            res.status(500).send(
-                'SSH 연결에 실패했습니다. 라즈베리파이 접속 설정을 확인해주세요.',
+
+            // 연결 실패 시에도 정상적인 응답을 보냄
+            res.status(200).send(
+                '라즈베리파이 종료 명령을 보낼 수 없습니다. SSH 연결이 설정되지 않았습니다.',
             );
         })
         .connect(raspberryPiConfig);

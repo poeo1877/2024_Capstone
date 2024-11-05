@@ -7,43 +7,48 @@ const {
 } = require('../services/db_services');
 
 // /dashboard 라우터 수정
-router.get('/dashboard', async (req, res) => {
-    try {
-        // Batch ID를 가져옴
-        var batchId = await getFermentingBatchId();
+// router.get('/dashboard', async (req, res) => {
+//     try {
+//         // Batch ID를 가져옴
+//         var batchId = await getFermentingBatchId();
 
-        // batchId가 없을 경우 error.ejs로 리다이렉트
-        if (!batchId) {
-            return res.render('error.ejs', {
-                errorLink: '/batch/create',
-                errorButtonText: 'Create Batch',
-                errorNumber: '',
-                errorTitle: 'Create Batch',
-                errorMessage: 'Batch를 만드세요',
-            });
-        }
+//         // batchId가 없을 경우 error.ejs로 리다이렉트
+//         if (!batchId) {
+//             return res.render('error.ejs', {
+//                 errorLink: '/batch/create',
+//                 errorButtonText: 'Create Batch',
+//                 errorNumber: '',
+//                 errorTitle: 'Create Batch',
+//                 errorMessage: 'Batch를 만드세요',
+//             });
+//         }
 
-        const data = await getSensorDataByBatchIdDashboard(
-            batchId,
-            'in_temperature',
-        );
+//         const data = await getSensorDataByBatchIdDashboard(
+//             batchId,
+//             'in_temperature',
+//         );
 
-        // data가 배열인지 확인 (에러 방지)
-        if (!Array.isArray(data)) {
-            throw new Error('Expected data to be an array');
-        }
+//         // data가 배열인지 확인 (에러 방지)
+//         if (!Array.isArray(data)) {
+//             throw new Error('Expected data to be an array');
+//         }
 
-        // dashboard 페이지로 렌더링
-        res.render('dashboard.ejs', {
-            title: 'dashboard',
-            batchId: JSON.stringify(batchId),
-            temperatureData: JSON.stringify(data),
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server Error');
-    }
+//         // dashboard 페이지로 렌더링
+//         res.render('dashboard.ejs', {
+//             title: 'dashboard',
+//             batchId: JSON.stringify(batchId),
+//             temperatureData: JSON.stringify(data),
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Server Error');
+//     }
+// });
+// '/' 경로로 요청이 들어왔을 때 '/dashboard'로 리다이렉트
+router.get('/', (req, res) => {
+    res.redirect('/dashboard');
 });
+
 
 router.get('/alert', async (req, res) => {
     res.render('alert');

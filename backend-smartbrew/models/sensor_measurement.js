@@ -36,10 +36,6 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DECIMAL(10, 4),
                 allowNull: true,
             },
-            // humidity: {
-            // 	type: DataTypes.INTEGER,
-            // 	allowNull: true,
-            // },
             batch_id: {
                 type: DataTypes.INTEGER,
                 references: { model: 'Batch', key: 'batch_id' },
