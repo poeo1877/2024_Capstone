@@ -220,7 +220,7 @@ async function createExcelFileForBatchIds(batchIds) {
                             : '',
                     co2_concentration:
                         row.co2_concentration !== null
-                            ? parseInt(row.co2_concentration, 10)
+                            ? parseFloat(row.co2_concentration)
                             : '',
                     ph: row.ph !== null ? parseFloat(row.ph) : '',
                 });
@@ -241,7 +241,10 @@ async function createExcelForMaterials(selectedData) {
 
     if (selectedData.includes('receipt')) {
         const receipts = await db.RawMaterialReceipt.findAll({
-            include: { model: db.RawMaterial, attributes: ['raw_material_name', 'category', 'unit'] },
+            include: {
+                model: db.RawMaterial,
+                attributes: ['raw_material_name', 'category', 'unit'],
+            },
         });
         const receiptSheet = workbook.addWorksheet('입고');
         receiptSheet.columns = [
@@ -256,10 +259,14 @@ async function createExcelForMaterials(selectedData) {
         receipts.forEach((record) => {
             const row = receiptSheet.addRow({
                 created_at: record.created_at,
-                raw_material_name: record.RawMaterial ? record.RawMaterial.raw_material_name : '',
+                raw_material_name: record.RawMaterial
+                    ? record.RawMaterial.raw_material_name
+                    : '',
                 category: record.RawMaterial ? record.RawMaterial.category : '',
                 quantity: `${record.quantity} ${record.RawMaterial.unit || ''}`,
-                price : (Math.floor(record.unit_price / record.quantity)).toLocaleString(),
+                price: Math.floor(
+                    record.unit_price / record.quantity,
+                ).toLocaleString(),
                 unit_price: record.unit_price,
                 description: record.description,
             });
@@ -269,15 +276,21 @@ async function createExcelForMaterials(selectedData) {
                 cell.alignment = { horizontal: 'right' };
             });
             // 단가와 총 금액에 ￦ 기호 추가
-            row.getCell('price').value = `￦${(Math.floor(record.unit_price / record.quantity)).toLocaleString()}`;
+            row.getCell('price').value = `￦${Math.floor(
+                record.unit_price / record.quantity,
+            ).toLocaleString()}`;
             row.getCell('unit_price').value = `￦${record.unit_price}`;
-
         });
     }
 
     if (selectedData.includes('usage')) {
         const usages = await db.RawMaterialUsage.findAll({
-            include: [{ model: db.RawMaterial, attributes: ['raw_material_name', 'category', 'unit'] }],
+            include: [
+                {
+                    model: db.RawMaterial,
+                    attributes: ['raw_material_name', 'category', 'unit'],
+                },
+            ],
         });
         const usageSheet = workbook.addWorksheet('출고');
         usageSheet.columns = [
@@ -291,9 +304,13 @@ async function createExcelForMaterials(selectedData) {
         usages.forEach((record) => {
             const row = usageSheet.addRow({
                 created_at: record.created_at,
-                raw_material_name: record.RawMaterial ? record.RawMaterial.raw_material_name : '',
+                raw_material_name: record.RawMaterial
+                    ? record.RawMaterial.raw_material_name
+                    : '',
                 category: record.RawMaterial ? record.RawMaterial.category : '',
-                quantity_used: `${record.quantity_used}${record.RawMaterial.unit || ''}`,
+                quantity_used: `${record.quantity_used}${
+                    record.RawMaterial.unit || ''
+                }`,
                 batch_id: record.batch_id,
                 description: record.description,
             });
@@ -319,7 +336,7 @@ async function createExcelForMaterials(selectedData) {
                 category: record.category,
                 today_stock: `${record.today_stock} ${record.unit || ''}`,
                 description: record.description,
-            })
+            });
             // 모든 셀에 오른쪽 정렬 적용
             row.eachCell((cell) => {
                 cell.alignment = { horizontal: 'right' };

@@ -1,6 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const { Batch, Recipe, Fermenter, SensorMeasurement, rawMaterials } = require('../models');
+const {
+    Batch,
+    Recipe,
+    Fermenter,
+    SensorMeasurement,
+    rawMaterials,
+} = require('../models');
 const { getSensorDataByBatchIds } = require('../services/db_services');
 
 const db = require('../models'); // /models/index.js를 import
@@ -33,12 +39,14 @@ router.get('/create', async (req, res) => {
         // Batch와 Recipe를 조인하여 데이터 가져오기
         const recipes = await Recipe.findAll({});
         const fermenters = await Fermenter.findAll({});
-        const rawMaterials = await db.RawMaterial.findAll({ attributes: ['raw_material_id', 'raw_material_name', 'unit'] });
+        const rawMaterials = await db.RawMaterial.findAll({
+            attributes: ['raw_material_id', 'raw_material_name', 'unit'],
+        });
 
         // rawMaterial 데이터를 사용해 recipe_detail에 unit 정보 추가
-        const recipesWithUnits = recipes.map(recipe => {
+        const recipesWithUnits = recipes.map((recipe) => {
             let recipeDetail = [];
-            
+
             // recipe_detail을 JSON 파싱
             try {
                 recipeDetail = JSON.parse(recipe.recipe_detail);
@@ -47,22 +55,31 @@ router.get('/create', async (req, res) => {
             }
 
             // 각 재료에 대해 unit 정보 추가
-            const recipeDetailWithUnits = Array.isArray(recipeDetail) ? recipeDetail.map(material => {
-                const materialInfo = rawMaterials.find(rm => rm.raw_material_id === material.raw_material_id);
-                return {
-                    ...material,
-                    unit: materialInfo ? materialInfo.unit : ''
-                };
-            }) : [];
+            const recipeDetailWithUnits = Array.isArray(recipeDetail)
+                ? recipeDetail.map((material) => {
+                      const materialInfo = rawMaterials.find(
+                          (rm) =>
+                              rm.raw_material_id === material.raw_material_id,
+                      );
+                      return {
+                          ...material,
+                          unit: materialInfo ? materialInfo.unit : '',
+                      };
+                  })
+                : [];
 
             return {
                 ...recipe.toJSON(),
-                recipe_detail: recipeDetailWithUnits
+                recipe_detail: recipeDetailWithUnits,
             };
         });
-        
+
         // EJS 템플릿에 데이터를 전달하여 렌더링
-        res.render('batch/create', { recipes : recipesWithUnits, fermenters, rawMaterials });
+        res.render('batch/create', {
+            recipes: recipesWithUnits,
+            fermenters,
+            rawMaterials,
+        });
     } catch (error) {
         console.error('Error fetching batch list:', error);
         res.status(500).send('Internal Server Error');
@@ -78,7 +95,7 @@ router.post('/create', async (req, res) => {
     }
 
     if (!ratio || ratio <= 0) {
-        ratio = 1;  // 기본 비율
+        ratio = 1; // 기본 비율
     }
 
     try {
@@ -92,7 +109,7 @@ router.post('/create', async (req, res) => {
 
             // 재고 확인
             const rawMaterial = await db.RawMaterial.findOne({
-                where: { raw_material_id: material.raw_material_id }
+                where: { raw_material_id: material.raw_material_id },
             });
 
             if (!rawMaterial || rawMaterial.today_stock < adjustedQuantity) {
@@ -108,26 +125,41 @@ router.post('/create', async (req, res) => {
             fermenter_id: fermenter_id,
         });
 
+        await Fermenter.update(
+            { status: 'FERMENTING' },
+            { where: { fermenter_id: fermenter_id } },
+        );
+
         // 재료마다 출고 처리
         for (let material of materials) {
             const adjustedQuantity = material.quantity * ratio;
             // quantity 값이 null이 아닌지 확인
-            if (!material.quantity || material.quantity <= 0 || !material.raw_material_id) {
-                console.error(`Invalid data for material: ${JSON.stringify(material)}`);
-                continue;  // 잘못된 데이터는 건너뜀
+            if (
+                !material.quantity ||
+                material.quantity <= 0 ||
+                !material.raw_material_id
+            ) {
+                console.error(
+                    `Invalid data for material: ${JSON.stringify(material)}`,
+                );
+                continue; // 잘못된 데이터는 건너뜀
             }
 
             await db.RawMaterialUsage.create({
                 raw_material_id: material.raw_material_id,
-                quantity_used: adjustedQuantity,  // 사용량
+                quantity_used: adjustedQuantity, // 사용량
                 batch_id: newBatch.batch_id,
-                description : `${recipe.product_name}에서 사용`,
+                description: `${recipe.product_name}에서 사용`,
             });
 
-        // 재고에서 해당 재료 출고 처리
+            // 재고에서 해당 재료 출고 처리
             await db.RawMaterial.update(
-                { today_stock: db.sequelize.literal(`today_stock - ${adjustedQuantity}`) },
-                { where: { raw_material_id: material.raw_material_id } }
+                {
+                    today_stock: db.sequelize.literal(
+                        `today_stock - ${adjustedQuantity}`,
+                    ),
+                },
+                { where: { raw_material_id: material.raw_material_id } },
             );
         }
 
