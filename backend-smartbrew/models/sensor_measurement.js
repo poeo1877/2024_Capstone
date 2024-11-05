@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             co2_concentration: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.DECIMAL(16, 10),
                 allowNull: true,
             },
             brix: {

@@ -211,23 +211,20 @@ router.post('/sensor/stop', async (req, res) => {
  *  summary: 라즈베리파이로 측정한 센서 데이터를 DB에 저장  # 요약
  */
 router.post('/sensor/measurement', async (req, res) => {
+    const initialVolume = 50; // 초기 부피 (L)
+    const finalVolume = 200; // 48시간 후 부피 (L)
+    const R = 8.314; // 이상 기체 상수 (J/(mol·K))
+    const totalVolume = 200; // 전체 부피 (L)
+    const initialV = 29.25882; // 초기 차감 부피 (L)
+    const V1 = 69.27126; // 48시간 후 추가 차감 부피 (L)
+    const V2 = 36.5853; // 96시간 후 추가 차감 부피 (L)
+    const M_CO2 = 44.01; // CO₂의 몰질량 (g/mol)
+
     if (isStopped) {
-        return res.status(403).json({ error: 'Data storage is stopped.' }); // 정지 상태일 때 에러 반환
+        return res.status(403).json({ error: 'Data storage is stopped.' });
     }
 
     try {
-        /* 
-            라즈베리파이에서 데이터 전송시 다음과 같은 형태로 보내줘야 한다.
-            {
-                "out_temperature": 14.79,
-                "in_temperature": 23.49,
-                "pressure_upper": 999999.59,
-                "humidity": 90,
-                "co2_concentration": 3988,
-                "ph": 4.01,
-                "measured_time": "2024-06-22T02:58:00"
-            }
-        */
         let {
             co2_concentration,
             brix,
@@ -236,18 +233,29 @@ router.post('/sensor/measurement', async (req, res) => {
             in_temperature,
             ph,
             pressure_upper,
-            // humidity,
         } = req.body;
 
-        // measured_time이 null인 경우 예외 처리
-        if (!measured_time) {
-            measured_time = new Date();
-        } else {
-            measured_time = new Date(measured_time);
+        // measured_time이 null인 경우 현재 시간으로 설정
+        measured_time = measured_time ? new Date(measured_time) : new Date();
+
+        // batch_id 가져오기
+        const batch_id = await getFermentingBatchId();
+
+        // batch_id에 해당하는 recipe_ratio 조회
+        const batch = await Batch.findOne({
+            where: { batch_id: batch_id },
+        });
+
+        if (!batch) {
+            return res.status(404).json({ error: 'Batch not found.' });
         }
 
-        // batch_id 값을 가져옵니다.
-        const batch_id = await getFermentingBatchId();
+        const recipe_ratio = batch.recipe_ratio;
+
+        // 부피 조정
+        const adjustedInitialV = initialV * recipe_ratio;
+        const adjustedV1 = V1 * recipe_ratio;
+        const adjustedV2 = V2 * recipe_ratio;
 
         // 가장 처음 측정된 시간을 가져옵니다.
         const firstMeasurement = await SensorMeasurement.findOne({
@@ -256,31 +264,51 @@ router.post('/sensor/measurement', async (req, res) => {
             attributes: ['measured_time'],
         });
 
-        // relative_time을 계산합니다.
-        let relative_time = firstMeasurement
-            ? (measured_time - new Date(firstMeasurement.measured_time)) / 1000
-            : 0;
+        let relative_time = 0;
+        let volume = (initialVolume - adjustedInitialV) / 1000; // 초기 부피 설정
 
-        const newSensorMeasurement = await SensorMeasurement.create({
-            measured_time: measured_time,
-            co2_concentration: co2_concentration || null,
-            in_temperature: in_temperature || null,
-            pressure_upper: pressure_upper || null,
-            relative_time,
-            batch_id,
-            // 매번 null로 전달될 것으로 예상되는 값들
-            brix: brix || null,
-            out_temperature: out_temperature || null,
-            ph: ph || null,
-            // humidity: humidity || null,
-        });
+        if (firstMeasurement) {
+            const firstMeasuredTime = new Date(firstMeasurement.measured_time);
+            relative_time = (measured_time - firstMeasuredTime) / 1000; // 초 단위로 변환
 
-        await checkAlert(newSensorMeasurement);
-        // 데이터베이스에 새 데이터가 추가된 후 클라이언트에게 응답
-        res.status(201).json(newSensorMeasurement);
+            // 시간에 따른 V 값 조정
+            if (relative_time >= 96 * 3600) {
+                // 96시간 후
+                volume =
+                    (finalVolume - adjustedInitialV - adjustedV1 - adjustedV2) /
+                    1000;
+            } else if (relative_time >= 48 * 3600) {
+                // 48시간 후
+                volume = (finalVolume - adjustedInitialV - adjustedV1) / 1000;
+            }
+        }
+
+        // co2_concentration을 이상기체 방정식을 통해 계산
+        if (in_temperature != null && pressure_upper != null) {
+            const inTemperatureKelvin = out_temperature + 273.15;
+            const co2_concentration_calculated =
+                ((pressure_upper * volume) / (R * inTemperatureKelvin)) * M_CO2;
+
+            const newSensorMeasurement = await SensorMeasurement.create({
+                measured_time,
+                co2_concentration: co2_concentration_calculated,
+                in_temperature: in_temperature || null,
+                pressure_upper: pressure_upper || null,
+                relative_time,
+                batch_id,
+                brix: brix || null,
+                out_temperature: out_temperature || null,
+                ph: ph || null,
+            });
+
+            await checkAlert(newSensorMeasurement);
+            res.status(201).json(newSensorMeasurement);
+        } else {
+            res.status(400).json({
+                error: 'Temperature and pressure are required to calculate CO₂ concentration.',
+            });
+        }
     } catch (error) {
-        // 에러 발생 시 클라이언트에게 에러 메시지 반환
-
         res.status(500).json({ error: error.message });
     }
 });
