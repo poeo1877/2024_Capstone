@@ -15,13 +15,13 @@ const {
     DashboardLimit,
 } = require('../models');
 const {
-	getSensorDataByBatchIds,
-	getLatestSensorDataByBatchId,
-	createExcelFileForBatchIds,
-	getFermentingBatchId,
-	getSensorDataByBatchIdDashboard,
-	getLatestSensorDashboardByBatchId,
-	createExcelForMaterials,
+    getSensorDataByBatchIds,
+    getLatestSensorDataByBatchId,
+    createExcelFileForBatchIds,
+    getFermentingBatchId,
+    getSensorDataByBatchIdDashboard,
+    getLatestSensorDashboardByBatchId,
+    createExcelForMaterials,
 } = require('../services/db_services');
 const { analyzeBatch } = require('../services/fastapi_service');
 
@@ -156,6 +156,109 @@ const checkAlert = async (measurement) => {
         console.error('경계값 체크 중 오류 발생:', error);
     }
 };
+// 특정 batch_id에 대한 CO₂ 농도 업데이트 함수
+async function updateCO2ConcentrationsForBatch(batch_id) {
+    const initialVolume = 50; // 초기 부피 (L)
+    const finalVolume = 200; // 48시간 후 부피 (L)
+    const totalVolume = 200; // 전체 부피 (L)
+    const initialV = 29.25882; // 초기 차감 부피 (L)
+    const V1 = 69.27126; // 48시간 후 추가 차감 부피 (L)
+    const V2 = 36.5853; // 96시간 후 추가 차감 부피 (L)
+    const batch = await Batch.findOne({ where: { batch_id: batch_id } });
+    if (!batch) {
+        return res.status(404).json({ error: 'Batch not found.' });
+    }
+    const recipe_ratio = batch.recipe_ratio;
+    const adjustedInitialV = initialV * recipe_ratio;
+    const adjustedV1 = V1 * recipe_ratio;
+    const adjustedV2 = V2 * recipe_ratio;
+
+    const firstMeasurement = await SensorMeasurement.findOne({
+        where: { batch_id },
+        order: [['measured_time', 'ASC']],
+        attributes: ['measured_time'],
+    });
+
+    let volume = (initialVolume - adjustedInitialV) / 1000; // 초기 부피 설정
+
+    try {
+        // 특정 batch_id에 해당하는 데이터만 가져옴
+        const measurements = await SensorMeasurement.findAll({
+            where: { batch_id },
+            attributes: [
+                'data_id',
+                'pressure_upper',
+                'relative_time',
+                'out_temperature',
+            ],
+        });
+
+        // 각 측정 데이터에 대해 FastAPI 서버에 요청
+        for (const measurement of measurements) {
+            const { data_id, pressure_upper, relative_time, out_temperature } =
+                measurement;
+
+            // 필요한 데이터가 없는 경우 건너뜀
+            if (
+                pressure_upper == null ||
+                relative_time == null ||
+                out_temperature == null
+            ) {
+                console.warn(
+                    `Skipping data_id ${data_id} due to missing fields.`,
+                );
+                continue;
+            }
+            if (relative_time >= 96 * 3600) {
+                volume =
+                    (finalVolume - adjustedInitialV - adjustedV1 - adjustedV2) /
+                    1000;
+            } else if (relative_time >= 48 * 3600) {
+                volume = (finalVolume - adjustedInitialV - adjustedV1) / 1000;
+            }
+            out_temperature_m = out_temperature + 273;
+            pressure_upper_m = pressure_upper * 100;
+            relative_time_m = relative_time / 86400;
+            try {
+                const transformedData = {
+                    out_temperature: out_temperature_m, // 섭씨에서 켈빈으로 변환
+                    pressure_upper: pressure_upper_m, // hPa에서 Pa로 변환
+                    relative_time: relative_time_m, // 초를 일(day) 단위로 변환
+                    volume: volume, // 필요시 변경할 부피 값
+                };
+                // FastAPI 서버에 데이터 전송
+                const response = await axios.post(
+                    'http://127.0.0.1:8000/predict_co2',
+                    transformedData,
+                );
+
+                const co2_concentration_calculated =
+                    response.data.co2_concentration * 1e6;
+
+                // 예측된 CO₂ 농도로 업데이트
+                await SensorMeasurement.update(
+                    { co2_concentration: co2_concentration_calculated },
+                    { where: { data_id } },
+                );
+
+                console.log(
+                    `Updated record data_id ${data_id} with CO₂ concentration: ${co2_concentration_calculated}`,
+                );
+            } catch (fastApiError) {
+                console.error(
+                    `FastAPI 서버 요청 실패: data_id ${data_id}`,
+                    fastApiError.message,
+                );
+            }
+        }
+
+        console.log(`Batch ID ${batch_id}의 CO₂ 농도 업데이트 완료`);
+    } catch (error) {
+        console.error('데이터 업데이트 중 에러 발생:', error.message);
+    }
+}
+
+// updateCO2ConcentrationsForBatch(12);
 
 // 정지 상태를 설정하는 라우터
 router.post('/sensor/start', (req, res) => {
@@ -214,12 +317,10 @@ router.post('/sensor/stop', async (req, res) => {
 router.post('/sensor/measurement', async (req, res) => {
     const initialVolume = 50; // 초기 부피 (L)
     const finalVolume = 200; // 48시간 후 부피 (L)
-    const R = 8.314; // 이상 기체 상수 (J/(mol·K))
     const totalVolume = 200; // 전체 부피 (L)
     const initialV = 29.25882; // 초기 차감 부피 (L)
     const V1 = 69.27126; // 48시간 후 추가 차감 부피 (L)
     const V2 = 36.5853; // 96시간 후 추가 차감 부피 (L)
-    const M_CO2 = 44.01; // CO₂의 몰질량 (g/mol)
 
     if (isStopped) {
         return res.status(403).json({ error: 'Data storage is stopped.' });
@@ -227,7 +328,6 @@ router.post('/sensor/measurement', async (req, res) => {
 
     try {
         let {
-            co2_concentration,
             brix,
             measured_time,
             out_temperature,
@@ -236,29 +336,19 @@ router.post('/sensor/measurement', async (req, res) => {
             pressure_upper,
         } = req.body;
 
-        // measured_time이 null인 경우 현재 시간으로 설정
         measured_time = measured_time ? new Date(measured_time) : new Date();
-
-        // batch_id 가져오기
         const batch_id = await getFermentingBatchId();
 
-        // batch_id에 해당하는 recipe_ratio 조회
-        const batch = await Batch.findOne({
-            where: { batch_id: batch_id },
-        });
-
+        const batch = await Batch.findOne({ where: { batch_id: batch_id } });
         if (!batch) {
             return res.status(404).json({ error: 'Batch not found.' });
         }
 
         const recipe_ratio = batch.recipe_ratio;
-
-        // 부피 조정
         const adjustedInitialV = initialV * recipe_ratio;
         const adjustedV1 = V1 * recipe_ratio;
         const adjustedV2 = V2 * recipe_ratio;
 
-        // 가장 처음 측정된 시간을 가져옵니다.
         const firstMeasurement = await SensorMeasurement.findOne({
             where: { batch_id },
             order: [['measured_time', 'ASC']],
@@ -272,39 +362,50 @@ router.post('/sensor/measurement', async (req, res) => {
             const firstMeasuredTime = new Date(firstMeasurement.measured_time);
             relative_time = (measured_time - firstMeasuredTime) / 1000; // 초 단위로 변환
 
-            // 시간에 따른 V 값 조정
             if (relative_time >= 96 * 3600) {
-                // 96시간 후
                 volume =
                     (finalVolume - adjustedInitialV - adjustedV1 - adjustedV2) /
                     1000;
             } else if (relative_time >= 48 * 3600) {
-                // 48시간 후
                 volume = (finalVolume - adjustedInitialV - adjustedV1) / 1000;
             }
         }
 
-        // co2_concentration을 이상기체 방정식을 통해 계산
-        if (in_temperature != null && pressure_upper != null) {
-            const inTemperatureKelvin = out_temperature + 273.15;
-            const co2_concentration_calculated =
-                ((pressure_upper * volume) / (R * inTemperatureKelvin)) * M_CO2;
+        if (out_temperature != null && pressure_upper != null) {
+            try {
+                const response = await axios.post(
+                    'http://127.0.0.1:8000/predict_co2',
+                    {
+                        out_temperature: out_temperature + 273.15,
+                        pressure_upper: pressure_upper * 100,
+                        relative_time: relative_time / 86400,
+                        volume: volume,
+                    },
+                );
 
-            const newSensorMeasurement = await SensorMeasurement.create({
-                measured_time,
-                co2_concentration: co2_concentration_calculated,
-                in_temperature: in_temperature || null,
-                pressure_upper: pressure_upper || null,
-                relative_time,
-                batch_id,
-                brix: brix || null,
-                out_temperature: out_temperature || null,
-                ph: ph || null,
-                // humidity: humidity || null,
-            });
+                const co2_concentration_calculated =
+                    response.data.co2_concentration * 1e6;
 
-            await checkAlert(newSensorMeasurement);
-            res.status(201).json(newSensorMeasurement);
+                const newSensorMeasurement = await SensorMeasurement.create({
+                    measured_time,
+                    co2_concentration: co2_concentration_calculated,
+                    in_temperature: in_temperature || null,
+                    pressure_upper: pressure_upper || null,
+                    relative_time,
+                    batch_id,
+                    brix: brix || null,
+                    out_temperature: out_temperature || null,
+                    ph: ph || null,
+                });
+
+                await checkAlert(newSensorMeasurement);
+                res.status(201).json(newSensorMeasurement);
+            } catch (fastApiError) {
+                console.error('FastAPI 서버 에러:', fastApiError);
+                res.status(500).json({
+                    error: 'Failed to calculate CO₂ concentration from FastAPI server.',
+                });
+            }
         } else {
             res.status(400).json({
                 error: 'Temperature and pressure are required to calculate CO₂ concentration.',
@@ -903,14 +1004,19 @@ router.post('/download-materials-excel', async (req, res) => {
         const { selectedData } = req.body;
         const excelBuffer = await createExcelForMaterials(selectedData);
 
-        res.setHeader('Content-Disposition', 'attachment; filename="materials_data.xlsx"');
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader(
+            'Content-Disposition',
+            'attachment; filename="materials_data.xlsx"',
+        );
+        res.setHeader(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
         res.send(excelBuffer);
     } catch (error) {
         console.error('Error generating Excel file:', error);
         res.status(500).send('Failed to generate Excel file');
     }
 });
-
 
 module.exports = { router };

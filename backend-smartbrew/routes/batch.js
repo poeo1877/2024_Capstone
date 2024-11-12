@@ -11,6 +11,10 @@ const { getSensorDataByBatchIds } = require('../services/db_services');
 
 const db = require('../models'); // /models/index.js를 import
 
+const fs = require('fs');
+const axios = require('axios');
+const path = require('path');
+
 router.get('/list', async (req, res) => {
     try {
         // Batch와 Recipe를 조인하여 데이터 가져오기
@@ -169,12 +173,116 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ error: 'Database error' });
     }
 });
+// FastAPI 서버에서 SVG 파일 경로를 포함한 JSON 데이터를 받아오는 함수
+async function getSvgFilePaths(batchId) {
+    try {
+        // FastAPI 서버로 POST 요청을 보내어 batchId에 해당하는 분석 결과를 받음
+        const response = await axios.post('http://127.0.0.1:8000/analyze/', {
+            batch_id: batchId,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching SVG file paths from FastAPI:', error);
+        throw error;
+    }
+}
+
+// Function to save SVG content to files
+async function saveSvgFiles(batchId) {
+    try {
+        const result = await getSvgFilePaths(batchId);
+
+        // Assuming the result contains SVG content (value) for histograms, volatility analysis, and change point detection
+        const allSvgContents = [
+            { type: 'histograms', content: result.histograms },
+            {
+                type: 'volatility_analysis',
+                content: result.volatility_analysis,
+            },
+            {
+                type: 'change_point_detection',
+                content: result.change_point_detection,
+            },
+            {
+                type: 'clustring',
+                content: result.clustring,
+            },
+        ];
+
+        // Iterate over each SVG content and save to a file
+        for (const svgCategory of allSvgContents) {
+            for (const svgContent of svgCategory.content) {
+                // Determine the type (temperature or co2) and construct the file name accordingly
+                let typePrefix = ''; // Either 'temperature' or 'co2'
+
+                if (svgCategory.type === 'histograms') {
+                    // Histograms: First SVG is for temperature, second is for CO2
+                    if (svgContent.includes('온도')) {
+                        // Check if the content is related to temperature
+                        typePrefix = 'temperature';
+                    } else {
+                        typePrefix = 'co2';
+                    }
+                } else if (svgCategory.type === 'volatility_analysis') {
+                    // Volatility Analysis: First SVG is for temperature, second is for CO2
+                    if (svgContent.includes('온도')) {
+                        typePrefix = 'temperature';
+                    } else {
+                        typePrefix = 'co2';
+                    }
+                } else if (svgCategory.type === 'change_point_detection') {
+                    // Change Point Detection: First SVG is for temperature, second is for CO2
+                    if (svgContent.includes('온도')) {
+                        typePrefix = 'temperature';
+                    } else {
+                        typePrefix = 'co2';
+                    }
+                } else if (svgCategory.type === 'clustring') {
+                    // Change Point Detection: First SVG is for temperature, second is for CO2
+                    if (svgContent.includes('온도')) {
+                        typePrefix = 'temperature';
+                    } else {
+                        typePrefix = 'co2';
+                    }
+                }
+
+                // Construct the file name based on the type (temperature/co2) and analysis type
+                const fileName = `${typePrefix}_${svgCategory.type}_${batchId}.svg`;
+                const filePath = path.join(
+                    'public',
+                    'images',
+                    'svgs',
+                    fileName,
+                ); // Save to 'svgs' directory
+
+                // Ensure the 'svgs' directory exists
+                if (!fs.existsSync(path.dirname(filePath))) {
+                    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+                }
+
+                // Check if svgContent is a string (the actual SVG markup) and save it to file
+                if (typeof svgContent === 'string') {
+                    fs.writeFileSync(filePath, svgContent);
+                    console.log(`SVG saved to: ${filePath}`);
+                } else {
+                    console.error(
+                        'Invalid SVG content format, expected string',
+                    );
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error saving SVG files:', error);
+    }
+}
 
 router.get('/archive', async (req, res) => {
     try {
         //list에서 사용자가 체크해서 넘어온 설정값을 변수에 저장하였다고 가정
         var batchIds = req.query.batchIds.split(',');
-
+        for (const batchId of batchIds) {
+            saveSvgFiles(batchId);
+        }
         const data = await getSensorDataByBatchIds(batchIds, 'in_temperature');
         // data가 배열인지 확인 (에러 방지)
         if (!Array.isArray(data)) {

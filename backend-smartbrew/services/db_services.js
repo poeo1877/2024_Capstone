@@ -135,7 +135,7 @@ async function getLatestSensorDataByBatchId(batchId) {
     try {
         const query = `
             SELECT 
-                co2_concentration,
+                ROUND(co2_concentration, 3) as co2_concentration,
                 in_temperature,
                 ph
             FROM sensor_measurement

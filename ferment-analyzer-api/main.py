@@ -1,94 +1,65 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from databases import Database
-from sqlalchemy import Table, Column, Integer, MetaData, Numeric, BigInteger, TIMESTAMP, String, ForeignKey, Enum
-import pandas as pd
-from statsmodels.tsa.seasonal import seasonal_decompose
-import enum
 from pydantic import BaseModel
+import seaborn as sns
+import pandas as pd
+import os
+from typing import List
+# from prophet import Prophet
+
+import pickle
 
 
-# 개발환경에서 필요한 패키지 설치
+
+from database import get_batch_data, connect_to_db, disconnect_from_db, database
+# from stationarity_analysis import check_stationarity
+# from trend_analysis import decompose_seasonality
+from data_preprocessing import preprocess_data
+from chart import save_histograms, save_volatility_analysis, save_change_point_detection
+from clustering import resample_data, chunk_data, extract_features, perform_clustering, plot_clustering_results
+
+import matplotlib
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
-
-# kilo7816 자리에 자신의 DB 비밀번호 입력
-DATABASE_URL = "postgresql://postgres:test1234@localhost/COREDB"
-
-database = Database(DATABASE_URL)
-metadata = MetaData()
-
-# Define enums
-class FermentationStatus(enum.Enum):
-    WAITING = "WAITING"
-    FERMENTING = "FERMENTING"
-    COMPLETED = "COMPLETED"
-    ERROR = "ERROR"
-
-# Define tables
-fermenter = Table(
-    "fermenter",
-    metadata,
-    Column("fermenter_id", Integer, primary_key=True),
-    Column("fermenter_volume", Integer, nullable=False),
-    Column("status", Enum(FermentationStatus), default=FermentationStatus.WAITING, nullable=False),
-    Column("fermenter_line", String(100)),
-)
-
-sensor_measurement = Table(
-    "sensor_measurement",
-    metadata,
-    Column("data_id", BigInteger, primary_key=True),
-    Column("co2_concentration", Integer),
-    Column("brix", Numeric(5, 3)),
-    Column("measured_time", TIMESTAMP),
-    Column("out_temperature", Numeric(5, 3)),
-    Column("in_temperature", Numeric(5, 3)),
-    Column("ph", Numeric(4, 2)),
-    Column("pressure_upper", Numeric(10, 4)),
-    Column("pressure_lower", Numeric(10, 4)),
-    Column("batch_id", Integer, ForeignKey("batch.batch_id")),
-    Column("relative_time", Integer),
-)
-
-batch = Table(
-    "batch",
-    metadata,
-    Column("batch_id", Integer, primary_key=True),
-    Column("start_time", TIMESTAMP, default="now()", nullable=False),
-    Column("end_time", TIMESTAMP),
-    Column("recipe_ratio", String(10), default="1.0"),
-    Column("recipe_id", Integer, ForeignKey("recipe.recipe_id")),
-    Column("fermenter_id", Integer, ForeignKey("fermenter.fermenter_id")),
-)
-
-recipe = Table(
-    "recipe",
-    metadata,
-    Column("recipe_id", Integer, primary_key=True),
-    Column("created_at", TIMESTAMP, default="CURRENT_TIMESTAMP"),
-    Column("updated_at", TIMESTAMP),
-    Column("recipe_detail", String),
-    Column("recipe_name", String(100), nullable=False),
-    Column("product_name", String(100), nullable=False),
-)
 
 app = FastAPI()
 
+# 한글 폰트 설정
+plt.rc("font", family = "Malgun Gothic")
+sns.set(font="Malgun Gothic", 
+rc={"axes.unicode_minus":False}, style='white')
+
+plt.rcParams["font.size"] = 14  # 기본 폰트 크기 설정
+plt.rcParams["axes.titlesize"] = 18  # 제목 폰트 크기 설정
+plt.rcParams["axes.labelsize"] = 16  # 축 레이블 폰트 크기 설정
+plt.rcParams["xtick.labelsize"] = 14  # x축 틱 라벨 폰트 크기 설정
+plt.rcParams["ytick.labelsize"] = 14  # y축 틱 라벨 폰트 크기 설정
+plt.rcParams["legend.fontsize"] = 14  # 범례 폰트 크기 설정
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allow all origins. 나중에 보안을 위해 수정 필요
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+class BatchRequest(BaseModel):
+    batch_id: int
+    
 @app.on_event("startup")
 async def startup():
-    await database.connect()
+    await connect_to_db()
 
 @app.on_event("shutdown")
 async def shutdown():
-    await database.disconnect()
+    await disconnect_from_db()
+
+
+@app.get("/")
+async def root():
+    return {"message": "FastAPI server is running"}
+
 
 
 
@@ -99,63 +70,100 @@ class BatchRequest(BaseModel):
 @app.post("/analyze")
 async def analyze_batch(request: BatchRequest):
     batch_id = request.batch_id
+    output_dir = os.getcwd()
 
-    query = sensor_measurement.select().where(
-        sensor_measurement.c.batch_id == batch_id,
-        sensor_measurement.c.measured_time.isnot(None)
-    ).order_by(sensor_measurement.c.data_id.asc())
-    batch_data = await database.fetch_all(query)
+    try:
+        # Fetch the data
+        try:
+            df = await get_batch_data(batch_id)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
-    # Convert to DataFrame
-    df = pd.DataFrame([dict(row) for row in batch_data])
-    
+        if df.empty:
+            raise HTTPException(status_code=404, detail="No data found for the given batch_id")
+
+
+        histograms = save_histograms(df, output_dir, batch_id)
+
+        # 데이터 전처리
+        try:
+            # df = preprocess_data(df, relative_time_column='relative_time', columns=['in_temperature', 'co2_concentration'])
+            df = preprocess_data(df, relative_time_column='relative_time', columns=['in_temperature', 'co2_concentration'])
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error during data preprocessing: {str(e)}")
+        
+
+        # Generate the charts and get the SVG paths in JSON format
+        
+        volatility_analysis = save_volatility_analysis(df, output_dir, batch_id)
+        change_point_detection = save_change_point_detection(df, output_dir, batch_id)
+
+        df['measured_time'] = pd.to_datetime(df['measured_time'])
+        df.set_index('measured_time', inplace=True)
+        
+        # 클러스터링에 사용하기 전에 결측값을 제거
+        features = df[['in_temperature', 'co2_concentration']]  # 클러스터링에 사용할 열 선택
+        features = features.dropna()  # 결측값이 있는 행 제거
+        
+        sensor_data_resampled = resample_data(features)
+        interval_points = 12 * 60 // 10  # 12시간에 해당하는 포인트 수 (10분 간격)
+        chunks = chunk_data(sensor_data_resampled, interval_points)
+
+        temperature_features = extract_features(chunks, 'in_temperature')
+        co2_features = extract_features(chunks, 'co2_concentration')
+
+        param_grid = {
+            'min_cluster_size': [2, 5, 10, 15],
+            'min_samples': [1, 5, 10]
+        }
+
+        best_temperature_labels, best_temperature_n_clusters = perform_clustering(temperature_features, param_grid)
+        best_co2_labels, best_co2_n_clusters = perform_clustering(co2_features, param_grid)
+
+        svg_temp_clustring = plot_clustering_results(sensor_data_resampled, temperature_features, best_temperature_labels, interval_points, 'in_temperature', os.path.join(os.getcwd(), f'temperature_clustering_{batch_id}.svg'))
+        svg_co2_clustring = plot_clustering_results(sensor_data_resampled, co2_features, best_co2_labels, interval_points, 'co2_concentration', os.path.join(os.getcwd(), f'co2_clustering_{batch_id}.svg'))
+
+        clustring = [svg_temp_clustring , svg_co2_clustring]
+        
+        # Combine results into a JSON structure
+        result = {
+            "histograms": histograms,
+            "volatility_analysis": volatility_analysis,
+            "change_point_detection": change_point_detection,
+            "clustring": clustring
+        }
+
+
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing the batch: {str(e)}")
+
     if df.empty:
         raise HTTPException(status_code=404, detail="No data found for the given batch_id")
 
-    # Check if 'measured_time' is in DataFrame columns
-    if 'measured_time' not in df.columns:
-        raise HTTPException(status_code=400, detail="'measured_time' column not found in fetched data")
-
-    df['measured_time'] = pd.to_datetime(df['measured_time'])
-    df.set_index('measured_time', inplace=True)
-
-    # Drop rows with missing values in 'in_temperature'
-    df = df.dropna(subset=['in_temperature'])
-    
-    # Ensure enough data for decomposition
-    if len(df) < 24:  # Assuming a period of 12, need at least 2 cycles
-        raise HTTPException(status_code=400, detail="Not enough data for seasonal decomposition (requires at least 24 observations)")
-
-    # Perform decomposition
-    decomposition = seasonal_decompose(df['in_temperature'], model='additive', period=12)
-
-    ### 시각화 코드 ###
-    # Plotting the decomposition
-    fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1, figsize=(12, 8), sharex=True)
-
-    ax1.set_title("Seasonal Decomposition of In Temperature")
-    ax1.plot(df['in_temperature'], label='Original')
-    ax1.legend(loc='upper left')
-
-    ax2.plot(decomposition.trend, label='Trend', color='orange')
-    ax2.legend(loc='upper left')
-
-    ax3.plot(decomposition.seasonal, label='Seasonal', color='green')
-    ax3.legend(loc='upper left')
-
-    ax4.plot(decomposition.resid, label='Residual', color='red')
-    ax4.legend(loc='upper left')
-
-    plt.tight_layout()
-    plt.show()
-
-    # Prepare result for response
-    result = {
-        "trend": decomposition.trend.dropna().to_dict(),
-        "seasonal": decomposition.seasonal.dropna().to_dict(),
-        "residual": decomposition.resid.dropna().to_dict(),
-    }
-    
-    print(result)
-    
     return result
+
+
+
+# 모델 로드
+with open("./best_rf_model.pkl", "rb") as f:
+    model = pickle.load(f)
+
+class CO2PredictionRequest(BaseModel):
+    out_temperature: float
+    pressure_upper: float
+    relative_time: float
+    volume: float
+
+@app.post("/predict_co2")
+async def predict_co2(data: CO2PredictionRequest):
+    
+    features = pd.DataFrame([[data.out_temperature, data.pressure_upper, data.volume, data.relative_time]])
+    
+    # 예측 수행
+    try:
+        co2_concentration = model.predict(features)[0]
+        return {"co2_concentration": co2_concentration}
+    except Exception as e:
+        # 에러 메시지 출력
+        return {"error": str(e)}

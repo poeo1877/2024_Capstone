@@ -110,42 +110,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12">
+                    <div
+                        class="dynamic-container row mt-4"
+                        style="display: flex"
+                    ></div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- 알림 범위를 해제하는 UI는 어떻게 구현할지 미정 -->
-    <!-- 이 아래에서 통계 같은 것 시각화-->
-    <!-- <div class="row">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">데이터</h4>
-                </div>
-                <div class="card-body">
-                    <canvas id="heatmap"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">데이터 2</h4>
-                </div>
-                <div class="card-body">
-                    <canvas id="density-plot"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">데이터 3</h4>
-                </div>
-                <div class="card-body">
-                    <div id="histogram"></div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
 <!--**********************************
         Content body end
@@ -172,3 +146,87 @@
 <script src="/js/archive-linechart.js"></script>
 
 <script src="/js/downloadExcel.js"></script>
+
+<script>
+    // 페이지가 로드될 때 초기 설정
+    document.addEventListener('DOMContentLoaded', function () {
+        showSVGSection();
+        updateSVGImages('temperature', batchIds); // 초기값으로 '온도' 데이터를 로드
+    });
+
+    // 버튼 클릭 시 이벤트 리스너 설정
+    document
+        .getElementById('temperature-btn')
+        .addEventListener('click', function () {
+            showSVGSection();
+            updateSVGImages('temperature', batchIds);
+        });
+
+    document.getElementById('co2-btn').addEventListener('click', function () {
+        showSVGSection();
+        updateSVGImages('co2', batchIds);
+    });
+
+    document.getElementById('ph-btn').addEventListener('click', function () {
+        hideSVGSection(); // pH 클릭 시 섹션 숨기기
+    });
+
+    // 이미지 업데이트 함수
+    function updateSVGImages(type, batchIds) {
+        const imagePaths = {
+            temperature: [
+                'volatility_analysis',
+                'change_point_detection',
+                'histograms',
+                'clustring',
+            ],
+            co2: [
+                'volatility_analysis',
+                'change_point_detection',
+                'histograms',
+                'clustring',
+            ],
+        };
+
+        const container = document.querySelector('.dynamic-container');
+        container.innerHTML = ''; // 기존 내용을 초기화
+        console.log(imagePaths);
+        // 각 batchId에 대해 4개의 이미지를 추가
+        batchIds.forEach((batchId) => {
+            imagePaths[type].forEach((analysisType, index) => {
+                const colDiv = document.createElement('div');
+                colDiv.classList.add('col-lg-6', 'col-sm-6');
+
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                <div class="card-header" style="display: flex; justify-content: center; ">
+                    <h3 class="card-title">Batch ${batchId}</h4>
+                </div>
+                <div class="card-body">
+                    <img src="/images/svgs/${type}_${analysisType}_${batchId}.svg" class="img-fluid" alt="${type} ${analysisType} 이미지"/>
+                </div>
+            `;
+
+                colDiv.appendChild(card);
+                container.appendChild(colDiv);
+            });
+        });
+    }
+
+    // SVG 섹션 숨기기 함수 (pH 버튼 클릭 시)
+    function hideSVGSection() {
+        const svgSection = document.querySelector('.dynamic-container');
+        if (svgSection) {
+            svgSection.style.display = 'none';
+        }
+    }
+
+    // SVG 섹션 보이기 함수 (온도, CO2 버튼 클릭 시)
+    function showSVGSection() {
+        const svgSection = document.querySelector('.dynamic-container');
+        if (svgSection) {
+            svgSection.style.display = 'flex'; // 다시 표시할 때 flex로 설정
+        }
+    }
+</script>

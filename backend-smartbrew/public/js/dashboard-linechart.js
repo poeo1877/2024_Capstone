@@ -58,29 +58,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
             },
             plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const sensorData = context.parsed.y;
+                            const absoluteTime = context.raw.absoluteTime;
+                            return `값: ${sensorData}, 측정 시점: ${absoluteTime}`;
+                        },
+                    },
+                },
                 zoom: {
                     pan: {
-                        enabled: true, // Enable panning
-                        mode: 'xy', // Allow panning in both directions
-                        modifierKey: null, // No modifier key required for panning
-                        threshold: 10, // Minimal pan distance required before actually panning
+                        enabled: true,
+                        mode: 'xy',
+                        threshold: 10, // 팬이 발생하기 위한 최소 움직임
+                        modifierKey: 'ctrl', // Ctrl 키를 누른 상태에서만 팬 가능
                     },
                     zoom: {
                         wheel: {
-                            enabled: false, // Disable zooming with the mouse wheel
-                        },
-                        drag: {
-                            enabled: true, // 드래그로 줌 가능
-                            threshold: 100, // 드래그 줌을 시작하기 위한 최소 드래그 거리
-                            borderWidth: 1, // 드래그 줌 영역의 테두리 두께
-                            backgroundColor: 'rgba(0, 0, 0, 0.1)', // 드래그 줌 영역의 배경색
+                            enabled: true, // 휠 줌만 활성화
                         },
                         pinch: {
-                            enabled: true, // Enable zooming by pinching on touch devices
+                            enabled: false, // 터치 줌 비활성화
                         },
                         mode: 'xy',
+                        drag: {
+                            enabled: true, // 드래그 줌 비활성화
+                        },
                     },
                 },
+
                 annotation: {
                     annotations: temperatureAnnotations,
                 },
